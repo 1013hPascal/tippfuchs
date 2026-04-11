@@ -6,7 +6,7 @@ import { TAGES_IDX } from './tageswort.js';
 import { getDatum } from './hilfsfunktionen.js';
 import { ladeRanglisteFirebase, speichereInRanglisteFirebase } from './firebase-basis.js';
 import { starteTimer, stoppeTimer, formatZeit, getGesamtZeit } from './timer.js';
-import { aktualisiereStats, aktualisiereRekord, aktualisiereStartStats, speichereZustand } from './lokaler-zustand.js';
+import { aktualisiereStats, aktualisiereRekord, aktualisiereStartStats, speichereZustand, ladeZustand } from './lokaler-zustand.js';
 import { zeigeScreen } from './screens.js';
 import { sageLaut } from './live-region.js';
 import { fuchsAktion } from './fuchs-animation.js';
