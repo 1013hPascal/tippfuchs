@@ -8,6 +8,7 @@ import { initialisiereHausFenster } from './haus-fenster.js';
 import { zeigeStart } from './auth.js';
 import { ladeTageswort } from './tageswort.js';
 import { zeigeGruppenScreen } from './gruppen-ui.js';
+import './event-listener.js';
 
 // Globale Funktionen die von inline-HTML (onclick=...) benötigt werden
 window.zeigeGruppenScreen = zeigeGruppenScreen;

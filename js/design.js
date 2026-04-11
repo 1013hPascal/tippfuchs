@@ -53,16 +53,18 @@ export function fuchsSVGInhalt(groesse) {
 
 // Wanduhr SVG (Stoppuhr-Stil) — Zeiger werden per JS gesteuert
 export function wandUhrSVG(cx, cy, r, rahmenFarbe, zifferFarbe, id) {
+  // cx, cy, r sind Prozentzahlen (z.B. 50 für 50%)
+  const p = v => `${v}%`;
   return `
-  <circle cx="${cx}" cy="${cy}" r="${r}" fill="${rahmenFarbe}" stroke="${zifferFarbe}" stroke-width="${r*0.06}"/>
-  <circle cx="${cx}" cy="${cy}" r="${r*0.88}" fill="rgba(255,255,255,0.12)"/>
-  <line x1="${cx}" y1="${cy-r*0.6}" x2="${cx}" y2="${cy-r*0.78}" stroke="${zifferFarbe}" stroke-width="${r*0.06}" stroke-linecap="round"/>
-  <line x1="${cx}" y1="${cy+r*0.6}" x2="${cx}" y2="${cy+r*0.78}" stroke="${zifferFarbe}" stroke-width="${r*0.06}" stroke-linecap="round"/>
-  <line x1="${cx-r*0.6}" y1="${cy}" x2="${cx-r*0.78}" y2="${cy}" stroke="${zifferFarbe}" stroke-width="${r*0.06}" stroke-linecap="round"/>
-  <line x1="${cx+r*0.6}" y1="${cy}" x2="${cx+r*0.78}" y2="${cy}" stroke="${zifferFarbe}" stroke-width="${r*0.06}" stroke-linecap="round"/>
-  <line id="uhr-min-${id}" x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-r*0.6}" stroke="${zifferFarbe}" stroke-width="${r*0.07}" stroke-linecap="round"/>
-  <line id="uhr-sek-${id}" x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-r*0.72}" stroke="#E8621A" stroke-width="${r*0.04}" stroke-linecap="round"/>
-  <circle cx="${cx}" cy="${cy}" r="${r*0.06}" fill="${zifferFarbe}"/>`;
+  <circle cx="${p(cx)}" cy="${p(cy)}" r="${p(r)}" fill="${rahmenFarbe}" stroke="${zifferFarbe}" stroke-width="${p(r*0.06)}"/>
+  <circle cx="${p(cx)}" cy="${p(cy)}" r="${p(r*0.88)}" fill="rgba(255,255,255,0.12)"/>
+  <line x1="${p(cx)}" y1="${p(cy-r*0.6)}" x2="${p(cx)}" y2="${p(cy-r*0.78)}" stroke="${zifferFarbe}" stroke-width="${p(r*0.06)}" stroke-linecap="round"/>
+  <line x1="${p(cx)}" y1="${p(cy+r*0.6)}" x2="${p(cx)}" y2="${p(cy+r*0.78)}" stroke="${zifferFarbe}" stroke-width="${p(r*0.06)}" stroke-linecap="round"/>
+  <line x1="${p(cx-r*0.6)}" y1="${p(cy)}" x2="${p(cx-r*0.78)}" y2="${p(cy)}" stroke="${zifferFarbe}" stroke-width="${p(r*0.06)}" stroke-linecap="round"/>
+  <line x1="${p(cx+r*0.6)}" y1="${p(cy)}" x2="${p(cx+r*0.78)}" y2="${p(cy)}" stroke="${zifferFarbe}" stroke-width="${p(r*0.06)}" stroke-linecap="round"/>
+  <line id="uhr-min-${id}" x1="${p(cx)}" y1="${p(cy)}" x2="${p(cx)}" y2="${p(cy-r*0.6)}" stroke="${zifferFarbe}" stroke-width="${p(r*0.07)}" stroke-linecap="round"/>
+  <line id="uhr-sek-${id}" x1="${p(cx)}" y1="${p(cy)}" x2="${p(cx)}" y2="${p(cy-r*0.72)}" stroke="#E8621A" stroke-width="${p(r*0.04)}" stroke-linecap="round"/>
+  <circle cx="${p(cx)}" cy="${p(cy)}" r="${p(r*0.06)}" fill="${zifferFarbe}"/>`;
 }
 
 const DESIGN_SVG_INHALTE = {
@@ -100,7 +102,7 @@ const DESIGN_SVG_INHALTE = {
 <circle cx="22%" cy="60%" r="0.4%" fill="#ffe060" opacity="0.7"/>
 <circle cx="85%" cy="54%" r="0.45%" fill="#ffe060" opacity="0.85"/>
 <circle cx="55%" cy="62%" r="0.35%" fill="#ffe060" opacity="0.75"/>
-${wandUhrSVG('50%', '28%', '7%', '#8B5E3C', '#F5E6D0', 'fuchsbau')}
+${wandUhrSVG(50, 28, 7, '#8B5E3C', '#F5E6D0', 'fuchsbau')}
 `,
 
 // NATUR AM TAG — Wiese, Kirchturm links, Fuchs auf der Wiese
@@ -132,7 +134,7 @@ ${wandUhrSVG('50%', '28%', '7%', '#8B5E3C', '#F5E6D0', 'fuchsbau')}
 <rect x="10.5%" y="17%" width="2%" height="6%" fill="#d4c8a0"/>
 <rect x="9%" y="30%" width="2.5%" height="3%" fill="#8090a0" rx="1"/>
 <rect x="12%" y="30%" width="2.5%" height="3%" fill="#8090a0" rx="1"/>
-${wandUhrSVG('11.5%', '27%', '3.5%', '#d4c8a0', '#3a2a10', 'natur-tag')}
+${wandUhrSVG(11.5, 27, 3.5, '#d4c8a0', '#3a2a10', 'natur-tag')}
 <circle cx="28%" cy="59%" r="1%" fill="#FF6B6B"/>
 <circle cx="38%" cy="60%" r="0.9%" fill="#FF9FD0"/>
 <circle cx="66%" cy="59%" r="1%" fill="#FF6B6B"/>
@@ -178,7 +180,7 @@ ${wandUhrSVG('11.5%', '27%', '3.5%', '#d4c8a0', '#3a2a10', 'natur-tag')}
 <rect x="18.2%" y="25%" width="1.6%" height="8%" fill="#1a1a2e"/>
 <rect x="16%" y="44%" width="3%" height="4%" fill="#8090a0" rx="1"/>
 <rect x="20%" y="44%" width="3%" height="4%" fill="#8090a0" rx="1"/>
-${wandUhrSVG('19%', '40%', '4%', '#1a1a2e', '#fffbe0', 'natur-nacht')}
+${wandUhrSVG(19, 40, 4, '#1a1a2e', '#fffbe0', 'natur-nacht')}
 <circle cx="17%" cy="82%" r="0.4%" fill="#aaff60" opacity="0.8"/>
 <circle cx="38%" cy="82%" r="0.35%" fill="#aaff60" opacity="0.7"/>
 <circle cx="59%" cy="83%" r="0.4%" fill="#aaff60" opacity="0.8"/>
