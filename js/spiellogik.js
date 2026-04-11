@@ -2,7 +2,7 @@ import { appState, state } from './state.js';
 import { db, ref, get, child } from './firebase-config.js';
 import { LOESUNGSWOERTER, EINGABEWOERTER } from './wortliste.js';
 import { ALLE_BUCHSTABEN } from './hilfsfunktionen.js';
-import { TAGES_IDX } from './tageswort.js';
+import { TAGES_IDX, ladeTageswort } from './tageswort.js';
 import { getDatum } from './hilfsfunktionen.js';
 import { ladeRanglisteFirebase, speichereInRanglisteFirebase } from './firebase-basis.js';
 import { starteTimer, stoppeTimer, formatZeit, getGesamtZeit } from './timer.js';
@@ -161,7 +161,7 @@ export async function starteSpiel() {
   aktualisiereVerlauf(); aktualisiereBuchstabenStatus();
   zeigeScreen('game-screen');
   // Fuchs nur im Standard-Design im Header zeigen
-  if (aktivesDesign === 'standard') {
+  if (document.documentElement.dataset.design === 'standard') {
     document.getElementById('fuchs-container').style.display = 'flex';
   } else {
     document.getElementById('fuchs-container').style.display = 'none';
