@@ -1,0 +1,154 @@
+/* Design-Themes und Hintergrundmuster: Fuchsbau, Natur-Tag, Natur-Nacht */
+}
+/* Design: Standard (default) */
+[data-design="standard"] {
+  --design-bg: var(--bg);
+  --design-surface: var(--surface);
+  --design-border: var(--border);
+  --design-header-bg: var(--bg);
+}
+
+/* Design: Fuchsbau hell */
+[data-design="fuchsbau"] {
+  --design-bg: #f2e8d5;
+  --design-surface: #fdf5e6;
+  --design-border: #c4a882;
+  --design-header-bg: #e8d5b0;
+}
+[data-design="fuchsbau"][data-theme="dark"] {
+  --design-bg: #2a1f0f;
+  --design-surface: #3a2a14;
+  --design-border: #6b4c22;
+  --design-header-bg: #1e1508;
+}
+
+/* Design: Natur Tag hell */
+[data-design="natur-tag"] {
+  --design-bg: #e8f4e8;
+  --design-surface: #f0faf0;
+  --design-border: #8bc48b;
+  --design-header-bg: #c8e8c8;
+}
+[data-design="natur-tag"][data-theme="dark"] {
+  --design-bg: #0f2a0f;
+  --design-surface: #1a3a1a;
+  --design-border: #2a6b2a;
+  --design-header-bg: #081a08;
+}
+
+/* Design: Natur Nacht (nur dark) */
+[data-design="natur-nacht"] {
+  --design-bg: #0a0e1f;
+  --design-surface: #141828;
+  --design-border: #2a3050;
+  --design-header-bg: #080b18;
+  --bg: #0a0e1f;
+  --surface: #141828;
+  --border: #2a3050;
+  --text: #e8eaf6;
+  --text-muted: #8890b0;
+  --accent: #7c9fd4;
+  --accent-dark: #5a80b8;
+  --key-bg: #1e2438;
+}
+
+/* Hintergrundmuster Fuchsbau */
+[data-design="fuchsbau"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(ellipse 3px 40px at 15% 0%, #8B5E3C 0%, transparent 100%),
+    radial-gradient(ellipse 2px 30px at 25% 0%, #6B4422 0%, transparent 100%),
+    radial-gradient(ellipse 4px 50px at 35% 0%, #9B6E4C 0%, transparent 100%),
+    radial-gradient(ellipse 2px 35px at 55% 0%, #7B4E2C 0%, transparent 100%),
+    radial-gradient(ellipse 3px 45px at 70% 0%, #8B5E3C 0%, transparent 100%),
+    radial-gradient(ellipse 2px 28px at 85% 0%, #6B4422 0%, transparent 100%),
+    radial-gradient(ellipse 200% 30% at 50% 100%, #8B5E3C22 0%, transparent 100%);
+  opacity: 0.4;
+}
+
+/* Hintergrundmuster Natur Tag */
+[data-design="natur-tag"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(ellipse 100% 20% at 50% 0%, #87CEEB44 0%, transparent 100%),
+    radial-gradient(ellipse 8px 60px at 10% 100%, #228B2244 0%, transparent 100%),
+    radial-gradient(ellipse 6px 50px at 22% 100%, #2E8B2244 0%, transparent 100%),
+    radial-gradient(ellipse 10px 70px at 78% 100%, #228B2244 0%, transparent 100%),
+    radial-gradient(ellipse 7px 55px at 90% 100%, #2E8B2244 0%, transparent 100%),
+    radial-gradient(ellipse 200% 15% at 50% 100%, #228B2233 0%, transparent 100%);
+  opacity: 0.6;
+}
+
+/* Hintergrundmuster Natur Nacht */
+[data-design="natur-nacht"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle 1px at 8% 12%, #fff 0%, transparent 100%),
+    radial-gradient(circle 1px at 15% 8%, #fff 0%, transparent 100%),
+    radial-gradient(circle 2px at 22% 18%, #fff 0%, transparent 100%),
+    radial-gradient(circle 1px at 30% 6%, #fff 0%, transparent 100%),
+    radial-gradient(circle 1px at 38% 14%, #fff 0%, transparent 100%),
+    radial-gradient(circle 2px at 45% 9%, #fff 0%, transparent 100%),
+    radial-gradient(circle 1px at 52% 20%, #fff 0%, transparent 100%),
+    radial-gradient(circle 1px at 60% 5%, #fff 0%, transparent 100%),
+    radial-gradient(circle 2px at 68% 15%, #fff 0%, transparent 100%),
+    radial-gradient(circle 1px at 75% 10%, #fff 0%, transparent 100%),
+    radial-gradient(circle 1px at 82% 18%, #fff 0%, transparent 100%),
+    radial-gradient(circle 2px at 90% 7%, #fff 0%, transparent 100%),
+    radial-gradient(circle 1px at 95% 13%, #fff 0%, transparent 100%),
+    radial-gradient(ellipse 60px 60px at 75% 8%, #fff8 0%, transparent 60%),
+    radial-gradient(ellipse 200% 20% at 50% 100%, #0a1a0a 0%, transparent 100%);
+  opacity: 0.8;
+}
+
+/* Alle Design-Elemente nutzen die Design-Variablen */
+[data-design]:not([data-design="standard"]) body {
+  background: var(--design-bg);
+}
+[data-design]:not([data-design="standard"]) header {
+  background: var(--design-header-bg);
+  border-color: var(--design-border);
+}
+[data-design]:not([data-design="standard"]) .stats-box,
+[data-design]:not([data-design="standard"]) .rang-box,
+[data-design]:not([data-design="standard"]) .erg-box,
+[data-design]:not([data-design="standard"]) .modal,
+[data-design]:not([data-design="standard"]) .status-gruppe,
+[data-design]:not([data-design="standard"]) .info-box,
+[data-design]:not([data-design="standard"]) .id-box,
+[data-design]:not([data-design="standard"]) #start-stats-box {
+  background: var(--design-surface);
+  border-color: var(--design-border);
+}
+[data-design]:not([data-design="standard"]) #app,
+[data-design]:not([data-design="standard"]) main {
+  position: relative;
+  z-index: 1;
+}
+[data-design]:not([data-design="standard"]) body {
+  background: transparent;
+}
+[data-design]:not([data-design="standard"]) #app {
+  position: relative;
+  z-index: 1;
+}
+[data-design]:not([data-design="standard"]) header {
+  position: relative;
+  z-index: 2;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+}
+[data-design="natur-nacht"] header {
+  background: rgba(0,0,0,0.25);

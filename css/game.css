@@ -1,0 +1,469 @@
+/* Spielfeld-Styles: Verlauf, Eingabe, Ergebnis, Buchstabenstatus, Design-Overrides */
+/* DESIGN-VERBESSERUNGEN ANFANG */
+
+/* Typografie-Hierarchie */
+.start-section-titel {
+  font-size: 1.15rem;
+  letter-spacing: .3px;
+}
+
+/* Mehr Luft zwischen Abschnitten */
+#start-screen {
+  gap: 20px;
+  padding: 28px 0;
+}
+
+/* Karten: mehr Rundung und Luft */
+.start-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  gap: 12px;
+}
+
+/* Titelzeile in Karten ohne Rahmen */
+.start-section-titel {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 2px;
+}
+
+/* Primäre Buttons größer und einladender */
+.btn-primary {
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  letter-spacing: .2px;
+}
+
+/* Sekundäre Buttons weicher */
+.btn-secondary {
+  padding: 13px;
+  border-radius: 8px;
+}
+
+/* Hover-Effekte weicher */
+.btn-primary:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+  transition: all .2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--border);
+  transform: translateY(-1px);
+  transition: all .2s ease;
+}
+
+/* Mobile: mehr Luft */
+@media(max-width: 560px) {
+  #start-screen {
+    gap: 16px;
+    padding: 20px 0;
+  }
+  .start-section {
+    padding: 14px 16px;
+  }
+  .btn-primary {
+    padding: 15px;
+  }
+}
+
+/* Details/Summary in Anleitung schöner */
+details {
+  border-radius: 10px !important;
+  transition: box-shadow .2s ease;
+}
+details[open] {
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+details summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+details summary::after {
+  content: '▸';
+  font-size: .85rem;
+  color: var(--text-muted);
+  transition: transform .2s ease;
+}
+details[open] summary::after {
+  transform: rotate(90deg);
+}
+
+/* Themes stärker integrieren */
+[data-design="fuchsbau"] .btn-primary {
+  background: #8B5E3C;
+}
+[data-design="fuchsbau"] .btn-primary:hover {
+  background: #6B4422;
+}
+[data-design="fuchsbau"] .start-section {
+  border-color: #c4a882;
+}
+[data-design="fuchsbau"] .start-section-titel {
+  border-color: #c4a882;
+}
+
+[data-design="natur-tag"] .btn-primary {
+  background: #3a8a3a;
+}
+[data-design="natur-tag"] .btn-primary:hover {
+  background: #2a6a2a;
+}
+[data-design="natur-tag"] .start-section {
+  border-color: #8bc48b;
+}
+[data-design="natur-tag"] .start-section-titel {
+  border-color: #8bc48b;
+}
+
+[data-design="natur-nacht"] .btn-primary {
+  background: #4a6fa5;
+}
+[data-design="natur-nacht"] .btn-primary:hover {
+  background: #3a5a8a;
+}
+[data-design="natur-nacht"] .start-section {
+  border-color: #2a3050;
+  background: rgba(20,24,40,.85);
+}
+
+/* Reduzierte Bewegung respektieren */
+@media(prefers-reduced-motion: reduce) {
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
+  details summary::after {
+    transition: none;
+  }
+}
+
+/* Mini-Fuchs Startseite Animationen */
+@keyframes warten {
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-2px) rotate(1deg)}
+}
+@keyframes schwanz {
+  0%,100%{transform:rotate(0deg)}
+  50%{transform:rotate(15deg)}
+}
+@keyframes schwanz-wedeln {
+  0%,100%{transform:rotate(0deg)}
+  50%{transform:rotate(15deg)}
+}
+
+/* Fuchs als Overlay im Hintergrundbild */
+#fuchs-overlay {
+  position: fixed;
+  z-index: 1;
+  pointer-events: none;
+  display: none;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 560px;
+}
+#fuchs-overlay svg {
+  display: block;
+}
+
+/* Uhr-Overlay für Design-Hintergründe */
+#uhr-overlay {
+  position: fixed;
+  z-index: 1;
+  pointer-events: none;
+  display: none;
+}
+
+/* Standard: Fuchs rechts neben dem Eingabefeld */
+[data-design="standard"] #fuchs-container {
+  display: flex !important;
+}
+
+/* =============================================
+   DESIGN-KARTEN
+   ============================================= */
+.design-karten-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.design-karte {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: border-color .2s, transform .15s;
+}
+.design-karte:hover {
+  transform: translateY(-2px);
+}
+.design-karte.aktiv {
+  border-color: var(--accent);
+}
+.design-karte.aktiv .design-karte-haken {
+  display: flex;
+}
+.design-karte input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.design-karte-vorschau {
+  height: 64px;
+  display: flex;
+  align-items: flex-end;
+  padding: 6px 8px;
+  position: relative;
+}
+.design-karte-haken {
+  display: none;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: .7rem;
+  font-weight: 700;
+}
+.design-karte-label {
+  padding: 8px 10px;
+  background: rgba(0,0,0,.08);
+}
+.design-karte-name {
+  font-size: .88rem;
+  font-weight: 700;
+  display: block;
+}
+.design-karte-desc {
+  font-size: .75rem;
+  opacity: .75;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Vorschau-Farben pro Design */
+.design-karte[data-design="standard"] .design-karte-vorschau {
+  background: linear-gradient(135deg, #f5f2ee 60%, #2c5f8a 100%);
+}
+.design-karte[data-design="standard"] .design-karte-label {
+  background: #f5f2ee;
+  color: #1c1a17;
+}
+.design-karte[data-design="fuchsbau"] .design-karte-vorschau {
+  background: linear-gradient(180deg, #c8a070 0%, #8B5E3C 60%, #6a3e20 100%);
+}
+.design-karte[data-design="fuchsbau"] .design-karte-vorschau::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; width: 4px; height: 40%;
+  background: #5a3520;
+  border-radius: 0 0 4px 4px;
+  opacity: .6;
+}
+.design-karte[data-design="fuchsbau"] .design-karte-vorschau::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 40%; width: 3px; height: 30%;
+  background: #5a3520;
+  border-radius: 0 0 4px 4px;
+  opacity: .5;
+}
+.design-karte[data-design="fuchsbau"] .design-karte-label {
+  background: #f2e8d5;
+  color: #3a1a00;
+}
+.design-karte[data-design="natur-tag"] .design-karte-vorschau {
+  background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 55%, #5a9e30 55%, #5a9e30 100%);
+}
+.design-karte[data-design="natur-tag"] .design-karte-vorschau::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 20%;
+  width: 12px; height: 32px;
+  background: radial-gradient(ellipse at 50% 100%, #228B22 60%, transparent 100%);
+  border-radius: 50% 50% 0 0;
+}
+.design-karte[data-design="natur-tag"] .design-karte-label {
+  background: #e8f4e8;
+  color: #1a3a1a;
+}
+.design-karte[data-design="natur-nacht"] .design-karte-vorschau {
+  background: #080c20;
+}
+.design-karte[data-design="natur-nacht"] .design-karte-vorschau::before {
+  content: '';
+  position: absolute;
+  top: 8px; right: 16px;
+  width: 14px; height: 14px;
+  background: #FFF8DC;
+  border-radius: 50%;
+  box-shadow: -3px 0 0 2px #080c20;
+}
+.design-karte[data-design="natur-nacht"] .design-karte-label {
+  background: #141828;
+  color: #e8eaf6;
+}
+
+/* Hell/Dunkel Umschalter */
+.hell-dunkel-schalter {
+  display: flex;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.hell-dunkel-option {
+  flex: 1;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: .9rem;
+  font-weight: 700;
+  background: var(--surface);
+  color: var(--text-muted);
+  transition: background .15s, color .15s;
+  position: relative;
+}
+.hell-dunkel-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.hell-dunkel-option.aktiv {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* =============================================
+   FUCHS-ILLUSTRATIONEN in Abschnitts-Titeln
+   ============================================= */
+.start-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.start-section-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  flex: 1;
+  letter-spacing: .3px;
+}
+.section-fuchs {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+}
+
+   ============================================= */
+.fuchs-titel-box {
+  background: #E8621A;
+  border-radius: 10px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.fuchs-titel-box h1,
+.fuchs-titel-box .fuchs-titel-text {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #3a1a00;
+  margin: 0;
+  flex: 1;
+}
+.fuchs-tatze {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+/* Im Dunkelmodus etwas heller */
+[data-theme="dark"] .fuchs-titel-box {
+  background: #c04f10;
+}
+[data-theme="dark"] .fuchs-titel-box h1,
+[data-theme="dark"] .fuchs-titel-box .fuchs-titel-text {
+  color: #ffe0c0;
+}
+/* Natur Nacht: Mondblau statt Orange */
+[data-design="natur-nacht"] .fuchs-titel-box {
+  background: #1e2a50;
+}
+[data-design="natur-nacht"] .fuchs-titel-box h1,
+[data-design="natur-nacht"] .fuchs-titel-box .fuchs-titel-text {
+  color: #c8d8f8;
+}
+/* Natur Tag: Waldgrün */
+[data-design="natur-tag"] .fuchs-titel-box {
+  background: #3a8a3a;
+}
+[data-design="natur-tag"] .fuchs-titel-box h1,
+[data-design="natur-tag"] .fuchs-titel-box .fuchs-titel-text {
+  color: #e8f8e8;
+}
+
+/* =============================================
+   WILLKOMMENS-BOX auf Startseite
+   ============================================= */
+.willkommen-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid #E8621A;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: .95rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.willkommen-box strong {
+  color: var(--text);
+}
+[data-design="natur-tag"] .willkommen-box { border-left-color: #3a8a3a; }
+[data-design="natur-nacht"] .willkommen-box { border-left-color: #4a6fa5; }
+
+/* =============================================
+   SPIELFELD — dezenter Hintergrund
+   ============================================= */
+#game-screen {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 0 16px 16px;
+  border: 1px solid var(--border);
+  margin-top: 8px;
+}
+[data-design="fuchsbau"] #game-screen {
+  background: var(--design-surface, #fdf5e6);
+  border-color: var(--design-border, #c4a882);
+}
+[data-design="natur-tag"] #game-screen {
+  background: var(--design-surface, #f0faf0);
+  border-color: var(--design-border, #8bc48b);
+}
+[data-design="natur-nacht"] #game-screen {
+  background: rgba(20,24,40,.9);
+  border-color: #2a3050;
+}
+

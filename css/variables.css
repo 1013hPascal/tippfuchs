@@ -1,0 +1,14 @@
+/* CSS-Variablen: Farben, Schriften, Radien */
+<style>
+:root {
+  --bg:#f5f2ee;--surface:#fff;--border:#d0cbc4;--text:#1c1a17;--text-muted:#6b6560;
+  --present:#d4621a;--present-bg:#fff1e8;--absent:#b91c1c;--absent-bg:#fef2f2;
+  --correct-badge:#4a7c59;--correct-badge-bg:#e8f4ed;
+  --key-bg:#e2ddd8;--accent:#2c5f8a;--accent-dark:#1e4a6e;
+  --radius:5px;--font-display:Georgia,'Times New Roman',serif;--font-body:'Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#111009;--surface:#1c1a16;--border:#38342e;--text:#f0ebe3;--text-muted:#908a84;
+  --present:#e8742a;--present-bg:#2d1a0a;--absent:#e05050;--absent-bg:#2a0e0e;
+  --correct-badge:#5a9c6e;--correct-badge-bg:#0e2018;
+  --key-bg:#2a2722;--accent:#5b9fd4;--accent-dark:#4080b0;

@@ -1,0 +1,551 @@
+/* Screen-spezifische Styles, Fortschrittsanzeige, Haus-Design, Animationen */
+/* =============================================
+   FORTSCHRITTSANZEIGE — 6 Punkte im Spielfeld
+   ============================================= */
+#fortschritt-punkte {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 8px 0 4px;
+}
+.fp-punkt {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 2px solid var(--border);
+  transition: background .3s, border-color .3s;
+}
+.fp-punkt.aktiv {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.fp-punkt.gewonnen {
+  background: var(--correct-badge);
+  border-color: var(--correct-badge);
+}
+.fp-punkt.verloren {
+  background: var(--absent);
+  border-color: var(--absent);
+}
+
+/* =============================================
+   ERGEBNIS-SCREEN — feierlicher
+   ============================================= */
+.erg-box h2.gewonnen {
+  color: var(--correct-badge);
+  font-size: 1.5rem;
+}
+.erg-box h2.verloren {
+  color: var(--text-muted);
+  font-size: 1.3rem;
+}
+.erg-gewinn-banner {
+  background: var(--correct-badge-bg);
+  border: 2px solid var(--correct-badge);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--correct-badge);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* =============================================
+   BUCHSTABENSTATUS — "Noch nicht verwendet" kompakter
+   ============================================= */
+.status-gruppe.unused {
+  background: var(--bg);
+  border-style: dashed;
+}
+.buchstaben-zeile.unbenutzt {
+  font-size: .82rem;
+  letter-spacing: 1.5px;
+  line-height: 1.6;
+}
+
+/* =============================================
+   ANLEITUNG-BUTTONS — mit Fragezeichen-Symbol
+   ============================================= */
+.anleitung-btn {
+  text-align: left;
+  padding-left: 40px !important;
+  position: relative;
+}
+.anleitung-btn::before {
+  content: '?';
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+  font-weight: 700;
+  font-family: var(--font-body);
+  line-height: 20px;
+  text-align: center;
+}
+.anleitung-btn[aria-expanded="true"] {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.anleitung-btn[aria-expanded="true"]::before {
+  background: #fff;
+  color: var(--accent);
+  content: '✕';
+  font-size: .7rem;
+}
+
+/* =============================================
+   DESIGN-AUSWAHL — Farbvorschau-Punkte
+   ============================================= */
+.design-vorschau {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.design-vorschau span {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,.15);
+}
+
+/* =============================================
+   FUCHS-MINI auf Startseite
+   ============================================= */
+#fuchs-mini-container {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 8px;
+}
+
+/* =============================================
+   FUCHSBAU — wärmere Spielfarben
+   ============================================= */
+[data-design="fuchsbau"] .vb.correct {
+  background: #e8f0d8;
+  color: #5a7a2a;
+  border-color: #5a7a2a;
+}
+[data-design="fuchsbau"] .vb.present {
+  background: #fdf0d8;
+  color: #c86820;
+  border-color: #c86820;
+}
+[data-design="fuchsbau"] .buchstaben-zeile.falsche-stelle { color: #c86820; }
+[data-design="fuchsbau"] .status-gruppe.falsch { border-left-color: #c86820; }
+
+/* DESIGN-VERBESSERUNGEN ENDE */
+
+/* =============================================
+   ANIMATIONS-SCHALTER — wenn deaktiviert
+   ============================================= */
+body.keine-animationen #fuchs-container,
+body.keine-animationen #fuchs-overlay,
+body.keine-animationen #fuchs-mini-container {
+  display: none !important;
+}
+body.keine-animationen * {
+  animation: none !important;
+  transition: none !important;
+}
+body.keine-animationen #konfetti {
+  display: none !important;
+}
+body.keine-animationen .fp-punkt {
+  transition: none !important;
+}
+
+/* =============================================
+   SPIELFELD — THEMATISCHE OPTIK PRO DESIGN
+   ============================================= */
+
+/* --- FUCHSBAU --- */
+[data-design="fuchsbau"] #game-screen {
+  background: #fdf5e6;
+  border-color: #c4a882;
+  border-width: 2px;
+}
+[data-design="fuchsbau"][data-theme="dark"] #game-screen {
+  background: #3a2a14;
+  border-color: #6b4c22;
+}
+/* Eingabefeld Fuchsbau */
+[data-design="fuchsbau"] #wort-input {
+  background: #f5ead0;
+  border-color: #c4a882;
+  color: #3a1a00;
+  border-width: 2px;
+}
+[data-design="fuchsbau"] #wort-input:focus {
+  border-color: #8B5E3C;
+  box-shadow: 0 0 0 3px rgba(139,94,60,.2);
+}
+[data-design="fuchsbau"][data-theme="dark"] #wort-input {
+  background: #2a1f0f;
+  border-color: #6b4c22;
+  color: #f0d8a8;
+}
+/* Buchstaben-Kästchen Fuchsbau */
+[data-design="fuchsbau"] .vb.correct {
+  background: #e8f0d0;
+  color: #5a7a2a;
+  border-color: #5a7a2a;
+  box-shadow: 0 2px 4px rgba(90,122,42,.2);
+}
+[data-design="fuchsbau"] .vb.present {
+  background: #fdf0d0;
+  color: #c86820;
+  border-color: #c86820;
+  box-shadow: 0 2px 4px rgba(200,104,32,.2);
+}
+[data-design="fuchsbau"] .vb.absent {
+  background: #f5e8d8;
+  color: #8B5E3C;
+  border-color: #c4a882;
+}
+/* Lösungszeichen Fuchsbau */
+[data-design="fuchsbau"] .lz-zeichen {
+  border-bottom-color: #8B5E3C;
+  color: #3a1a00;
+}
+[data-design="fuchsbau"][data-theme="dark"] .lz-zeichen {
+  color: #f0d8a8;
+}
+/* Status-Boxen Fuchsbau */
+[data-design="fuchsbau"] .status-gruppe {
+  background: #fdf5e6;
+  border-color: #c4a882;
+}
+[data-design="fuchsbau"][data-theme="dark"] .status-gruppe {
+  background: #3a2a14;
+  border-color: #6b4c22;
+}
+[data-design="fuchsbau"] .status-gruppe.falsch { border-left-color: #c86820; }
+[data-design="fuchsbau"] .status-gruppe.nein { border-left-color: #a04020; }
+[data-design="fuchsbau"] .status-gruppe.used { border-left-color: #c4a882; }
+[data-design="fuchsbau"] .status-gruppe.unused { border-left-color: #8B5E3C; }
+
+/* --- NATUR AM TAG --- */
+[data-design="natur-tag"] #game-screen {
+  background: #f0faf0;
+  border-color: #8bc48b;
+  border-width: 2px;
+}
+[data-design="natur-tag"][data-theme="dark"] #game-screen {
+  background: #1a3a1a;
+  border-color: #2a6b2a;
+}
+/* Eingabefeld Natur Tag */
+[data-design="natur-tag"] #wort-input {
+  background: #e8f8e8;
+  border-color: #8bc48b;
+  color: #1a3a1a;
+  border-width: 2px;
+}
+[data-design="natur-tag"] #wort-input:focus {
+  border-color: #3a8a3a;
+  box-shadow: 0 0 0 3px rgba(58,138,58,.18);
+}
+[data-design="natur-tag"][data-theme="dark"] #wort-input {
+  background: #0f2a0f;
+  border-color: #2a6b2a;
+  color: #c8f0c8;
+}
+/* Buchstaben-Kästchen Natur Tag */
+[data-design="natur-tag"] .vb.correct {
+  background: #d0f0d0;
+  color: #2a6a2a;
+  border-color: #3a8a3a;
+  box-shadow: 0 2px 4px rgba(58,138,58,.2);
+}
+[data-design="natur-tag"] .vb.present {
+  background: #fff8d0;
+  color: #8a6a00;
+  border-color: #c8a800;
+  box-shadow: 0 2px 4px rgba(200,168,0,.2);
+}
+[data-design="natur-tag"] .vb.absent {
+  background: #f0f8f0;
+  color: #6b8b6b;
+  border-color: #8bc48b;
+}
+/* Lösungszeichen Natur Tag */
+[data-design="natur-tag"] .lz-zeichen {
+  border-bottom-color: #3a8a3a;
+  color: #1a3a1a;
+}
+[data-design="natur-tag"][data-theme="dark"] .lz-zeichen {
+  color: #c8f0c8;
+}
+/* Status-Boxen Natur Tag */
+[data-design="natur-tag"] .status-gruppe {
+  background: #f0faf0;
+  border-color: #8bc48b;
+}
+[data-design="natur-tag"][data-theme="dark"] .status-gruppe {
+  background: #1a3a1a;
+  border-color: #2a6b2a;
+}
+[data-design="natur-tag"] .status-gruppe.falsch { border-left-color: #c8a800; }
+[data-design="natur-tag"] .status-gruppe.nein { border-left-color: #b03020; }
+[data-design="natur-tag"] .status-gruppe.used { border-left-color: #8bc48b; }
+[data-design="natur-tag"] .status-gruppe.unused { border-left-color: #3a8a3a; }
+[data-design="natur-tag"] .buchstaben-zeile.falsche-stelle { color: #8a6a00; }
+
+/* --- NATUR NACHT (immer dunkel) --- */
+[data-design="natur-nacht"] #game-screen {
+  background: rgba(14,20,48,.95);
+  border-color: #3a4070;
+  border-width: 2px;
+  box-shadow: 0 0 20px rgba(100,130,220,.1);
+}
+/* Eingabefeld Natur Nacht */
+[data-design="natur-nacht"] #wort-input {
+  background: #0e1430;
+  border-color: #3a4070;
+  color: #c8d8f8;
+  border-width: 2px;
+  letter-spacing: 8px;
+}
+[data-design="natur-nacht"] #wort-input:focus {
+  border-color: #7c9fd4;
+  box-shadow: 0 0 0 3px rgba(124,159,212,.25), 0 0 12px rgba(124,159,212,.15);
+}
+[data-design="natur-nacht"] #wort-input::placeholder {
+  color: #3a4070;
+}
+/* Buchstaben-Kästchen Natur Nacht */
+[data-design="natur-nacht"] .vb.correct {
+  background: #0e2030;
+  color: #80d4a0;
+  border-color: #40a060;
+  box-shadow: 0 0 6px rgba(64,160,96,.4);
+}
+[data-design="natur-nacht"] .vb.present {
+  background: #201428;
+  color: #d4a840;
+  border-color: #b08820;
+  box-shadow: 0 0 6px rgba(208,168,64,.3);
+}
+[data-design="natur-nacht"] .vb.absent {
+  background: #141828;
+  color: #4a5070;
+  border-color: #2a3050;
+}
+/* Lösungszeichen Natur Nacht */
+[data-design="natur-nacht"] .lz-zeichen {
+  border-bottom-color: #7c9fd4;
+  color: #c8d8f8;
+}
+[data-design="natur-nacht"] .lz-zeichen.leer {
+  color: #2a3050;
+  border-color: #2a3050;
+}
+/* Status-Boxen Natur Nacht */
+[data-design="natur-nacht"] .status-gruppe {
+  background: rgba(14,20,48,.9);
+  border-color: #2a3050;
+}
+[data-design="natur-nacht"] .status-gruppe.falsch { border-left-color: #b08820; }
+[data-design="natur-nacht"] .status-gruppe.nein { border-left-color: #a04040; }
+[data-design="natur-nacht"] .status-gruppe.used { border-left-color: #3a4070; }
+[data-design="natur-nacht"] .status-gruppe.unused { border-left-color: #7c9fd4; }
+[data-design="natur-nacht"] .buchstaben-zeile.falsche-stelle { color: #d4a840; }
+[data-design="natur-nacht"] .buchstaben-zeile.nicht-vorhanden { color: #a06060; }
+[data-design="natur-nacht"] .buchstaben-zeile.verwendet { color: #4a5070; }
+[data-design="natur-nacht"] .buchstaben-zeile.unbenutzt { color: #8890b0; }
+/* Fortschritts-Punkte Natur Nacht */
+[data-design="natur-nacht"] .fp-punkt {
+  border-color: #3a4070;
+  background: #0e1430;
+}
+[data-design="natur-nacht"] .fp-punkt.aktiv {
+  background: #7c9fd4;
+  border-color: #7c9fd4;
+  box-shadow: 0 0 6px rgba(124,159,212,.5);
+}
+[data-design="natur-nacht"] .fp-punkt.gewonnen {
+  background: #40a060;
+  border-color: #40a060;
+  box-shadow: 0 0 6px rgba(64,160,96,.5);
+}
+/* Fehlertext Natur Nacht */
+[data-design="natur-nacht"] #fehler-msg {
+  color: #e07080;
+}
+/* Timer Natur Nacht */
+[data-design="natur-nacht"] #timer-zeile span {
+  color: #7c9fd4;
+}
+
+
+/* =============================================
+   HAUS-STARTSEITE — Nur visuell, Screenreader
+   sieht identische Struktur wie Standard
+   ============================================= */
+
+/* Wrapper für die gesamte Startseite */
+.haus-startseite-wrapper {
+  position: relative;
+}
+
+/* Das SVG-Haus liegt dekorativ im Hintergrund */
+.haus-deko {
+  width: 100%;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 0;
+  position: relative;
+}
+.haus-deko svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+/* Klickbare Elemente im SVG müssen pointer-events bekommen */
+.haus-deko .haus-fenster,
+.haus-deko #pool-klick,
+.haus-deko #pool-btn-text,
+.haus-deko #pool-btn-subtext {
+  pointer-events: all;
+  cursor: pointer;
+}
+/* Menüfeld über dem SVG */
+#haus-menue-feld {
+  pointer-events: all;
+}
+#haus-menue-feld button {
+  pointer-events: all;
+}
+
+/* Die normalen Abschnitte liegen ÜBER dem SVG */
+/* Für thematische Designs: normale Abschnitte bleiben sichtbar */
+[data-design="fuchsbau"] .start-abschnitte-normal,
+[data-design="natur-tag"] .start-abschnitte-normal,
+[data-design="natur-nacht"] .start-abschnitte-normal {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* Visuell versteckt aber für Screenreader vorhanden */
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  left: -9999px !important;
+}
+
+/* Standard: Haus-Deko verstecken */
+[data-design="standard"] .haus-deko {
+  display: none;
+}
+
+/* Thematische Designs: Abschnitte bekommen Glasmorphism-Karten */
+[data-design="fuchsbau"] .start-section,
+[data-design="natur-tag"] .start-section,
+[data-design="natur-nacht"] .start-section {
+  background: rgba(255,255,255,0.82);
+  border-color: rgba(255,255,255,0.4);
+  backdrop-filter: blur(6px);
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+[data-design="fuchsbau"] .start-section {
+  background: rgba(253,245,230,0.88);
+  border-color: rgba(196,168,130,0.5);
+}
+[data-design="natur-tag"] .start-section {
+  background: rgba(240,250,240,0.88);
+  border-color: rgba(139,196,139,0.5);
+}
+[data-design="natur-nacht"] .start-section {
+  background: rgba(14,20,48,0.85);
+  border-color: rgba(58,64,112,0.6);
+}
+[data-design="natur-nacht"] .start-section-header h2,
+[data-design="natur-nacht"] .start-section-titel {
+  color: #c8d8f8;
+}
+[data-design="natur-nacht"] .willkommen-box {
+  background: rgba(14,20,48,0.85);
+  border-left-color: #7c9fd4;
+  color: #a8b8d8;
+}
+
+/* Spielen-Button bekommt auf Haus-Seite mehr Gewicht */
+[data-design="fuchsbau"] #btn-spiel-starten,
+[data-design="natur-tag"] #btn-spiel-starten,
+[data-design="natur-nacht"] #btn-spiel-starten {
+  font-size: 1.2rem;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+[data-design="fuchsbau"] #btn-spiel-starten {
+  background: #8B5E3C;
+  border: 3px solid #F5C842;
+}
+[data-design="natur-tag"] #btn-spiel-starten {
+  background: #3a8a3a;
+  border: 3px solid #FFD700;
+}
+[data-design="natur-nacht"] #btn-spiel-starten {
+  background: #2a3a7a;
+  border: 3px solid #7c9fd4;
+  box-shadow: 0 4px 20px rgba(124,159,212,0.3);
+}
+
+/* Fuchs-Mini auf Startseite in thematischen Designs größer */
+[data-design="fuchsbau"] #fuchs-mini-container svg,
+[data-design="natur-tag"] #fuchs-mini-container svg,
+[data-design="natur-nacht"] #fuchs-mini-container svg {
+  width: 64px;
+  height: 64px;
+}
+
+/* start-screen padding anpassen wenn Haus da ist */
+[data-design="fuchsbau"] #start-screen,
+[data-design="natur-tag"] #start-screen,
+[data-design="natur-nacht"] #start-screen {
+  padding-top: 16px;
+  gap: 8px;
+}
+
+/* Natur-Nacht Menüfeld */
+[data-design="natur-nacht"] #haus-menue-feld {
+  background: rgba(8,12,32,0.97);
+  border-color: #2a3050;
+}
+[data-design="natur-nacht"] #haus-menue-feld h3 {
+  color: #c8d8f8;
+}
+
+
+/* Anmelde-Block in thematischen Designs */
+[data-design="natur-nacht"] #anmelden-block p {
+  color: #a8b8d8;
+}
+[data-design="natur-nacht"] #anmelden-block .btn-secondary {
+  background: rgba(30,40,80,0.8);
+  color: #c8d8f8;
+  border-color: #3a4070;
+}
+
+</style>

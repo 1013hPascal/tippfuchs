@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tippfuchs - Das taegliche Woerteraetsel</title>
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/designs.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/game.css">
+<link rel="stylesheet" href="css/screens.css">
+</head>
+<body>
+
+<div id="live-region" aria-live="polite" aria-atomic="true"></div>
+
+<!-- HEADER ANFANG -->
+<!-- DESIGN-HINTERGRUND ANFANG -->
+<div id="design-hintergrund" aria-hidden="true" style="position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;display:none;">
+  <svg id="design-svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  </svg>
+</div>
+<!-- DESIGN-HINTERGRUND ENDE -->
+
+<!-- FUCHS-OVERLAY (für thematische Designs, positioniert im Bild) -->
+<div id="fuchs-overlay" aria-hidden="true"></div>
+
+<!-- UHR-OVERLAY (Uhr synchron zum Timer) -->
+<div id="uhr-overlay" aria-hidden="true"></div>
+<header>
+  <div class="logo" aria-hidden="true">🦊 Tipp<span>fuchs</span></div>
+  <div id="fuchs-container" aria-hidden="true" style="width:60px;height:60px;flex-shrink:0;display:none;">
+    <svg id="tippfuchs-svg" width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      #fuchs-gruppe { transform-origin: 30px 35px; transition: transform 0.3s ease; }
+      #fuchs-kopf { transform-origin: 30px 20px; transition: transform 0.3s ease; }
+      #fuchs-schwanz { transform-origin: 10px 45px; }
+      .warten { animation: warten 2s ease-in-out infinite; }
+      .nicken { animation: nicken-anim 0.5s ease forwards; }
+      .schuetteln { animation: schuetteln-anim 0.5s ease forwards; }
+      .jubeln { animation: jubeln-anim 0.6s ease forwards; }
+      .zittern { animation: zittern-anim 0.8s ease infinite; }
+      .traurig-anim { animation: traurig-fall 0.6s ease forwards; }
+      .schwanz-wedeln { animation: schwanz 2s ease-in-out infinite; }
+      @keyframes warten {
+        0%,100%{transform:translateY(0) rotate(0deg)}
+        50%{transform:translateY(-2px) rotate(1deg)}
+      }
+      @keyframes schwanz {
+        0%,100%{transform:rotate(0deg)}
+        50%{transform:rotate(15deg)}
+      }
+      @keyframes nicken-anim {
+        0%{transform:rotate(0deg)}
+        30%{transform:rotate(12deg)}
+        60%{transform:rotate(-6deg)}
+        100%{transform:rotate(0deg)}
+      }
+      @keyframes schuetteln-anim {
+        0%{transform:translateX(0)}
+        20%{transform:translateX(-5px)}
+        40%{transform:translateX(5px)}
+        60%{transform:translateX(-4px)}
+        80%{transform:translateX(4px)}
+        100%{transform:translateX(0)}
+      }
+      @keyframes jubeln-anim {
+        0%{transform:translateY(0) rotate(0deg)}
+        20%{transform:translateY(-8px) rotate(-8deg)}
+        40%{transform:translateY(-12px) rotate(8deg)}
+        60%{transform:translateY(-6px) rotate(-4deg)}
+        80%{transform:translateY(-3px) rotate(2deg)}
+        100%{transform:translateY(0) rotate(0deg)}
+      }
+      @keyframes zittern-anim {
+        0%,100%{transform:rotate(0deg)}
+        25%{transform:rotate(-3deg) translateX(-1px)}
+        75%{transform:rotate(3deg) translateX(1px)}
+      }
+      @keyframes traurig-fall {
+        0%{transform:rotate(0deg) translateY(0)}
+        40%{transform:rotate(8deg) translateY(2px)}
+        100%{transform:rotate(5deg) translateY(3px)}
+      }
+    </style>
+    <g id="fuchs-schwanz" class="schwanz-wedeln">
+      <path d="M8,48 Q2,38 6,30 Q10,22 16,28 Q20,32 18,42 Q16,50 12,52 Z" fill="#E8621A"/>
+      <path d="M10,50 Q8,44 10,38 Q13,32 15,36 Q16,42 14,50 Z" fill="white"/>
+    </g>
+    <g id="fuchs-gruppe" class="warten">
+      <ellipse cx="30" cy="42" rx="16" ry="14" fill="#E8621A"/>
+      <ellipse cx="30" cy="44" rx="9" ry="9" fill="#F5E6D0"/>
+      <g transform="translate(16,38) rotate(-20)">
+        <rect x="-2" y="-18" width="5" height="20" rx="1" fill="#F5C842"/>
+        <polygon points="-2,2 3,2 0.5,8" fill="#F5E6D0"/>
+        <polygon points="-0.5,4 1.5,4 0.5,8" fill="#2A1A0A"/>
+        <rect x="-2" y="-22" width="5" height="5" rx="1" fill="#E06060"/>
+        <rect x="-2" y="-19" width="5" height="2" fill="#C8A830"/>
+      </g>
+      <ellipse cx="44" cy="40" rx="5" ry="4" fill="#E8621A" transform="rotate(20,44,40)"/>
+      <g id="fuchs-kopf">
+        <polygon points="20,16 23,28 28,16" fill="#E8621A"/>
+        <polygon points="21,17 23,26 27,17" fill="#F5E6D0"/>
+        <polygon points="40,16 37,28 32,16" fill="#E8621A"/>
+        <polygon points="39,17 37,26 33,17" fill="#F5E6D0"/>
+        <ellipse cx="30" cy="24" rx="13" ry="12" fill="#E8621A"/>
+        <ellipse cx="30" cy="27" rx="9" ry="8" fill="#F5E6D0"/>
+        <ellipse cx="25" cy="22" rx="3.5" ry="3.5" fill="white"/>
+        <ellipse cx="35" cy="22" rx="3.5" ry="3.5" fill="white"/>
+        <circle id="pupille-links" cx="25" cy="22" r="2" fill="#2A1A0A"/>
+        <circle id="pupille-rechts" cx="35" cy="22" r="2" fill="#2A1A0A"/>
+        <circle cx="26" cy="21" r="0.8" fill="white"/>
+        <circle cx="36" cy="21" r="0.8" fill="white"/>
+        <ellipse cx="30" cy="28" rx="2.5" ry="2" fill="#2A1A0A"/>
+        <path id="mund" d="M26,32 Q30,34 34,32" fill="none" stroke="#2A1A0A" stroke-width="1.2" stroke-linecap="round"/>
+        <path id="braue-links" d="M22,18 Q25,16 28,18" fill="none" stroke="#2A1A0A" stroke-width="1" stroke-linecap="round"/>
+        <path id="braue-rechts" d="M32,18 Q35,16 38,18" fill="none" stroke="#2A1A0A" stroke-width="1" stroke-linecap="round"/>
+        <ellipse cx="20" cy="28" rx="4" ry="2.5" fill="#F08060" opacity="0.3"/>
+        <ellipse cx="40" cy="28" rx="4" ry="2.5" fill="#F08060" opacity="0.3"/>
+      </g>
+    </g>
+    <g id="konfetti" opacity="0">
+      <circle cx="15" cy="15" r="2" fill="#E8621A"/>
+      <circle cx="45" cy="10" r="2" fill="#F5C842"/>
+      <circle cx="50" cy="25" r="1.5" fill="#4a7c59"/>
+      <circle cx="10" cy="30" r="1.5" fill="#2c5f8a"/>
+      <rect x="38" y="8" width="3" height="3" fill="#E8621A" transform="rotate(30,40,10)"/>
+      <rect x="12" y="18" width="3" height="3" fill="#F5C842" transform="rotate(45,14,20)"/>
+    </g>
+    </svg>
+  </div>
+  <nav class="header-btns" aria-label="Optionen">
+  <button class="icon-btn" id="btn-theme" aria-label="Dark Mode umschalten" aria-pressed="false" style="display:none;">Dunkel</button>
+  </nav>
+</header>
+<!-- HEADER ENDE -->
+
+<main id="app">
+
+<!-- STARTSEITE ANFANG -->
+<section id="start-screen">
+<!-- HAUS-DEKO ANFANG (nur visuell, aria-hidden) -->
+<div class="haus-deko" aria-hidden="true" id="haus-deko" style="position:relative;pointer-events:none;">
+
+<!-- Das SVG-Bild -->
+<svg id="haus-svg" viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet" role="presentation" style="width:100%;display:block;pointer-events:none;">
+<defs>
+  <linearGradient id="hg2-himmel" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#87CEEB"/>
+    <stop offset="100%" stop-color="#c8e8f8"/>
+  </linearGradient>
+  <linearGradient id="hg2-wiese" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#6ab040"/>
+    <stop offset="100%" stop-color="#4a8020"/>
+  </linearGradient>
+  <linearGradient id="hg2-fassade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f5ead0"/>
+    <stop offset="100%" stop-color="#e8d5b0"/>
+  </linearGradient>
+  <radialGradient id="hg2-ballon" cx="50%" cy="40%" r="50%">
+    <stop offset="0%" stop-color="#ff9040"/>
+    <stop offset="100%" stop-color="#E8621A"/>
+  </radialGradient>
+  <radialGradient id="hg2-pool" cx="50%" cy="40%" r="60%">
+    <stop offset="0%" stop-color="#60d0f0"/>
+    <stop offset="100%" stop-color="#2090c0"/>
+  </radialGradient>
+  <filter id="pool-glow">
+    <feGaussianBlur stdDeviation="2" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+
+<!-- HIMMEL -->
+<rect width="640" height="420" fill="url(#hg2-himmel)"/>
+
+<!-- WIESE GROSS -->
+<rect y="278" width="640" height="142" fill="url(#hg2-wiese)"/>
+<ellipse cx="100" cy="278" rx="100" ry="22" fill="#5a9820"/>
+<ellipse cx="540" cy="278" rx="105" ry="20" fill="#5a9820"/>
+<ellipse cx="320" cy="282" rx="170" ry="16" fill="#62a030"/>
+
+<!-- PFLANZEN LINKS -->
+<rect x="3" y="238" width="8" height="46" fill="#3a7018" rx="2"/>
+<ellipse cx="7" cy="232" rx="15" ry="18" fill="#4a8828"/>
+<ellipse cx="-1" cy="246" rx="10" ry="13" fill="#3a7818"/>
+<ellipse cx="16" cy="242" rx="12" ry="15" fill="#4a8828"/>
+<rect x="24" y="252" width="6" height="32" fill="#3a7018" rx="2"/>
+<ellipse cx="27" cy="246" rx="11" ry="13" fill="#5a9828"/>
+<rect x="40" y="260" width="5" height="22" fill="#4a8018" rx="2"/>
+<ellipse cx="42" cy="255" rx="9" ry="11" fill="#4a9028"/>
+<!-- Blumen links -->
+<rect x="10" y="278" width="2" height="9" fill="#4a8018"/>
+<circle cx="11" cy="276" r="4.5" fill="#FF6B6B"/>
+<circle cx="11" cy="276" r="2.2" fill="#FFD700"/>
+<rect x="32" y="280" width="2" height="7" fill="#4a8018"/>
+<circle cx="33" cy="278" r="4" fill="#FF9FD0"/>
+<circle cx="33" cy="278" r="2" fill="#FFD700"/>
+<rect x="50" y="279" width="2" height="8" fill="#4a8018"/>
+<circle cx="51" cy="277" r="3.5" fill="#9B59B6"/>
+<circle cx="51" cy="277" r="1.8" fill="#FFD700"/>
+
+<!-- PFLANZEN RECHTS -->
+<rect x="629" y="242" width="8" height="40" fill="#3a7018" rx="2"/>
+<ellipse cx="633" cy="236" rx="15" ry="18" fill="#4a8828"/>
+<ellipse cx="625" cy="250" rx="10" ry="13" fill="#3a7818"/>
+<ellipse cx="642" cy="246" rx="12" ry="15" fill="#4a8828"/>
+<rect x="609" y="255" width="6" height="27" fill="#3a7018" rx="2"/>
+<ellipse cx="612" cy="249" rx="11" ry="13" fill="#5a9828"/>
+<rect x="594" y="263" width="5" height="18" fill="#4a8018" rx="2"/>
+<ellipse cx="596" cy="258" rx="9" ry="11" fill="#4a9028"/>
+<!-- Blumen rechts -->
+<rect x="590" y="278" width="2" height="8" fill="#4a8018"/>
+<circle cx="591" cy="276" r="4.5" fill="#FF6B6B"/>
+<circle cx="591" cy="276" r="2.2" fill="#FFD700"/>
+<rect x="610" y="280" width="2" height="6" fill="#4a8018"/>
+<circle cx="611" cy="278" r="4" fill="#FF9FD0"/>
+<circle cx="611" cy="278" r="2" fill="#FFD700"/>
+<rect x="627" y="279" width="2" height="7" fill="#4a8018"/>
+<circle cx="628" cy="277" r="3.5" fill="#9B59B6"/>
+<circle cx="628" cy="277" r="1.8" fill="#FFD700"/>
+
+<!-- SONNE oben links -->
+<circle cx="58" cy="52" r="24" fill="#FFD700"/>
+<circle cx="58" cy="52" r="18" fill="#FFE840"/>
+<line x1="58" y1="22" x2="58" y2="14" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>
+<line x1="58" y1="82" x2="58" y2="90" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>
+<line x1="28" y1="52" x2="20" y2="52" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>
+<line x1="88" y1="52" x2="96" y2="52" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>
+<line x1="37" y1="31" x2="31" y2="25" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="79" y1="73" x2="85" y2="79" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="79" y1="31" x2="85" y2="25" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="37" y1="73" x2="31" y2="79" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
+
+<!-- FUCHSWOLKE -->
+<ellipse cx="260" cy="58" rx="72" ry="25" fill="white" opacity="0.95"/>
+<ellipse cx="216" cy="65" rx="28" ry="20" fill="white" opacity="0.95"/>
+<ellipse cx="304" cy="63" rx="26" ry="18" fill="white" opacity="0.95"/>
+<ellipse cx="240" cy="46" rx="26" ry="18" fill="white" opacity="0.95"/>
+<ellipse cx="280" cy="44" rx="24" ry="17" fill="white" opacity="0.95"/>
+<ellipse cx="238" cy="31" rx="11" ry="14" fill="white" opacity="0.95" transform="rotate(-10,238,31)"/>
+<ellipse cx="281" cy="29" rx="10" ry="13" fill="white" opacity="0.95" transform="rotate(10,281,29)"/>
+<ellipse cx="330" cy="62" rx="18" ry="10" fill="white" opacity="0.9"/>
+<ellipse cx="351" cy="58" rx="13" ry="8" fill="white" opacity="0.85"/>
+<ellipse cx="366" cy="55" rx="9" ry="6" fill="white" opacity="0.8"/>
+<ellipse cx="375" cy="53" rx="5" ry="4" fill="#fff8f0" opacity="0.9"/>
+<text x="260" y="65" text-anchor="middle" font-family="Georgia,serif" font-size="19" font-weight="700" fill="#E8621A">Tippfuchs</text>
+
+<!-- HEISSLUFTBALLON rechts -->
+<!-- Seile -->
+<line x1="520" y1="102" x2="510" y2="132" stroke="#8B5E3C" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="538" y1="104" x2="536" y2="132" stroke="#8B5E3C" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="556" y1="102" x2="562" y2="132" stroke="#8B5E3C" stroke-width="1.5" stroke-linecap="round"/>
+<!-- Korb -->
+<rect x="506" y="132" width="60" height="30" fill="#8B5E3C" rx="4"/>
+<rect x="508" y="134" width="56" height="26" fill="#a07040" rx="3"/>
+<line x1="526" y1="134" x2="526" y2="162" stroke="#8B5E3C" stroke-width="1" opacity="0.5"/>
+<line x1="546" y1="134" x2="546" y2="162" stroke="#8B5E3C" stroke-width="1" opacity="0.5"/>
+<line x1="506" y1="146" x2="566" y2="146" stroke="#8B5E3C" stroke-width="1" opacity="0.5"/>
+<line x1="506" y1="156" x2="566" y2="156" stroke="#8B5E3C" stroke-width="1" opacity="0.5"/>
+<!-- Ballon-Hülle -->
+<ellipse cx="536" cy="56" rx="43" ry="52" fill="url(#hg2-ballon)"/>
+<path d="M495,52 Q536,16 577,52" fill="none" stroke="#c04010" stroke-width="2" opacity="0.35"/>
+<path d="M495,68 Q536,34 577,68" fill="none" stroke="#c04010" stroke-width="2" opacity="0.3"/>
+<path d="M497,84 Q536,54 575,84" fill="none" stroke="#c04010" stroke-width="2" opacity="0.25"/>
+<ellipse cx="520" cy="38" rx="13" ry="16" fill="white" opacity="0.12"/>
+<!-- #barrierefrei Text auf dem Ballon -->
+<text x="536" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="700" fill="white" opacity="0.9">#barrierefrei</text>
+<!-- Fuchs im Korb — Ohren zeigen nach OBEN (korrekt) -->
+<!-- Ohren spitz nach oben -->
+<polygon points="526,116 529,128 533,116" fill="#E8621A"/>
+<polygon points="527,117 529,126 531,117" fill="#F5E6D0"/>
+<polygon points="539,116 543,128 547,116" fill="#E8621A"/>
+<polygon points="540,117 543,126 546,117" fill="#F5E6D0"/>
+<!-- Kopf -->
+<ellipse cx="536" cy="128" rx="14" ry="13" fill="#E8621A"/>
+<ellipse cx="536" cy="130" rx="9" ry="8" fill="#F5E6D0"/>
+<!-- Augen -->
+<circle cx="531" cy="126" r="2.5" fill="white"/>
+<circle cx="541" cy="126" r="2.5" fill="white"/>
+<circle cx="531.5" cy="126" r="1.5" fill="#2A1A0A"/>
+<circle cx="541.5" cy="126" r="1.5" fill="#2A1A0A"/>
+<circle cx="532" cy="125.5" r="0.6" fill="white"/>
+<circle cx="542" cy="125.5" r="0.6" fill="white"/>
+<!-- Nase + Mund -->
+<ellipse cx="536" cy="132" rx="2" ry="1.5" fill="#2A1A0A"/>
+<path d="M532,135 Q536,137 540,135" fill="none" stroke="#2A1A0A" stroke-width="1" stroke-linecap="round"/>
+<!-- Körper-Andeutung im Korb -->
+<rect x="513" y="140" width="46" height="14" fill="#E8621A" rx="3"/>
+<ellipse cx="510" cy="140" rx="7" ry="5" fill="#E8621A"/>
+<ellipse cx="562" cy="140" rx="7" ry="5" fill="#E8621A"/>
+<!-- Wimpel/Fähnchen am Ballon -->
+<line x1="562" y1="138" x2="455" y2="70" stroke="#8B5E3C" stroke-width="2" stroke-linecap="round"/>
+<polygon points="455,70 448,64 461,65" fill="#2A1A0A"/>
+<rect x="451" y="64" width="9" height="7" fill="#F5C842" transform="rotate(-35,455,67)"/>
+
+<!-- HAUS FASSADE -->
+<rect x="82" y="172" width="456" height="108" fill="url(#hg2-fassade)" stroke="#c4a882" stroke-width="1.5"/>
+<!-- DACH -->
+<polygon points="68,172 310,88 552,172" fill="#c84020"/>
+<polygon points="68,172 310,88 552,172" fill="none" stroke="#a03010" stroke-width="2"/>
+<path d="M100,165 Q310,88 520,165" fill="none" stroke="#a03010" stroke-width="1" opacity="0.25"/>
+<path d="M125,158 Q310,88 495,158" fill="none" stroke="#a03010" stroke-width="1" opacity="0.2"/>
+<!-- Schornstein -->
+<rect x="368" y="98" width="26" height="46" fill="#b03820"/>
+<rect x="364" y="95" width="34" height="7" fill="#c04020" rx="2"/>
+<ellipse cx="381" cy="93" rx="5" ry="3" fill="#8a3010" opacity="0.5"/>
+<!-- Rauch -->
+<ellipse cx="381" cy="88" rx="4" ry="5" fill="#d0d0d0" opacity="0.4"/>
+<ellipse cx="383" cy="81" rx="3" ry="4" fill="#d0d0d0" opacity="0.3"/>
+
+<!-- HAUSNAME -->
+<text x="310" y="210" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#8B5E3C" opacity="0.6">Fuchsbau</text>
+
+<!-- ====== FENSTER mit Fuchs-Illustrationen + große Labels ====== -->
+<!-- Fenster sind gleichmäßig verteilt: x = 92, 174, 310(Tür), 386, 468 -->
+<!-- Label-Größe: 13px (wie Tippfuchs-Wolke ~19px, hier etwas kleiner damit's passt) -->
+
+<!-- FENSTER 1: Persönliche Erfolge — Fuchs mit angespanntem Bizeps -->
+<g class="haus-fenster" data-fenster="erfolge" style="cursor:pointer;pointer-events:all;">
+  <rect x="92" y="200" width="64" height="58" fill="#c8e8f8" stroke="#8B5E3C" stroke-width="2" rx="3"/>
+  <line x1="124" y1="200" x2="124" y2="258" stroke="#8B5E3C" stroke-width="1.5"/>
+  <line x1="92" y1="229" x2="156" y2="229" stroke="#8B5E3C" stroke-width="1.5"/>
+  <!-- Fuchs Kopf -->
+  <ellipse cx="124" cy="212" rx="8" ry="7.5" fill="#E8621A"/>
+  <ellipse cx="124" cy="213" rx="5" ry="5" fill="#F5E6D0"/>
+  <!-- Ohren -->
+  <polygon points="117,206 119,213 122,206" fill="#E8621A"/>
+  <polygon points="118,207 119,212 121,207" fill="#F5E6D0"/>
+  <polygon points="126,206 129,213 132,206" fill="#E8621A"/>
+  <polygon points="127,207 129,212 131,207" fill="#F5E6D0"/>
+  <!-- Augen -->
+  <circle cx="121" cy="210" r="1.3" fill="#2A1A0A"/>
+  <circle cx="127" cy="210" r="1.3" fill="#2A1A0A"/>
+  <!-- Körper -->
+  <ellipse cx="124" cy="222" rx="7" ry="6" fill="#E8621A"/>
+  <!-- Linker Arm — angewinkelt nach oben (Bizeps) -->
+  <line x1="117" y1="220" x2="109" y2="215" stroke="#E8621A" stroke-width="3" stroke-linecap="round"/>
+  <line x1="109" y1="215" x2="107" y2="221" stroke="#E8621A" stroke-width="3" stroke-linecap="round"/>
+  <!-- Rechter Arm — angewinkelt nach oben (Bizeps) -->
+  <line x1="131" y1="220" x2="139" y2="215" stroke="#E8621A" stroke-width="3" stroke-linecap="round"/>
+  <line x1="139" y1="215" x2="141" y2="221" stroke="#E8621A" stroke-width="3" stroke-linecap="round"/>
+  <!-- Muskeln-Andeutung -->
+  <ellipse cx="108" cy="218" rx="4" ry="3" fill="#E8621A" opacity="0.7"/>
+  <ellipse cx="140" cy="218" rx="4" ry="3" fill="#E8621A" opacity="0.7"/>
+  <!-- Fensterbank -->
+  <rect x="88" y="257" width="72" height="7" fill="#c4a882" rx="2"/>
+  <text x="124" y="276" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#6a3e20">Erfolge</text>
+</g>
+
+<!-- FENSTER 2: Statistiken — Fuchs hält Globus -->
+<g class="haus-fenster" data-fenster="statistik" style="cursor:pointer;pointer-events:all;">
+  <rect x="174" y="200" width="64" height="58" fill="#c8e8f8" stroke="#8B5E3C" stroke-width="2" rx="3"/>
+  <line x1="206" y1="200" x2="206" y2="258" stroke="#8B5E3C" stroke-width="1.5"/>
+  <line x1="174" y1="229" x2="238" y2="229" stroke="#8B5E3C" stroke-width="1.5"/>
+  <!-- Globus -->
+  <circle cx="206" cy="220" r="11" fill="#4a90d9" stroke="#2c5f8a" stroke-width="1.2"/>
+  <ellipse cx="206" cy="220" rx="4.5" ry="11" fill="none" stroke="#2c5f8a" stroke-width="0.8"/>
+  <line x1="195" y1="220" x2="217" y2="220" stroke="#2c5f8a" stroke-width="0.8"/>
+  <path d="M197,214 Q206,217 215,214" fill="none" stroke="#2c5f8a" stroke-width="0.8"/>
+  <path d="M197,226 Q206,223 215,226" fill="none" stroke="#2c5f8a" stroke-width="0.8"/>
+  <!-- Fuchs-Kopf klein dahinter/darunter -->
+  <ellipse cx="206" cy="236" rx="6" ry="5.5" fill="#E8621A"/>
+  <ellipse cx="206" cy="237" rx="4" ry="3.5" fill="#F5E6D0"/>
+  <!-- Ohren -->
+  <polygon points="201,232 202,236 204,232" fill="#E8621A"/>
+  <polygon points="208,232 210,236 212,232" fill="#E8621A"/>
+  <!-- Ärmchen die Globus halten -->
+  <line x1="200" y1="237" x2="196" y2="229" stroke="#E8621A" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="212" y1="237" x2="216" y2="229" stroke="#E8621A" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Fensterbank -->
+  <rect x="170" y="257" width="72" height="7" fill="#c4a882" rx="2"/>
+  <text x="206" y="276" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#6a3e20">Statistiken</text>
+</g>
+
+<!-- FENSTER 3: Meine Gruppen — zwei umarmende Füchse -->
+<g class="haus-fenster" data-fenster="gruppen" style="cursor:pointer;pointer-events:all;">
+  <rect x="256" y="200" width="64" height="58" fill="#c8e8f8" stroke="#8B5E3C" stroke-width="2" rx="3"/>
+  <line x1="288" y1="200" x2="288" y2="258" stroke="#8B5E3C" stroke-width="1.5"/>
+  <line x1="256" y1="229" x2="320" y2="229" stroke="#8B5E3C" stroke-width="1.5"/>
+  <!-- Fuchs links -->
+  <ellipse cx="279" cy="216" rx="7" ry="6.5" fill="#E8621A"/>
+  <ellipse cx="279" cy="217" rx="4.5" ry="4" fill="#F5E6D0"/>
+  <polygon points="273,210 275,217 278,210" fill="#E8621A"/>
+  <polygon points="274,211 275,216 277,211" fill="#F5E6D0"/>
+  <polygon points="280,210 283,217 286,210" fill="#E8621A"/>
+  <polygon points="281,211 283,216 285,211" fill="#F5E6D0"/>
+  <circle cx="276.5" cy="214.5" r="1.2" fill="#2A1A0A"/>
+  <circle cx="281.5" cy="214.5" r="1.2" fill="#2A1A0A"/>
+  <ellipse cx="279" cy="226" rx="6" ry="5.5" fill="#E8621A"/>
+  <!-- Fuchs rechts -->
+  <ellipse cx="297" cy="216" rx="7" ry="6.5" fill="#c84020"/>
+  <ellipse cx="297" cy="217" rx="4.5" ry="4" fill="#F5E6D0"/>
+  <polygon points="291,210 293,217 296,210" fill="#c84020"/>
+  <polygon points="292,211 293,216 295,211" fill="#F5E6D0"/>
+  <polygon points="298,210 301,217 304,210" fill="#c84020"/>
+  <polygon points="299,211 301,216 303,211" fill="#F5E6D0"/>
+  <circle cx="294.5" cy="214.5" r="1.2" fill="#2A1A0A"/>
+  <circle cx="299.5" cy="214.5" r="1.2" fill="#2A1A0A"/>
+  <ellipse cx="297" cy="226" rx="6" ry="5.5" fill="#c84020"/>
+  <!-- Umarmungs-Arme -->
+  <path d="M285,224 Q288,219 291,224" fill="none" stroke="#E8621A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M291,224 Q294,219 297,224" fill="none" stroke="#c84020" stroke-width="3" stroke-linecap="round"/>
+  <!-- Herz zwischen beiden -->
+  <path d="M287,213 Q288,211 289,212 Q290,210 291,213 Q290,215 288.5,216 Q287,215 287,213 Z" fill="#e84040" opacity="0.85"/>
+  <!-- Fensterbank -->
+  <rect x="252" y="257" width="72" height="7" fill="#c4a882" rx="2"/>
+  <text x="288" y="276" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#6a3e20">Gruppen</text>
+</g>
+
+<!-- TÜR: Anmelden — Fuchs drückt auf Klingel (verschoben nach rechts) -->
+<g class="haus-fenster" data-fenster="anmelden" style="cursor:pointer;pointer-events:all;">
+  <rect x="332" y="200" width="56" height="78" fill="#8B5E3C" stroke="#6a3e20" stroke-width="2" rx="3"/>
+  <rect x="334" y="202" width="52" height="74" fill="#a07040" rx="2"/>
+  <!-- Oberlicht -->
+  <ellipse cx="360" cy="217" rx="20" ry="11" fill="#87CEEB" stroke="#6a3e20" stroke-width="1"/>
+  <!-- Türknauf -->
+  <circle cx="376" cy="248" r="3.5" fill="#F5C842"/>
+  <circle cx="376" cy="248" r="2.2" fill="#E8A820"/>
+  <!-- Fuchs vor Tür — Kopf -->
+  <ellipse cx="345" cy="238" rx="8.5" ry="8" fill="#E8621A"/>
+  <ellipse cx="345" cy="239" rx="5.5" ry="5" fill="#F5E6D0"/>
+  <!-- Ohren -->
+  <polygon points="338,231 341,239 344,231" fill="#E8621A"/>
+  <polygon points="339,232 341,238 343,232" fill="#F5E6D0"/>
+  <polygon points="346,231 349,239 352,231" fill="#E8621A"/>
+  <polygon points="347,232 349,238 351,232" fill="#F5E6D0"/>
+  <!-- Augen -->
+  <circle cx="342" cy="236" r="1.3" fill="#2A1A0A"/>
+  <circle cx="348" cy="236" r="1.3" fill="#2A1A0A"/>
+  <!-- Körper -->
+  <ellipse cx="345" cy="251" rx="7" ry="6" fill="#E8621A"/>
+  <!-- Arm streckt sich zur Klingel -->
+  <line x1="352" y1="249" x2="368" y2="248" stroke="#E8621A" stroke-width="3" stroke-linecap="round"/>
+  <!-- Klingelknopf -->
+  <circle cx="372" cy="258" r="4.5" fill="#F5C842" stroke="#c08010" stroke-width="1"/>
+  <circle cx="372" cy="258" r="2.8" fill="#E8A820"/>
+  <text x="378" y="254" font-family="Georgia,serif" font-size="7" fill="#F5C842" opacity="0.8">♪</text>
+  <!-- Türschild -->
+  <rect x="335" y="270" width="50" height="9" fill="#c4a882" rx="3"/>
+  <text x="360" y="277" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#3a1a00">Anmelden</text>
+</g>
+
+<!-- FENSTER 4: Design — Fuchs malt Leinwand -->
+<g class="haus-fenster" data-fenster="design" style="cursor:pointer;pointer-events:all;">
+  <rect x="400" y="200" width="64" height="58" fill="#c8e8f8" stroke="#8B5E3C" stroke-width="2" rx="3"/>
+  <line x1="432" y1="200" x2="432" y2="258" stroke="#8B5E3C" stroke-width="1.5"/>
+  <line x1="400" y1="229" x2="464" y2="229" stroke="#8B5E3C" stroke-width="1.5"/>
+  <!-- Leinwand/Staffelei -->
+  <rect x="408" y="204" width="18" height="14" fill="white" stroke="#8B5E3C" stroke-width="0.8" rx="1"/>
+  <!-- Farbkleckse auf Leinwand -->
+  <circle cx="412" cy="208" r="2.5" fill="#E8621A"/>
+  <circle cx="418" cy="207" r="2" fill="#4a90d9"/>
+  <circle cx="422" cy="210" r="2" fill="#5a9820"/>
+  <!-- Staffelei-Beine -->
+  <line x1="409" y1="218" x2="405" y2="226" stroke="#8B5E3C" stroke-width="1" stroke-linecap="round"/>
+  <line x1="425" y1="218" x2="429" y2="226" stroke="#8B5E3C" stroke-width="1" stroke-linecap="round"/>
+  <!-- Fuchs-Kopf rechts von Staffelei -->
+  <ellipse cx="447" cy="213" rx="8" ry="7.5" fill="#E8621A"/>
+  <ellipse cx="447" cy="214" rx="5" ry="5" fill="#F5E6D0"/>
+  <!-- Ohren -->
+  <polygon points="440,207 442,214 445,207" fill="#E8621A"/>
+  <polygon points="441,208 442,213 444,208" fill="#F5E6D0"/>
+  <polygon points="449,207 452,214 455,207" fill="#E8621A"/>
+  <polygon points="450,208 452,213 454,208" fill="#F5E6D0"/>
+  <!-- Auge -->
+  <circle cx="444" cy="211" r="1.3" fill="#2A1A0A"/>
+  <circle cx="450" cy="211" r="1.3" fill="#2A1A0A"/>
+  <!-- Pinsel in Pfote -->
+  <line x1="440" y1="219" x2="428" y2="212" stroke="#8B5E3C" stroke-width="1.8" stroke-linecap="round"/>
+  <ellipse cx="427" cy="211" rx="2.5" ry="1.5" fill="#E8621A" transform="rotate(-30,427,211)"/>
+  <!-- Fensterbank -->
+  <rect x="396" y="257" width="72" height="7" fill="#c4a882" rx="2"/>
+  <text x="432" y="276" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#6a3e20">Design</text>
+</g>
+
+<!-- FENSTER 5: Anleitung — Fuchs liest Heft -->
+<g class="haus-fenster" data-fenster="anleitung" style="cursor:pointer;pointer-events:all;">
+  <rect x="476" y="200" width="64" height="58" fill="#c8e8f8" stroke="#8B5E3C" stroke-width="2" rx="3"/>
+  <line x1="508" y1="200" x2="508" y2="258" stroke="#8B5E3C" stroke-width="1.5"/>
+  <line x1="476" y1="229" x2="540" y2="229" stroke="#8B5E3C" stroke-width="1.5"/>
+  <!-- Heft/Buch aufgeschlagen -->
+  <path d="M484,207 Q508,205 530,207 L530,224 Q508,222 484,224 Z" fill="#e8d5b0" stroke="#8B5E3C" stroke-width="0.8"/>
+  <line x1="508" y1="205" x2="508" y2="224" stroke="#8B5E3C" stroke-width="1"/>
+  <!-- Zeilen im Heft -->
+  <line x1="487" y1="211" x2="506" y2="210" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <line x1="487" y1="215" x2="506" y2="214" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <line x1="487" y1="219" x2="506" y2="218" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <line x1="510" y1="211" x2="528" y2="212" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <line x1="510" y1="215" x2="528" y2="216" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <!-- Fuchs-Kopf hinter Heft -->
+  <ellipse cx="508" cy="235" rx="8" ry="7.5" fill="#E8621A"/>
+  <ellipse cx="508" cy="236" rx="5" ry="5" fill="#F5E6D0"/>
+  <!-- Ohren -->
+  <polygon points="501,229 503,236 506,229" fill="#E8621A"/>
+  <polygon points="502,230 503,235 505,230" fill="#F5E6D0"/>
+  <polygon points="510,229 513,236 516,229" fill="#E8621A"/>
+  <polygon points="511,230 513,235 515,230" fill="#F5E6D0"/>
+  <!-- Augen über Heft-Rand -->
+  <circle cx="505" cy="233" r="1.3" fill="#2A1A0A"/>
+  <circle cx="511" cy="233" r="1.3" fill="#2A1A0A"/>
+  <!-- Arme halten Heft -->
+  <line x1="500" y1="237" x2="487" y2="227" stroke="#E8621A" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="516" y1="237" x2="529" y2="227" stroke="#E8621A" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Fensterbank -->
+  <rect x="472" y="257" width="72" height="7" fill="#c4a882" rx="2"/>
+  <text x="508" y="276" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#6a3e20">Anleitung</text>
+</g>
+
+<!-- SOCKEL -->
+<rect x="72" y="278" width="496" height="9" fill="#c4a882" rx="3"/>
+<rect x="62" y="285" width="516" height="7" fill="#b09870" rx="2"/>
+
+<!-- === ZAUN links unten === -->
+<rect x="82" y="282" width="6" height="75" fill="#8B6040" rx="2"/>
+<rect x="114" y="280" width="5" height="77" fill="#8B6040" rx="2"/>
+<rect x="146" y="282" width="5" height="75" fill="#8B6040" rx="2"/>
+<rect x="178" y="280" width="5" height="77" fill="#8B6040" rx="2"/>
+<rect x="210" y="282" width="5" height="75" fill="#8B6040" rx="2"/>
+<rect x="242" y="280" width="5" height="77" fill="#8B6040" rx="2"/>
+<rect x="274" y="282" width="5" height="75" fill="#8B6040" rx="2"/>
+<!-- Querbalken -->
+<rect x="82" y="292" width="197" height="9" fill="#a07848" rx="2"/>
+<rect x="82" y="310" width="197" height="9" fill="#a07848" rx="2"/>
+<rect x="82" y="328" width="197" height="9" fill="#a07848" rx="2"/>
+<!-- Schrift auf dem Zaun — 3 Zeilen, größer -->
+<text x="180" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" font-weight="700" fill="#3a1a00">Täglich ein neues Wort</text>
+<text x="180" y="320" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#3a1a00">5 Buchstaben · 6 Versuche</text>
+<text x="180" y="337" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="#3a1a00">für alle spielbar!</text>
+
+<!-- === POOL mit Fuchs auf Liegestuhl rechts unten === -->
+<!-- Liegestuhl NEBEN dem Pool, Pool rechts -->
+<!-- Sonnenschirm -->
+<line x1="430" y1="290" x2="430" y2="360" stroke="#8B5E3C" stroke-width="2.5" stroke-linecap="round"/>
+<ellipse cx="430" cy="292" rx="30" ry="11" fill="#E8621A" stroke="#c04010" stroke-width="1"/>
+<ellipse cx="430" cy="292" rx="15" ry="11" fill="#F5C842" stroke="#c08010" stroke-width="0.8"/>
+<line x1="430" y1="292" x2="400" y2="292" stroke="#8B5E3C" stroke-width="1" opacity="0.5"/>
+<line x1="430" y1="292" x2="460" y2="292" stroke="#8B5E3C" stroke-width="1" opacity="0.5"/>
+
+<!-- Liegestuhl (neben Pool) -->
+<rect x="400" y="318" width="64" height="18" fill="#a07040" rx="4" transform="rotate(-6,432,327)"/>
+<rect x="460" y="322" width="16" height="24" fill="#a07040" rx="3" transform="rotate(-6,468,334)"/>
+<rect x="400" y="336" width="7" height="12" fill="#8B5E3C" rx="1"/>
+<rect x="455" y="332" width="7" height="12" fill="#8B5E3C" rx="1"/>
+<!-- Liegestuhllehne -->
+<rect x="399" y="308" width="52" height="15" fill="#c4a882" rx="3" transform="rotate(-28,425,315)"/>
+
+<!-- Fuchs auf Liegestuhl -->
+<ellipse cx="432" cy="320" rx="23" ry="11" fill="#E8621A" transform="rotate(-6,432,320)"/>
+<ellipse cx="427" cy="322" rx="14" ry="8" fill="#F5E6D0" transform="rotate(-6,427,322)"/>
+<!-- Schwanz -->
+<path d="M454,314 Q466,306 468,298 Q470,290 463,293 Q457,296 456,306 Z" fill="#E8621A"/>
+<path d="M456,312 Q465,305 467,299 Q465,295 461,298 Q458,302 457,310 Z" fill="white"/>
+<!-- Kopf -->
+<ellipse cx="412" cy="308" rx="12" ry="11" fill="#E8621A"/>
+<ellipse cx="412" cy="310" rx="8" ry="7.5" fill="#F5E6D0"/>
+<!-- Ohren -->
+<polygon points="405,299 408,309 411,299" fill="#E8621A"/>
+<polygon points="406,300 408,308 410,300" fill="#F5E6D0"/>
+<polygon points="413,298 416,309 419,298" fill="#E8621A"/>
+<polygon points="414,299 416,308 418,299" fill="#F5E6D0"/>
+<!-- Augen -->
+<circle cx="408.5" cy="306" r="2" fill="#2A1A0A"/>
+<circle cx="415.5" cy="306" r="2" fill="#2A1A0A"/>
+<circle cx="409" cy="305.5" r="0.7" fill="white"/>
+<circle cx="416" cy="305.5" r="0.7" fill="white"/>
+<!-- Sonnenbrille -->
+<rect x="406" y="304" width="7" height="5" fill="#2A1A0A" rx="1.5" opacity="0.85"/>
+<rect x="414" y="304" width="7" height="5" fill="#2A1A0A" rx="1.5" opacity="0.85"/>
+<line x1="413" y1="306" x2="414" y2="306" stroke="#2A1A0A" stroke-width="0.8"/>
+<!-- Nase + Lächeln -->
+<ellipse cx="412" cy="313" rx="1.8" ry="1.3" fill="#2A1A0A"/>
+<path d="M409,316 Q412,318 415,316" fill="none" stroke="#2A1A0A" stroke-width="0.9" stroke-linecap="round"/>
+<!-- Drink in Pfote -->
+<line x1="424" y1="315" x2="432" y2="305" stroke="#E8621A" stroke-width="2.5" stroke-linecap="round"/>
+<rect x="430" y="299" width="9" height="11" fill="#60d0f0" rx="2" opacity="0.9"/>
+<rect x="429" y="297" width="11" height="3.5" fill="#e0e0e0" rx="1"/>
+<line x1="434" y1="297" x2="434" y2="292" stroke="#e0e0e0" stroke-width="1.5" stroke-linecap="round"/>
+
+<!-- Pool-Rand (Stein) — rechts vom Liegestuhl -->
+<ellipse cx="562" cy="348" rx="72" ry="28" fill="#e0e0e0" stroke="#c0c0b0" stroke-width="2"/>
+<!-- Poolwasser -->
+<ellipse cx="562" cy="348" rx="62" ry="22" fill="url(#hg2-pool)" opacity="0.92" filter="url(#pool-glow)"/>
+<!-- Wasserwellen -->
+<path d="M505,344 Q522,339 540,344 Q558,349 576,344 Q594,339 612,344 Q624,348 624,348" fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
+<path d="M502,351 Q519,346 537,351 Q555,356 573,351 Q591,346 610,351" fill="none" stroke="white" stroke-width="1" opacity="0.2"/>
+
+<!-- SPIELEN-BUTTON IM POOL — klar im Pool-Wasser, kein Überlapp mit Fuchs -->
+<text id="pool-btn-text" style="pointer-events:all;cursor:pointer;text-shadow:0 1px 3px rgba(0,0,0,0.4);" x="562" y="344" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="white">🦊 Spielen</text>
+<text id="pool-btn-subtext" style="pointer-events:all;cursor:pointer;" x="562" y="357" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="rgba(255,255,255,0.85)">Klick zum Starten</text>
+<!-- Unsichtbarer klickbarer Bereich über Pool -->
+<ellipse id="pool-klick" cx="562" cy="348" rx="62" ry="22" fill="transparent" style="cursor:pointer;pointer-events:all;"/>
+
+<!-- TATZEN-MARKER auf aktivem Fenster (initial versteckt) -->
+<g id="tatze-marker" opacity="0" transform="translate(124,193)">
+  <ellipse cx="0" cy="0" rx="8" ry="6" fill="#E8621A"/>
+  <ellipse cx="-5" cy="-6" rx="3.5" ry="4" fill="#E8621A"/>
+  <ellipse cx="0" cy="-7" rx="3.5" ry="4" fill="#E8621A"/>
+  <ellipse cx="5" cy="-6" rx="3.5" ry="4" fill="#E8621A"/>
+</g>
+
+</svg>
+
+<!-- GRÜNES MENÜ-FELD das über Pool/Zaun erscheint -->
+<div id="haus-menue-feld" style="
+  display:none;
+  position:absolute;
+  bottom:0; left:0; right:0;
+  background:rgba(74,128,32,0.95);
+  border:2px solid #3a7018;
+  border-radius:0 0 8px 8px;
+  padding:14px 16px;
+  backdrop-filter:blur(4px);
+">
+  <!-- Schließen-Button -->
+  <button id="haus-menue-schliessen" style="
+    position:absolute; top:8px; right:10px;
+    background:rgba(0,0,0,.2); color:white; border:1px solid rgba(255,255,255,.3);
+    border-radius:50%; width:26px; height:26px; cursor:pointer;
+    font-size:.85rem; line-height:26px; text-align:center; padding:0;
+  " aria-label="Menü schließen">✕</button>
+
+  <!-- Persönliche Erfolge -->
+  <div id="haus-panel-erfolge" style="display:none;">
+    <h3 style="color:#f5e6d0;font-family:Georgia,serif;font-size:.95rem;margin-bottom:8px;">🏆 Persönliche Erfolge</h3>
+    <div id="haus-streak-anzeige" style="font-size:.88rem;font-weight:700;color:#f5e6d0;margin-bottom:4px;"></div>
+    <div id="haus-rekord-anzeige" style="font-size:.82rem;color:#c8e8a8;margin-bottom:8px;"></div>
+    <p style="font-size:.8rem;color:#c8e8a8;">Vollständige Statistik findest du in den persönlichen Erfolgen weiter unten.</p>
+  </div>
+
+  <!-- Statistiken -->
+  <div id="haus-panel-statistik" style="display:none;">
+    <h3 style="color:#f5e6d0;font-family:Georgia,serif;font-size:.95rem;margin-bottom:8px;">📊 Statistiken</h3>
+    <button onclick="document.getElementById('haus-menue-feld').style.display='none';document.getElementById('btn-stats-start').click();" style="width:100%;background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:8px;text-align:left;cursor:pointer;font-size:.85rem;">🌍 Statistik aller Tippfüchse</button>
+  </div>
+
+  <!-- Meine Gruppen -->
+  <div id="haus-panel-gruppen" style="display:none;">
+    <h3 style="color:#f5e6d0;font-family:Georgia,serif;font-size:.95rem;margin-bottom:8px;">👥 Meine Gruppen</h3>
+    <button onclick="document.getElementById('haus-menue-feld').style.display='none';zeigeGruppenScreen();" style="width:100%;background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:8px;text-align:left;cursor:pointer;font-size:.85rem;">👥 Meine Tippfuchs Gruppen öffnen</button>
+  </div>
+
+  <!-- Anmelden -->
+  <div id="haus-panel-anmelden" style="display:none;">
+    <h3 style="color:#f5e6d0;font-family:Georgia,serif;font-size:.95rem;margin-bottom:8px;">🔑 Anmelden und Spielername</h3>
+    <button onclick="document.getElementById('btn-mit-email').click();" style="width:100%;margin-bottom:5px;background:#E8621A;color:white;border:2px solid #F5C842;border-radius:6px;padding:9px;cursor:pointer;font-weight:700;font-size:.88rem;">Mit E-Mail anmelden</button>
+    <button onclick="document.getElementById('btn-mit-konto').click();" style="width:100%;margin-bottom:5px;background:#E8621A;color:white;border:2px solid #F5C842;border-radius:6px;padding:9px;cursor:pointer;font-weight:700;font-size:.88rem;">Mit Google Konto spielen</button>
+    <button onclick="document.getElementById('btn-spitzname-aendern-start').click();" style="width:100%;margin-bottom:5px;background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:8px;cursor:pointer;font-size:.85rem;">✏️ Spielername ändern</button>
+    <hr style="border-color:rgba(255,255,255,.2);margin:8px 0;"/>
+    <button onclick="document.getElementById('btn-ohne-konto').click();" style="width:100%;background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:8px;cursor:pointer;font-size:.85rem;">Ohne Account spielen</button>
+  </div>
+
+  <!-- Design -->
+  <div id="haus-panel-design" style="display:none;">
+    <h3 style="color:#f5e6d0;font-family:Georgia,serif;font-size:.95rem;margin-bottom:8px;">🎨 Design auswählen</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;">
+      <button onclick="setzeDesign('standard')" style="background:rgba(245,242,238,.9);color:#1c1a17;border:2px solid transparent;border-radius:6px;padding:6px;cursor:pointer;font-size:.78rem;font-weight:700;" id="haus-btn-standard">Schlicht</button>
+      <button onclick="setzeDesign('fuchsbau')" style="background:rgba(139,94,60,.9);color:#f5e6d0;border:2px solid #F5C842;border-radius:6px;padding:6px;cursor:pointer;font-size:.78rem;font-weight:700;" id="haus-btn-fuchsbau">Fuchsbau</button>
+      <button onclick="setzeDesign('natur-tag')" style="background:rgba(58,138,58,.9);color:white;border:2px solid transparent;border-radius:6px;padding:6px;cursor:pointer;font-size:.78rem;font-weight:700;" id="haus-btn-natur-tag">Natur Tag</button>
+      <button onclick="setzeDesign('natur-nacht')" style="background:rgba(8,12,32,.9);color:#c8d8f8;border:2px solid #7c9fd4;border-radius:6px;padding:6px;cursor:pointer;font-size:.78rem;font-weight:700;" id="haus-btn-natur-nacht">Natur Nacht</button>
+    </div>
+    <div style="display:flex;gap:6px;">
+      <button onclick="setzeDark(false)" style="flex:1;background:rgba(255,255,255,.9);color:#333;border:2px solid transparent;border-radius:6px;padding:6px;cursor:pointer;font-size:.8rem;font-weight:700;">☀️ Hell</button>
+      <button onclick="setzeDark(true)" style="flex:1;background:rgba(20,24,40,.9);color:#c8d8f8;border:2px solid transparent;border-radius:6px;padding:6px;cursor:pointer;font-size:.8rem;font-weight:700;">🌙 Dunkel</button>
+      <button onclick="setzeAnimationen(document.body.classList.contains('keine-animationen'))" style="flex:1;background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:6px;cursor:pointer;font-size:.75rem;" id="haus-btn-anim">✨ Anim</button>
+    </div>
+  </div>
+
+  <!-- Anleitung -->
+  <div id="haus-panel-anleitung" style="display:none;">
+    <h3 style="color:#f5e6d0;font-family:Georgia,serif;font-size:.95rem;margin-bottom:8px;">📖 Anleitung und Hilfe</h3>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <button class="anleitung-btn" data-thema="spielprinzip" style="background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);text-align:left;padding-left:36px;font-size:.82rem;border-radius:6px;padding-top:7px;padding-bottom:7px;">Spielprinzip</button>
+      <button class="anleitung-btn" data-thema="barrierefrei" style="background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);text-align:left;padding-left:36px;font-size:.82rem;border-radius:6px;padding-top:7px;padding-bottom:7px;">Barrierefreie Bedienung</button>
+      <button class="anleitung-btn" data-thema="anmeldung" style="background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);text-align:left;padding-left:36px;font-size:.82rem;border-radius:6px;padding-top:7px;padding-bottom:7px;">Anmeldung und Spitzname</button>
+      <button class="anleitung-btn" data-thema="erfolge" style="background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);text-align:left;padding-left:36px;font-size:.82rem;border-radius:6px;padding-top:7px;padding-bottom:7px;">Persönliche Erfolge</button>
+      <button class="anleitung-btn" data-thema="gruppen" style="background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);text-align:left;padding-left:36px;font-size:.82rem;border-radius:6px;padding-top:7px;padding-bottom:7px;">Meine Gruppen</button>
+      <button class="anleitung-btn" data-thema="statistik" style="background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);text-align:left;padding-left:36px;font-size:.82rem;border-radius:6px;padding-top:7px;padding-bottom:7px;">Statistik</button>
+      <button class="anleitung-btn" data-thema="design" style="background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);text-align:left;padding-left:36px;font-size:.82rem;border-radius:6px;padding-top:7px;padding-bottom:7px;">Designauswahl</button>
+      <div id="anleitung-inhalt-haus" style="display:none;background:rgba(0,0,0,.25);border-radius:6px;padding:10px;margin-top:4px;font-size:.82rem;color:#e8f8d8;" role="region" aria-live="polite"></div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+<!-- HAUS-DEKO ENDE -->
+
+
+
+
+<!-- Tagessieger-Meldung -->
+<div id="tagessieger-meldung" style="display:none;background:var(--correct-badge-bg);border:2px solid var(--correct-badge);border-radius:var(--radius);padding:12px 16px;font-size:.95rem;font-weight:700;color:var(--correct-badge);" role="alert"></div>
+
+<div class="start-abschnitte-normal">
+<!-- HAUPT-SPIELEN-BUTTON ganz oben -->
+<div id="start-spiel-bereich" style="display:flex;flex-direction:column;gap:10px;">
+  <!-- Mini-Fuchs -->
+  <div id="fuchs-mini-container" aria-hidden="true">
+    <svg width="48" height="48" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <g style="animation:warten 2s ease-in-out infinite;transform-origin:30px 35px;">
+        <g style="animation:schwanz 2s ease-in-out infinite;transform-origin:10px 45px;">
+          <path d="M8,48 Q2,38 6,30 Q10,22 16,28 Q20,32 18,42 Q16,50 12,52 Z" fill="#E8621A"/>
+          <path d="M10,50 Q8,44 10,38 Q13,32 15,36 Q16,42 14,50 Z" fill="white"/>
+        </g>
+        <ellipse cx="30" cy="42" rx="16" ry="14" fill="#E8621A"/>
+        <ellipse cx="30" cy="44" rx="9" ry="9" fill="#F5E6D0"/>
+        <g transform="translate(16,38) rotate(-20)">
+          <rect x="-2" y="-18" width="5" height="20" rx="1" fill="#F5C842"/>
+          <polygon points="-2,2 3,2 0.5,8" fill="#F5E6D0"/>
+        </g>
+        <ellipse cx="44" cy="40" rx="5" ry="4" fill="#E8621A" transform="rotate(20,44,40)"/>
+        <g>
+          <polygon points="20,16 23,28 28,16" fill="#E8621A"/>
+          <polygon points="21,17 23,26 27,17" fill="#F5E6D0"/>
+          <polygon points="40,16 37,28 32,16" fill="#E8621A"/>
+          <polygon points="39,17 37,26 33,17" fill="#F5E6D0"/>
+          <ellipse cx="30" cy="24" rx="13" ry="12" fill="#E8621A"/>
+          <ellipse cx="30" cy="27" rx="9" ry="8" fill="#F5E6D0"/>
+          <ellipse cx="25" cy="22" rx="3.5" ry="3.5" fill="white"/>
+          <ellipse cx="35" cy="22" rx="3.5" ry="3.5" fill="white"/>
+          <circle cx="25" cy="22" r="2" fill="#2A1A0A"/>
+          <circle cx="35" cy="22" r="2" fill="#2A1A0A"/>
+          <circle cx="26" cy="21" r="0.8" fill="white"/>
+          <circle cx="36" cy="21" r="0.8" fill="white"/>
+          <ellipse cx="30" cy="28" rx="2.5" ry="2" fill="#2A1A0A"/>
+          <path d="M26,32 Q30,34 34,32" fill="none" stroke="#2A1A0A" stroke-width="1.2" stroke-linecap="round"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Großer Spielen-Button — Text wird per JS gesetzt -->
+  <button class="btn-primary" id="btn-spiel-starten" style="font-size:1.15rem;padding:18px;border-radius:10px;">🦊 Wird geladen...</button>
+
+  <!-- Willkommenstext -->
+  <div class="willkommen-box">
+    <strong>Jeden Tag ein neues Wort</strong> — 5 Buchstaben, 6 Versuche, null Ausreden. Miss dich mit Familie, Freunden und Arbeitskollegen und finde heraus wer beim Wörter raten die Nase vorne hat! <strong>#barrierefrei</strong> — Tippfuchs ist für alle spielbar.
+  </div>
+</div>
+
+<!-- STREAK-UND-REKORD-ANZEIGE ANFANG -->
+<div class="start-section">
+  <div class="start-section-header">
+    <svg class="section-fuchs" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- Fuchs Körper -->
+  <ellipse cx="22" cy="36" rx="9" ry="7" fill="#E8621A"/>
+  <ellipse cx="22" cy="37" rx="6" ry="5" fill="#F5E6D0"/>
+  <!-- Ohren/Kopf -->
+  <polygon points="15,14 17.5,21 21,14" fill="#E8621A"/>
+  <polygon points="16,15 17.5,20 20,15" fill="#F5E6D0"/>
+  <polygon points="23,14 26.5,21 29,14" fill="#E8621A"/>
+  <polygon points="24,15 26.5,20 28,15" fill="#F5E6D0"/>
+  <ellipse cx="22" cy="20" rx="8" ry="7.5" fill="#E8621A"/>
+  <ellipse cx="22" cy="22" rx="5.5" ry="5" fill="#F5E6D0"/>
+  <circle cx="19.5" cy="19.5" r="1.4" fill="#2A1A0A"/>
+  <circle cx="24.5" cy="19.5" r="1.4" fill="#2A1A0A"/>
+  <circle cx="20" cy="19" r="0.6" fill="white"/>
+  <circle cx="25" cy="19" r="0.6" fill="white"/>
+  <ellipse cx="22" cy="24" rx="2" ry="1.5" fill="#2A1A0A"/>
+  <!-- Stolzes Lächeln -->
+  <path d="M18.5,26 Q22,28.5 25.5,26" fill="none" stroke="#2A1A0A" stroke-width="1" stroke-linecap="round"/>
+  <!-- Linker Arm angewinkelt mit Bizeps -->
+  <line x1="13" y1="30" x2="8" y2="26" stroke="#E8621A" stroke-width="3" stroke-linecap="round"/>
+  <line x1="8" y1="26" x2="6" y2="20" stroke="#E8621A" stroke-width="3" stroke-linecap="round"/>
+  <!-- Bizeps Beule -->
+  <ellipse cx="7.5" cy="23" rx="3.5" ry="2.5" fill="#E8621A" stroke="#d4561a" stroke-width="0.5"/>
+  <!-- Rechter Arm angewinkelt -->
+  <line x1="31" y1="30" x2="36" y2="26" stroke="#E8621A" stroke-width="3" stroke-linecap="round"/>
+  <line x1="36" y1="26" x2="38" y2="20" stroke="#E8621A" stroke-width="3" stroke-linecap="round"/>
+  <!-- Sternchen Erfolg -->
+  <text x="34" y="12" font-size="8" fill="#F5C842">★</text>
+  <text x="2" y="13" font-size="6" fill="#F5C842">✦</text>
+</svg>
+    <h2>Persönliche Erfolge</h2>
+  </div>
+  <div id="start-stats-box" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;flex-direction:column;gap:8px;">
+    <div id="start-streak" style="font-size:.9rem;font-weight:700;color:var(--text);"></div>
+    <div id="start-rekord" style="font-size:.85rem;color:var(--text-muted);"></div>
+  </div>
+  <div id="historie-bereich" style="display:flex;flex-direction:column;gap:8px;">
+    <div id="historie-kein-account" style="display:none;font-size:.85rem;color:var(--text-muted);padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
+      Für die Historie deiner Spielergebnisse brauchst du einen Account — dann werden deine Ergebnisse gespeichert.
+    </div>
+    <div id="historie-mit-account" style="display:none;flex-direction:column;gap:8px;">
+      <label for="historie-select" style="font-size:.85rem;color:var(--text-muted);">Meine Ergebnisse — Datum auswählen:</label>
+      <select class="datum-select" id="historie-select" aria-label="Tag auswählen"></select>
+      <div id="historie-ergebnis" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+  </div>
+</div>
+<!-- STREAK-UND-REKORD-ANZEIGE ENDE -->
+
+<div class="start-section">
+  <div class="start-section-header">
+    <svg class="section-fuchs" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- Globus -->
+  <circle cx="26" cy="20" r="14" fill="#4a90d9" stroke="#2c5f8a" stroke-width="1.2"/>
+  <ellipse cx="26" cy="20" rx="6" ry="14" fill="none" stroke="#2c5f8a" stroke-width="0.8"/>
+  <line x1="12" y1="20" x2="40" y2="20" stroke="#2c5f8a" stroke-width="0.8"/>
+  <path d="M14,13 Q26,16 38,13" fill="none" stroke="#2c5f8a" stroke-width="0.8"/>
+  <path d="M14,27 Q26,24 38,27" fill="none" stroke="#2c5f8a" stroke-width="0.8"/>
+  <!-- Fuchs klein links hält Globus -->
+  <ellipse cx="10" cy="36" rx="5" ry="4" fill="#E8621A"/>
+  <polygon points="6,24 8,29 10,24" fill="#E8621A"/>
+  <polygon points="10,24 12,29 14,24" fill="#E8621A"/>
+  <ellipse cx="10" cy="28" rx="4.5" ry="4" fill="#E8621A"/>
+  <ellipse cx="10" cy="29" rx="2.8" ry="2.5" fill="#F5E6D0"/>
+  <circle cx="8.8" cy="27.5" r="1" fill="#2A1A0A"/>
+  <circle cx="11.2" cy="27.5" r="1" fill="#2A1A0A"/>
+  <path d="M8.5,31 Q10,32 11.5,31" fill="none" stroke="#2A1A0A" stroke-width="0.7" stroke-linecap="round"/>
+  <!-- Arm hält Globus -->
+  <line x1="13" y1="30" x2="18" y2="24" stroke="#E8621A" stroke-width="2" stroke-linecap="round"/>
+</svg>
+    <h2>Statistiken</h2>
+  </div>
+  <button class="btn-secondary" id="btn-gruppen-start" style="text-align:left;padding-left:14px;">
+    <span style="display:flex;align-items:center;gap:8px;">
+      <svg width="28" height="28" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0;">
+        <ellipse cx="12" cy="30" rx="5" ry="4" fill="#E8621A"/>
+        <polygon points="8,18 10,23 13,18" fill="#E8621A"/><polygon points="13,18 15,23 17,18" fill="#E8621A"/>
+        <ellipse cx="12.5" cy="22" rx="4.5" ry="4" fill="#E8621A"/><ellipse cx="12.5" cy="23" rx="2.8" ry="2.5" fill="#F5E6D0"/>
+        <circle cx="11.2" cy="21.5" r="1" fill="#2A1A0A"/><circle cx="13.8" cy="21.5" r="1" fill="#2A1A0A"/>
+        <ellipse cx="28" cy="30" rx="5" ry="4" fill="#E8621A"/>
+        <polygon points="24,18 26,23 29,18" fill="#E8621A"/><polygon points="29,18 31,23 33,18" fill="#E8621A"/>
+        <ellipse cx="28.5" cy="22" rx="4.5" ry="4" fill="#E8621A"/><ellipse cx="28.5" cy="23" rx="2.8" ry="2.5" fill="#F5E6D0"/>
+        <circle cx="27.2" cy="21.5" r="1" fill="#2A1A0A"/><circle cx="29.8" cy="21.5" r="1" fill="#2A1A0A"/>
+        <ellipse cx="38" cy="34" rx="3.5" ry="3" fill="#E8621A"/>
+        <polygon points="35,26 36.5,30 38,26" fill="#E8621A"/><polygon points="38,26 39.5,30 41,26" fill="#E8621A"/>
+        <ellipse cx="38" cy="29" rx="3.2" ry="2.8" fill="#E8621A"/><ellipse cx="38" cy="30" rx="2" ry="1.8" fill="#F5E6D0"/>
+        <circle cx="37" cy="28.5" r="0.8" fill="#2A1A0A"/><circle cx="39" cy="28.5" r="0.8" fill="#2A1A0A"/>
+      </svg>
+      <span>
+        <span style="display:block;font-weight:700;">Meine Tippfuchs Gruppen</span>
+        <span style="display:block;font-size:.82rem;color:var(--text-muted);font-weight:400;margin-top:2px;">Spiele mit Familie, Freunden und Kollegen in privaten Gruppen</span>
+      </span>
+    </span>
+  </button>
+  <button class="btn-secondary" id="btn-stats-start" style="text-align:left;padding-left:14px;">
+    <span style="display:flex;align-items:center;gap:8px;">
+      <svg width="28" height="28" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0;">
+        <circle cx="22" cy="22" r="16" fill="#4a90d9" stroke="#2c5f8a" stroke-width="1.5"/>
+        <ellipse cx="22" cy="22" rx="7" ry="16" fill="none" stroke="#2c5f8a" stroke-width="0.9"/>
+        <line x1="6" y1="22" x2="38" y2="22" stroke="#2c5f8a" stroke-width="0.9"/>
+        <path d="M8,15 Q22,18 36,15" fill="none" stroke="#2c5f8a" stroke-width="0.9"/>
+        <path d="M8,29 Q22,26 36,29" fill="none" stroke="#2c5f8a" stroke-width="0.9"/>
+        <circle cx="22" cy="22" r="4" fill="#E8621A"/>
+        <circle cx="22" cy="22" r="2.5" fill="#F5E6D0"/>
+        <circle cx="21" cy="21" r="0.8" fill="#2A1A0A"/>
+        <circle cx="23" cy="21" r="0.8" fill="#2A1A0A"/>
+      </svg>
+      <span>
+        <span style="display:block;font-weight:700;">Statistik aller Tippfüchse 🌍</span>
+        <span style="display:block;font-size:.82rem;color:var(--text-muted);font-weight:400;margin-top:2px;">Wer löst das Wort am schnellsten? Champion aller Zeiten, Monats- und Jahreswertung</span>
+      </span>
+    </span>
+  </button>
+</div>
+
+<!-- ANMELDEN-BLOCK -->
+<div class="start-section" id="anmelden-block">
+  <div class="start-section-header">
+    <svg class="section-fuchs" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- Tür -->
+  <rect x="24" y="8" width="16" height="28" fill="#c4a882" stroke="#8B5E3C" stroke-width="1.5" rx="2"/>
+  <rect x="25" y="9" width="14" height="26" fill="#d4b88e" rx="1"/>
+  <!-- Türknauf -->
+  <circle cx="27" cy="23" r="2" fill="#E8621A"/>
+  <!-- Schlüsselloch -->
+  <circle cx="37" cy="22" r="2.5" fill="#8B5E3C"/>
+  <rect x="36.2" y="22" width="1.6" height="3.5" fill="#8B5E3C"/>
+  <!-- Fuchs davor -->
+  <ellipse cx="12" cy="34" rx="6" ry="5" fill="#E8621A"/>
+  <polygon points="7,20 9.5,27 13,20" fill="#E8621A"/>
+  <polygon points="13,20 15.5,27 18,20" fill="#E8621A"/>
+  <ellipse cx="12.5" cy="24" rx="5.5" ry="5" fill="#E8621A"/>
+  <ellipse cx="12.5" cy="25.5" rx="3.5" ry="3" fill="#F5E6D0"/>
+  <circle cx="11" cy="23.5" r="1.2" fill="#2A1A0A"/>
+  <circle cx="14" cy="23.5" r="1.2" fill="#2A1A0A"/>
+  <path d="M10.5,27.5 Q12.5,29 14.5,27.5" fill="none" stroke="#2A1A0A" stroke-width="0.8" stroke-linecap="round"/>
+  <!-- Schlüssel in Pfote -->
+  <circle cx="19" cy="30" r="3" fill="none" stroke="#F5C842" stroke-width="1.5"/>
+  <line x1="21.2" y1="30" x2="26" y2="30" stroke="#F5C842" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="24" y1="30" x2="24" y2="32" stroke="#F5C842" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="22.5" y1="30" x2="22.5" y2="31.5" stroke="#F5C842" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Arm -->
+  <line x1="17" y1="28" x2="19.5" y2="27" stroke="#E8621A" stroke-width="2" stroke-linecap="round"/>
+</svg>
+    <h2>Anmelden und Spielername</h2>
+  </div>
+  <p style="font-size:.85rem;color:var(--text-muted);">Mit Account werden deine Ergebnisse gespeichert, du kannst Gruppen erstellen und in der Statistik erscheinen.</p>
+
+  <!-- Mit Account -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <p style="font-size:.85rem;font-weight:700;color:var(--text);">Mit Account spielen</p>
+    <button class="btn-primary" id="btn-mit-email">Mit E-Mail anmelden</button>
+    <button class="btn-primary" id="btn-mit-konto">Mit Google Konto spielen</button>
+    <button class="btn-secondary" id="btn-spitzname-aendern-start">Spielername aendern ✏️</button>
+  </div>
+
+  <!-- Trennlinie -->
+  <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
+
+  <!-- Ohne Account -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <p style="font-size:.85rem;font-weight:700;color:var(--text);">Ohne Account spielen</p>
+    <p style="font-size:.82rem;color:var(--text-muted);">Deine Ergebnisse werden nur lokal gespeichert und erscheinen nicht in der Rangliste.</p>
+    <button class="btn-secondary" id="btn-ohne-konto">Ohne Account spielen</button>
+  </div>
+</div>
+
+<!-- DESIGN-AUSWAHL ANFANG -->
+<div class="start-section">
+  <div class="start-section-header">
+    <svg class="section-fuchs" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- Leinwand -->
+  <rect x="22" y="6" width="18" height="14" fill="white" stroke="#d0cbc4" stroke-width="1.2" rx="1"/>
+  <rect x="23" y="7" width="16" height="12" fill="#fff8f0"/>
+  <!-- Farbklecks auf Leinwand -->
+  <circle cx="28" cy="11" r="3" fill="#E8621A" opacity="0.7"/>
+  <circle cx="34" cy="13" r="2" fill="#4a7c59" opacity="0.7"/>
+  <circle cx="32" cy="9" r="1.5" fill="#2c5f8a" opacity="0.7"/>
+  <!-- Staffelei -->
+  <line x1="22" y1="20" x2="19" y2="30" stroke="#8B5E3C" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="40" y1="20" x2="43" y2="30" stroke="#8B5E3C" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Fuchs mit Pinsel -->
+  <ellipse cx="10" cy="34" rx="5.5" ry="4.5" fill="#E8621A"/>
+  <polygon points="6,21 8,27 11,21" fill="#E8621A"/>
+  <polygon points="11,21 13,27 16,21" fill="#E8621A"/>
+  <ellipse cx="11" cy="25" rx="5" ry="4.5" fill="#E8621A"/>
+  <ellipse cx="11" cy="26" rx="3" ry="2.8" fill="#F5E6D0"/>
+  <circle cx="9.5" cy="24.5" r="1.1" fill="#2A1A0A"/>
+  <circle cx="12.5" cy="24.5" r="1.1" fill="#2A1A0A"/>
+  <path d="M9.5,28 Q11,29 12.5,28" fill="none" stroke="#2A1A0A" stroke-width="0.7" stroke-linecap="round"/>
+  <!-- Pinsel-Arm -->
+  <line x1="14" y1="26" x2="21" y2="14" stroke="#E8621A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Pinsel -->
+  <rect x="19" y="9" width="2" height="7" fill="#8B5E3C" rx="0.5" transform="rotate(-20,20,13)"/>
+  <ellipse cx="19.5" cy="9" rx="2" ry="1.5" fill="#E8621A" transform="rotate(-20,20,13)"/>
+</svg>
+    <h2>Design auswaehlen</h2>
+  </div>
+  <p style="font-size:.85rem;color:var(--text-muted);">Wähle ein Design und lege danach Hell- oder Dunkelmodus fest.</p>
+
+  <!-- Design-Karten -->
+  <div class="design-karten-grid" role="radiogroup" aria-label="Design auswaehlen">
+
+    <label class="design-karte" data-design="standard" id="karte-standard">
+      <input type="radio" name="design" value="standard" id="design-standard">
+      <div class="design-karte-vorschau" aria-hidden="true">
+        <div class="design-karte-haken">✓</div>
+      </div>
+      <div class="design-karte-label">
+        <span class="design-karte-name">Schlicht und Barrierefrei</span>
+        <span class="design-karte-desc">Empfohlen für Screenreader</span>
+      </div>
+    </label>
+
+    <label class="design-karte" data-design="fuchsbau" id="karte-fuchsbau">
+      <input type="radio" name="design" value="fuchsbau" id="design-fuchsbau">
+      <div class="design-karte-vorschau" aria-hidden="true">
+        <div class="design-karte-haken">✓</div>
+      </div>
+      <div class="design-karte-label">
+        <span class="design-karte-name">Fuchsbau</span>
+        <span class="design-karte-desc">Warme Erdtöne</span>
+      </div>
+    </label>
+
+    <label class="design-karte" data-design="natur-tag" id="karte-natur-tag">
+      <input type="radio" name="design" value="natur-tag" id="design-natur-tag">
+      <div class="design-karte-vorschau" aria-hidden="true">
+        <div class="design-karte-haken">✓</div>
+      </div>
+      <div class="design-karte-label">
+        <span class="design-karte-name">Natur am Tag</span>
+        <span class="design-karte-desc">Wiese und Himmel</span>
+      </div>
+    </label>
+
+    <label class="design-karte" data-design="natur-nacht" id="karte-natur-nacht">
+      <input type="radio" name="design" value="natur-nacht" id="design-natur-nacht">
+      <div class="design-karte-vorschau" aria-hidden="true">
+        <div class="design-karte-haken">✓</div>
+      </div>
+      <div class="design-karte-label">
+        <span class="design-karte-name">Natur Nacht</span>
+        <span class="design-karte-desc">Sterne und Mond</span>
+      </div>
+    </label>
+
+  </div>
+
+  <!-- Hell / Dunkel Umschalter -->
+  <div style="margin-top:4px;">
+    <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:6px;">Helligkeit:</p>
+    <div class="hell-dunkel-schalter" role="radiogroup" aria-label="Hell oder Dunkel">
+      <label class="hell-dunkel-option" id="label-darkmode-hell">
+        <input type="radio" name="darkmode" value="hell" id="darkmode-hell">
+        ☀️ Hell
+      </label>
+      <label class="hell-dunkel-option" id="label-darkmode-dunkel">
+        <input type="radio" name="darkmode" value="dunkel" id="darkmode-dunkel">
+        🌙 Dunkel
+      </label>
+    </div>
+  </div>
+  <!-- Animationen Umschalter -->
+  <div style="margin-top:4px;">
+    <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:6px;">Animationen:</p>
+    <div class="hell-dunkel-schalter" role="group" aria-label="Animationen ein oder aus">
+      <label class="hell-dunkel-option" id="label-anim-an">
+        <input type="radio" name="animationen" value="an" id="anim-an">
+        ✨ An
+      </label>
+      <label class="hell-dunkel-option" id="label-anim-aus">
+        <input type="radio" name="animationen" value="aus" id="anim-aus">
+        🔇 Aus
+      </label>
+    </div>
+    <p style="font-size:.78rem;color:var(--text-muted);margin-top:5px;">Aus: keine Fuchs-Animation, keine Übergänge — für Menschen die Bewegung ablenkend finden.</p>
+  </div>
+
+</div>
+<!-- DESIGN-AUSWAHL ENDE -->
+
+<div class="start-section">
+  <div class="start-section-header">
+    <svg class="section-fuchs" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- Aufgeklapptes Buch -->
+  <path d="M4,28 Q4,14 22,16 Q40,14 40,28 L40,38 Q22,36 22,36 Q22,36 4,38 Z" fill="#e8d5b0" stroke="#8B5E3C" stroke-width="1"/>
+  <line x1="22" y1="16" x2="22" y2="38" stroke="#8B5E3C" stroke-width="1.2"/>
+  <!-- Linien im Buch (Text) -->
+  <line x1="7" y1="22" x2="19" y2="21.5" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <line x1="7" y1="25" x2="19" y2="24.5" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <line x1="7" y1="28" x2="19" y2="27.5" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <line x1="25" y1="21.5" x2="37" y2="22" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <line x1="25" y1="24.5" x2="37" y2="25" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <line x1="25" y1="27.5" x2="37" y2="28" stroke="#8B5E3C" stroke-width="0.7" opacity="0.5"/>
+  <!-- Fuchs sitzt auf/vor dem Buch -->
+  <ellipse cx="22" cy="12" rx="5" ry="4" fill="#E8621A"/>
+  <polygon points="17.5,3 19.5,8 22,3" fill="#E8621A"/>
+  <polygon points="22,3 24.5,8 26.5,3" fill="#E8621A"/>
+  <ellipse cx="22" cy="7" rx="4.5" ry="4" fill="#E8621A"/>
+  <ellipse cx="22" cy="8" rx="3" ry="2.5" fill="#F5E6D0"/>
+  <circle cx="20.5" cy="6.5" r="1.1" fill="#2A1A0A"/>
+  <circle cx="23.5" cy="6.5" r="1.1" fill="#2A1A0A"/>
+  <path d="M20.5,9.5 Q22,11 23.5,9.5" fill="none" stroke="#2A1A0A" stroke-width="0.7" stroke-linecap="round"/>
+  <!-- Lesezeichen -->
+  <polygon points="36,14 39,14 39,20 37.5,18.5 36,20" fill="#E8621A"/>
+</svg>
+    <h2>Anleitung und Hilfe</h2>
+  </div>
+  <div id="anleitung-liste" style="display:flex;flex-direction:column;gap:8px;">
+
+    <button class="btn-secondary anleitung-btn" data-thema="spielprinzip">Erklaerung Spielprinzip</button>
+    <button class="btn-secondary anleitung-btn" data-thema="barrierefrei">Erklaerung Barrierefreie Bedienung</button>
+    <button class="btn-secondary anleitung-btn" data-thema="anmeldung">Erklaerung Anmeldeoptionen und Spitzname</button>
+    <button class="btn-secondary anleitung-btn" data-thema="erfolge">Erklaerung Persoenliche Erfolge</button>
+    <button class="btn-secondary anleitung-btn" data-thema="gruppen">Erklaerung Meine Tippfuchs Gruppen</button>
+    <button class="btn-secondary anleitung-btn" data-thema="statistik">Erklaerung Statistik aller Tippfuechse</button>
+    <button class="btn-secondary anleitung-btn" data-thema="design">Erklaerung Designauswahl</button>
+
+    <div id="anleitung-inhalt" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;" role="region" aria-live="polite"></div>
+
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD — nur für blindermoveindeutschland@gmail.com -->
+<div id="admin-bereich" style="display:none;" aria-label="Administrator Statistiken">
+  <div class="abschnitt-header">
+    <h2>Admin Statistiken</h2>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <p id="admin-lade-status" style="font-size:.85rem;color:var(--text-muted);">Lade Daten...</p>
+    <div class="stats-box" id="admin-box" style="display:none;">
+      <p style="font-size:.85rem;font-weight:700;color:var(--text-muted);margin-bottom:8px;">Nutzer</p>
+      <p id="admin-email-accounts">Accounts gesamt: –</p>
+      <p id="admin-google-accounts">Nutzer mit Freundesliste: –</p>
+      <p id="admin-gesamt-accounts">Gruppen erstellt: –</p>
+      <p id="admin-gruppen" style="display:none;"></p>
+      <p id="admin-freundeslisten" style="display:none;"></p>
+
+      <p style="font-size:.85rem;font-weight:700;color:var(--text-muted);margin-top:12px;margin-bottom:4px;">Spiele pro Woche</p>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <select id="admin-jahr-select" class="datum-select" aria-label="Jahr auswaehlen" style="flex:1;"></select>
+        <select id="admin-woche-select" class="datum-select" aria-label="Woche auswaehlen" style="flex:1;"></select>
+      </div>
+      <p id="admin-spiele-woche">Spiele in dieser Woche: –</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- Ende start-abschnitte-normal -->
+</section>
+<!-- STARTSEITE ENDE -->
+
+<!-- SPITZNAME-SCREEN ANFANG -->
+<section id="spitzname-screen" aria-label="Spielername festlegen">
+  <h2 style="font-family:var(--font-display);font-size:1.4rem;">Spielername festlegen</h2>
+  <p style="font-size:.9rem;color:var(--text-muted);">Waehle einen Spielernamen fuer die Rangliste.</p>
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <label for="spitzname-input" style="font-size:.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Dein Spielername</label>
+    <input type="text" id="spitzname-input" maxlength="20" autocomplete="off" spellcheck="false"
+      placeholder="Spielername eingeben..."
+      aria-label="Spielername eingeben, dann Bestaetigen druecken"
+      aria-describedby="spitzname-fehler">
+  </div>
+  <div id="spitzname-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
+  <button class="btn-primary" id="btn-spitzname-bestaetigen">Spielername bestaetigen</button>
+</section>
+<!-- SPITZNAME-SCREEN ENDE -->
+
+<!-- SPIELFELD ANFANG -->
+<section id="game-screen">
+  <div class="fuchs-titel-box" style="margin-top:16px;">
+    <svg class="fuchs-tatze" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="20" cy="26" rx="11" ry="9" fill="#E8621A"/>
+      <ellipse cx="20" cy="28" rx="7" ry="6" fill="#F5E6D0"/>
+      <ellipse cx="10" cy="16" rx="4" ry="5" fill="#E8621A"/>
+      <ellipse cx="17" cy="13" rx="3.5" ry="4.5" fill="#E8621A"/>
+      <ellipse cx="24" cy="13" rx="3.5" ry="4.5" fill="#E8621A"/>
+      <ellipse cx="31" cy="16" rx="4" ry="5" fill="#E8621A"/>
+    </svg>
+    <h1 class="fuchs-titel-text">Heutiges Tippfuchsrätsel</h1>
+    <svg class="fuchs-tatze" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="20" cy="26" rx="11" ry="9" fill="#E8621A"/>
+      <ellipse cx="20" cy="28" rx="7" ry="6" fill="#F5E6D0"/>
+      <ellipse cx="10" cy="16" rx="4" ry="5" fill="#E8621A"/>
+      <ellipse cx="17" cy="13" rx="3.5" ry="4.5" fill="#E8621A"/>
+      <ellipse cx="24" cy="13" rx="3.5" ry="4.5" fill="#E8621A"/>
+      <ellipse cx="31" cy="16" rx="4" ry="5" fill="#E8621A"/>
+    </svg>
+  </div>
+  <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:4px;margin-top:8px;">Mit dem ersten abgegebenen Tipp läuft die Uhr.</p>
+  <div id="fortschritt-punkte" aria-hidden="true">
+    <div class="fp-punkt" id="fp-1"></div>
+    <div class="fp-punkt" id="fp-2"></div>
+    <div class="fp-punkt" id="fp-3"></div>
+    <div class="fp-punkt" id="fp-4"></div>
+    <div class="fp-punkt" id="fp-5"></div>
+    <div class="fp-punkt" id="fp-6"></div>
+  </div>
+  <div id="timer-zeile" aria-live="off">Zeit: <span id="timer-wert">00:00</span></div>
+  <div id="verlauf" aria-label="Bisherige Eingaben">
+    <ul id="verlauf-liste" aria-label="Eingegebene Woerter und Loesungsfortschritt"></ul>
+  </div>
+  <div id="eingabe-bereich">
+    <div class="eingabe-wrapper">
+      <input type="text" id="wort-input" maxlength="5"
+        autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
+        placeholder=", , , , ,"
+        aria-label="Wort eingeben und Enter druecken"
+        aria-describedby="fehler-msg">
+    </div>
+    <div id="fehler-msg" role="alert" aria-live="assertive"></div>
+  </div>
+  <div id="status-bereich" aria-label="Buchstabenstatus">
+    <div class="status-gruppe falsch">
+      <div class="buchstaben-zeile falsche-stelle" id="bz-falsch">keine (Falsche Stelle)</div>
+    </div>
+    <div class="status-gruppe nein">
+      <div class="buchstaben-zeile nicht-vorhanden" id="bz-nein">keine (Nicht vorhanden)</div>
+    </div>
+    <div class="status-gruppe used">
+      <div class="buchstaben-zeile verwendet" id="bz-used">keine (Bereits verwendet)</div>
+    </div>
+    <div class="status-gruppe unused">
+      <div class="buchstaben-zeile unbenutzt" id="bz-unused">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z (Noch nicht verwendet)</div>
+    </div>
+  </div>
+  <button class="btn-secondary" id="btn-zurueck-zum-menue" style="margin-top:12px;">Zurueck zum Menue</button>
+</section>
+<!-- SPIELFELD ENDE -->
+
+<!-- ERGEBNIS-SCREEN ANFANG -->
+<section id="ergebnis-screen" aria-label="Spielergebnis" aria-live="polite">
+  <div class="erg-box">
+    <div id="erg-banner" style="display:none;" class="erg-gewinn-banner"></div>
+    <h2 id="erg-titel" tabindex="-1">Wort geloest!</h2>
+    <div class="erg-zeile"><span class="erg-label">Wort:</span><span class="erg-wert" id="erg-wort">-</span></div>
+    <div class="erg-zeile"><span class="erg-label">Anzahl Versuche:</span><span class="erg-wert" id="erg-versuche">-</span></div>
+    <div class="erg-zeile"><span class="erg-label">Zeit:</span><span class="erg-wert" id="erg-zeit">-</span></div>
+    <div class="erg-zeile" id="erg-platz-zeile" style="display:none;"><span class="erg-label">Dein Platz heute:</span><span class="erg-wert" id="erg-platz">-</span></div>
+    <div class="erg-zeile" style="flex-direction:column;gap:6px;">
+      <span class="erg-label">Eingegebene Woerter:</span>
+      <ul class="erg-wortliste" id="erg-wortliste" aria-label="Eingegebene Woerter"></ul>
+    </div>
+  </div>
+  <div class="erg-btns">
+    <button class="btn-secondary" id="btn-zurueck-erg" style="flex:1;padding:11px;font-size:.9rem;">Zurueck zum Menue</button>
+  </div>
+</section>
+<!-- ERGEBNIS-SCREEN ENDE -->
+
+<!-- TAGESRANGLISTE-SCREEN ANFANG -->
+<section id="tagstats-screen" aria-label="Heutige Rangliste" aria-live="polite">
+  <div class="rang-box">
+    <h2 id="tagstats-titel" tabindex="-1">Heutige Rangliste</h2>
+    <ol class="rang-liste" id="tagstats-liste" aria-label="Rangliste des heutigen Tages"></ol>
+  </div>
+  <div class="erg-btns">
+    <button class="btn-teile" id="btn-tagstats-teile">Rangliste teilen</button>
+    <button class="btn-secondary" id="btn-zurueck-von-rangliste" style="flex:1;min-width:120px;padding:11px;font-size:.9rem;">Zurueck</button>
+  </div>
+</section>
+<!-- TAGESRANGLISTE-SCREEN ENDE -->
+
+<!-- STATISTIK-HAUPTMENUE ANFANG -->
+<section id="statistik-screen" aria-label="Statistiken" aria-live="polite">
+  <div style="display:flex;flex-direction:column;gap:12px;padding:16px 0;">
+    <h1 style="font-family:var(--font-display);font-size:1.6rem;">Statistiken 📊</h1>
+    <button class="btn-primary" id="btn-alle-spieler-stats">Statistik aller Tippfüchse 🌍</button>
+    <button class="btn-secondary" id="btn-gruppen-stats">Meine Tippfuchs Gruppen 👥</button>
+    <button class="btn-secondary" id="btn-zurueck-von-statistik">Zurueck</button>
+  </div>
+</section>
+<!-- STATISTIK-HAUPTMENUE ENDE -->
+
+<!-- ALLE-SPIELER-STATISTIK-SCREEN ANFANG -->
+<section id="alle-stats-screen" aria-label="Statistik aller Spieler" aria-live="polite">
+  <div style="display:flex;flex-direction:column;gap:14px;padding:16px 0;">
+    <h1 style="font-family:var(--font-display);font-size:1.4rem;">Statistik aller Tippfüchse 🌍</h1>
+    <div class="stats-box">
+      <h2>Letzte Tage 📅</h2>
+      <label for="tage-select" style="font-size:.85rem;color:var(--text-muted);">Datum auswaehlen:</label>
+      <select class="datum-select" id="tage-select" aria-label="Tag auswaehlen"></select>
+      <div id="tage-ergebnis" class="tages-ergebnis" style="display:none;"></div>
+      <div id="tage-weitere" style="display:none;" class="platzierung-navigator">
+        <span style="font-size:.82rem;color:var(--text-muted);white-space:nowrap;">Weitere Plaetze:</span>
+        <select id="tage-weitere-dropdown" aria-label="Weitere Plaetze"></select>
+      </div>
+    </div>
+    <div class="stats-box">
+      <h2>Tippfuchs Champion aller Zeiten <span id="bot-anzahl" style="font-size:.8rem;color:var(--text-muted);font-family:var(--font-body);font-weight:400;"></span></h2>
+      <div id="bot-mein-platz" class="mein-platz-box" style="display:none;font-size:.9rem;"></div>
+      <input type="text" id="bot-suche" placeholder="Spieler suchen..." aria-label="Spieler suchen" class="text-input" style="font-size:.9rem;padding:8px 12px;">
+      <ul class="best-of-liste" id="bot-liste" aria-label="Champion aller Zeiten Liste"></ul>
+      <div id="bot-mehr" style="display:none;" class="platzierung-navigator">
+        <span style="font-size:.82rem;color:var(--text-muted);white-space:nowrap;">Weitere Plaetze:</span>
+        <select id="bot-dropdown" aria-label="Weitere Plaetze"></select>
+      </div>
+    </div>
+    <div class="stats-box">
+      <h2>Tippfuchs des Monats 📆</h2>
+      <div style="display:flex;gap:8px;">
+        <select class="datum-select" id="monat-jahr-select" aria-label="Jahr auswaehlen" style="flex:1;"></select>
+        <select class="datum-select" id="monat-select" aria-label="Monat auswaehlen" style="flex:1;"></select>
+      </div>
+      <div id="monat-ergebnis" class="tages-ergebnis" style="display:none;"></div>
+      <div id="monat-weitere" style="display:none;" class="platzierung-navigator">
+        <span style="font-size:.82rem;color:var(--text-muted);white-space:nowrap;">Weitere Plaetze:</span>
+        <select id="monat-weitere-dropdown" aria-label="Weitere Plaetze"></select>
+      </div>
+    </div>
+    <div class="stats-box">
+      <h2>Tippfuchs des Jahres 🗓️</h2>
+      <select class="datum-select" id="jahr-select" aria-label="Jahr auswaehlen"></select>
+      <div id="jahr-ergebnis" class="tages-ergebnis" style="display:none;"></div>
+      <div id="jahr-weitere" style="display:none;" class="platzierung-navigator">
+        <span style="font-size:.82rem;color:var(--text-muted);white-space:nowrap;">Weitere Plaetze:</span>
+        <select id="jahr-weitere-dropdown" aria-label="Weitere Plaetze"></select>
+      </div>
+    </div>
+    <button class="btn-secondary" id="btn-zurueck-von-alle">Zurueck</button>
+  </div>
+</section>
+<!-- ALLE-SPIELER-STATISTIK-SCREEN ENDE -->
+
+<!-- GRUPPEN-SCREEN ANFANG -->
+<section id="gruppen-screen" aria-label="Meine Tippfuchs Gruppen" aria-live="polite">
+  <div style="display:flex;flex-direction:column;gap:16px;padding:16px 0;">
+    <h1 style="font-family:var(--font-display);font-size:1.6rem;">Meine Tippfuchs Gruppen 👥</h1>
+    <div id="gruppen-kein-konto" style="display:none;flex-direction:column;gap:12px;">
+      <p style="font-size:.9rem;color:var(--text-muted);">Du musst mit einem Google-Konto angemeldet sein um Tippfuchs Gruppen zu nutzen.</p>
+      <button class="btn-primary" id="btn-gruppen-login">Mit Google anmelden</button>
+    </div>
+    <div id="gruppen-inhalt" style="display:none;flex-direction:column;gap:16px;">
+
+      <!-- GRUPPEN-VERWALTUNG ANFANG -->
+      <div class="stats-box">
+        <h2>Tippfuchs Gruppen verwalten</h2>
+        <button class="btn-primary" id="btn-gruppe-erstellen-oeffnen">Neue Tippfuchs Gruppe erstellen ➕</button>
+        <button class="btn-secondary" id="btn-gruppe-beitreten-oeffnen">Tippfuchs Gruppe beitreten 🔑</button>
+        <button class="btn-danger" id="btn-gruppe-verlassen-oeffnen">Tippfuchs Gruppe verlassen 🚪</button>
+      </div>
+      <!-- GRUPPEN-VERWALTUNG ENDE -->
+
+      <!-- GRUPPEN-LISTE ANFANG -->
+      <div class="stats-box">
+        <h2>Meine Tippfuchs Gruppen 👥</h2>
+        <div id="meine-gruppen-liste" style="display:flex;flex-direction:column;gap:8px;">
+          <p style="font-size:.9rem;color:var(--text-muted);">Wird geladen...</p>
+        </div>
+      </div>
+      <!-- GRUPPEN-LISTE ENDE -->
+
+      <!-- FREUNDESLISTE ANFANG -->
+      <div class="stats-box">
+        <h2>Freundesliste 👤</h2>
+        <div class="info-box">Deine persoenliche Freundesliste - nur fuer dich sichtbar.</div>
+        <h3>Letzte Tage 📅</h3>
+        <label for="freunde-tage-select" style="font-size:.85rem;color:var(--text-muted);">Datum auswaehlen:</label>
+        <select class="datum-select" id="freunde-tage-select" aria-label="Tag auswaehlen"></select>
+        <div id="freunde-tage-ergebnis" class="tages-ergebnis" style="display:none;"></div>
+        <h3>Freunde hinzufuegen ➕</h3>
+        <input type="text" id="freunde-suche" placeholder="Spielernamen suchen..." aria-label="Spielernamen suchen" class="text-input" style="font-size:.9rem;padding:8px 12px;">
+        <div id="freunde-suche-ergebnis" class="checkbox-liste" style="display:none;" role="group" aria-label="Spieler auswaehlen"></div>
+        <button class="btn-primary" id="btn-freunde-hinzufuegen" style="display:none;">Ausgewaehlte Freunde hinzufuegen ➕</button>
+        <h3>Freunde entfernen ➖</h3>
+        <div id="freunde-entfernen-liste" class="checkbox-liste" role="group" aria-label="Freunde zum Entfernen auswaehlen"></div>
+        <button class="btn-danger" id="btn-freunde-entfernen" style="display:none;">Ausgewaehlte Freunde entfernen ➖</button>
+      </div>
+      <!-- FREUNDESLISTE ENDE -->
+
+    </div>
+    <button class="btn-secondary" id="btn-zurueck-von-gruppen">Zurueck</button>
+  </div>
+</section>
+<!-- GRUPPEN-SCREEN ENDE -->
+
+<!-- GRUPPE-DETAIL-SCREEN ANFANG -->
+<section id="gruppe-detail-screen" aria-label="Gruppendetails" aria-live="polite">
+  <div style="display:flex;flex-direction:column;gap:14px;padding:16px 0;">
+    <h1 id="gruppe-detail-titel" style="font-family:var(--font-display);font-size:1.4rem;">Gruppe</h1>
+
+    <!-- GRUPPENINFO ANFANG -->
+    <div class="stats-box">
+      <h2>Gruppeninfo ℹ️</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <p style="font-size:.85rem;color:var(--text-muted);">Beitrittsschluessel:</p>
+        <div class="id-box" id="gruppe-id-anzeige"></div>
+        <button class="btn-secondary" id="btn-gruppe-code-teilen" style="margin-top:4px;">
+          🦊 Beitrittscode teilen
+        </button>
+      </div>
+      <div>
+        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:8px;">Mitglieder:</p>
+        <div id="gruppe-mitglieder-liste" style="display:flex;flex-direction:column;gap:2px;"></div>
+      </div>
+      <div id="gruppe-anfragen-bereich" style="display:none;flex-direction:column;gap:8px;">
+        <p style="font-size:.85rem;font-weight:700;color:var(--text-muted);">Beitrittsanfragen 📬</p>
+        <div id="gruppe-anfragen-liste" style="display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+    </div>
+    <!-- GRUPPENINFO ENDE -->
+
+    <!-- GRUPPE-BESTOFTIME ANFANG -->
+    <div class="stats-box">
+      <h2>Best of all Time <span id="gruppe-bot-anzahl" style="font-size:.8rem;color:var(--text-muted);font-family:var(--font-body);font-weight:400;"></span></h2>
+      <div class="info-box">Nur Tage an denen alle Mitglieder gespielt haben werden gewertet.</div>
+      <div id="gruppe-bot-mein-platz" class="mein-platz-box" style="display:none;font-size:.9rem;"></div>
+      <ul class="best-of-liste" id="gruppe-bot-liste" aria-label="Gruppenrangliste Best of Time"></ul>
+    </div>
+    <!-- GRUPPE-BESTOFTIME ENDE -->
+
+    <!-- GRUPPE-LETZTE-TAGE ANFANG -->
+    <div class="stats-box">
+      <h2>Letzte Tage 📅</h2>
+      <label for="gruppe-tage-select" style="font-size:.85rem;color:var(--text-muted);">Datum auswaehlen:</label>
+      <select class="datum-select" id="gruppe-tage-select" aria-label="Tag auswaehlen"></select>
+      <div id="gruppe-tage-ergebnis" class="tages-ergebnis" style="display:none;"></div>
+    </div>
+    <!-- GRUPPE-LETZTE-TAGE ENDE -->
+
+    <button class="btn-secondary" id="btn-zurueck-von-gruppe-detail">Zurueck zu Meine Tippfuchs Gruppen</button>
+  </div>
+</section>
+<!-- GRUPPE-DETAIL-SCREEN ENDE -->
+
+</main>
+
+<!-- MODAL-EMAIL-LOGIN ANFANG -->
+<div class="modal-overlay" id="modal-email-login" role="dialog" aria-modal="true" aria-labelledby="email-login-titel">
+  <div class="modal">
+    <button class="modal-close" id="email-login-close" aria-label="Schliessen">X</button>
+    <h2 id="email-login-titel">Mit E-Mail anmelden</h2>
+
+    <!-- Umschalter -->
+    <div style="display:flex;gap:0;margin-bottom:16px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+      <button id="tab-login" style="flex:1;padding:10px;background:var(--accent);color:#fff;border:none;font-weight:700;cursor:pointer;font-size:.9rem;">Anmelden</button>
+      <button id="tab-register" style="flex:1;padding:10px;background:var(--key-bg);color:var(--text);border:none;font-weight:700;cursor:pointer;font-size:.9rem;">Registrieren</button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <label for="email-input" style="font-size:.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">E-Mail</label>
+      <input type="email" id="email-input" autocomplete="email" spellcheck="false" placeholder="deine@email.de" class="text-input">
+
+      <label for="passwort-input" style="font-size:.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Passwort</label>
+      <input type="password" id="passwort-input" autocomplete="current-password" placeholder="Passwort..." class="text-input">
+
+      <div id="passwort-wiederholen-bereich" style="display:none;flex-direction:column;gap:6px;">
+        <label for="passwort-wiederholen-input" style="font-size:.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Passwort wiederholen</label>
+        <input type="password" id="passwort-wiederholen-input" autocomplete="new-password" placeholder="Passwort wiederholen..." class="text-input">
+      </div>
+
+      <div id="email-login-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
+      <button class="btn-primary" id="btn-email-login-bestaetigen">Anmelden</button>
+
+      <button id="btn-passwort-vergessen" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:.85rem;text-align:left;padding:0;">Passwort vergessen?</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL-EMAIL-LOGIN ENDE -->
+
+<!-- MODAL-SPITZNAME ANFANG -->
+<div class="modal-overlay" id="modal-spitzname" role="dialog" aria-modal="true" aria-labelledby="spitzname-modal-titel">
+  <div class="modal">
+    <button class="modal-close" id="spitzname-modal-close" aria-label="Schliessen">X</button>
+    <h2 id="spitzname-modal-titel">Spielername aendern ✏️</h2>
+    <p style="font-size:.9rem;color:var(--text-muted);margin-bottom:12px;">Melde dich mit deinem Google-Konto an um deinen Spielernamen zu aendern.</p>
+    <button class="google-btn" id="btn-google-spitzname">
+      <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Mit Google anmelden
+    </button>
+    <div id="neuer-spitzname-bereich" style="display:none;flex-direction:column;gap:12px;margin-top:12px;">
+      <label for="neuer-spitzname-input" style="font-size:.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Neuer Spielername</label>
+      <input type="text" id="neuer-spitzname-input" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Neuer Spielername..." class="text-input">
+      <div id="neuer-spitzname-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
+      <button class="btn-primary" id="btn-neuer-spitzname-bestaetigen">Neuen Spielernamen bestaetigen</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL-SPITZNAME ENDE -->
+
+<!-- MODAL-GRUPPE-ERSTELLEN ANFANG -->
+<div class="modal-overlay" id="modal-gruppe-erstellen" role="dialog" aria-modal="true" aria-labelledby="gruppe-erstellen-titel">
+  <div class="modal">
+    <button class="modal-close" id="gruppe-erstellen-close" aria-label="Schliessen">X</button>
+    <h2 id="gruppe-erstellen-titel">Neue Tippfuchs Gruppe erstellen ➕</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <label for="gruppe-name-input" style="font-size:.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Gruppenname</label>
+      <input type="text" id="gruppe-name-input" maxlength="30" autocomplete="off" spellcheck="false" placeholder="Gruppenname eingeben..." class="text-input">
+      <div id="gruppe-erstellen-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
+      <button class="btn-primary" id="btn-gruppe-erstellen-bestaetigen">Gruppe erstellen</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL-GRUPPE-ERSTELLEN ENDE -->
+
+<!-- MODAL-GRUPPE-BEITRETEN ANFANG -->
+<div class="modal-overlay" id="modal-gruppe-beitreten" role="dialog" aria-modal="true" aria-labelledby="gruppe-beitreten-titel">
+  <div class="modal">
+    <button class="modal-close" id="gruppe-beitreten-close" aria-label="Schliessen">X</button>
+    <h2 id="gruppe-beitreten-titel">Tippfuchs Gruppe beitreten 🔑</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <label for="gruppe-id-input" style="font-size:.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Beitrittsschluessel eingeben</label>
+      <input type="text" id="gruppe-id-input" maxlength="20" autocomplete="off" spellcheck="false" placeholder="z.B. ABC12345" class="text-input">
+      <div id="gruppe-beitreten-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
+      <button class="btn-primary" id="btn-gruppe-anfrage-senden">Anfrage senden</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL-GRUPPE-BEITRETEN ENDE -->
+
+<!-- MODAL-GRUPPE-VERLASSEN ANFANG -->
+<div class="modal-overlay" id="modal-gruppe-verlassen" role="dialog" aria-modal="true" aria-labelledby="gruppe-verlassen-titel">
+  <div class="modal">
+    <button class="modal-close" id="gruppe-verlassen-close" aria-label="Schliessen">X</button>
+    <h2 id="gruppe-verlassen-titel">Tippfuchs Gruppe verlassen 🚪</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <p style="font-size:.9rem;color:var(--text-muted);">Waehle die Gruppe die du verlassen moechtest:</p>
+      <div id="gruppe-verlassen-liste" class="checkbox-liste" role="group" aria-label="Gruppe auswaehlen"></div>
+      <div id="gruppe-verlassen-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
+      <button class="btn-danger" id="btn-gruppe-verlassen-bestaetigen" style="display:none;">Gruppe verlassen</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL-GRUPPE-VERLASSEN ENDE -->
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
