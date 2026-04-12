@@ -174,6 +174,7 @@ function registriereToggle(btnId, inhaltId, label) {
   });
 }
 
+registriereToggle('btn-push-toggle',      'push-inhalt',             'Benachrichtigungen einstellen');
 registriereToggle('btn-erfolge-toggle',   'erfolge-inhalt',          'Persönliche Erfolge');
 registriereToggle('btn-gruppen-toggle',   'start-gruppen-inhalt',    'Meine Tippfuchsgruppen');
 registriereToggle('btn-stats-toggle',     'stats-inhalt',            'Statistik aller Tippfüchse');
