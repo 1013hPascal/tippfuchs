@@ -6,7 +6,7 @@ import { zeigeStart, aktualisiereStartseite, googleLogin, abmelden, loescheAccou
 import { starteSpiel, verarbeiteWort, zeigeErgebnis } from './spiellogik.js';
 import { zeigeTagesrangliste } from './rangliste.js';
 import { ladeBotListe, ladeTagsSelect, ladeMonatSelect, ladeJahrSelect } from './statistik.js';
-import { zeigeGruppenScreen, zeigeGruppeVerlassenModal } from './gruppen-ui.js';
+import { zeigeGruppenScreen, zeigeGruppeVerlassenModal, ladeMeineGruppenListe, zeigeGruppeDetail } from './gruppen-ui.js';
 import { erstelleGruppe, ladeGruppe, sendeAnfrage, verlasseGruppe } from './gruppen.js';
 import { teile, teileRangliste } from './teilen.js';
 import { oeffneModal, schliesseModal, schliesseAlleModals } from './modal.js';
@@ -44,7 +44,7 @@ document.getElementById('btn-mit-konto').addEventListener('click', async()=>{
 });
 document.getElementById('btn-abmelden').addEventListener('click', abmelden);
 document.getElementById('btn-account-loeschen').addEventListener('click', async () => {
-  if (!confirm('Möchtest du deinen Account wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) return;
+  if (!confirm('Moechtest du deinen Account wirklich loeschen? Diese Aktion kann nicht rueckgaengig gemacht werden.')) return;
   await loescheAccount();
 });
 document.getElementById('btn-stats-start').addEventListener('click',async()=>{ zeigeScreen('alle-stats-screen'); await ladeBotListe(); await ladeTagsSelect(); await ladeMonatSelect(); await ladeJahrSelect(); });
@@ -59,7 +59,16 @@ document.getElementById('btn-spitzname-bestaetigen').addEventListener('click',as
   const v=await spitznameVorhanden(name);
   if (v) { fehler.textContent='Spielername gibt es schon, waehle einen anderen.'; sageLaut('Spielername gibt es schon.'); input.value=''; input.focus(); return; }
   await speichereSpitzname(appState.currentUser.uid,name);
-  appState.currentSpitzname=name; fehler.textContent=''; aktualisiereStartseite(); starteSpiel();
+  appState.currentSpitzname=name; fehler.textContent=''; aktualisiereStartseite();
+  if (appState.pendingBeitreten) {
+    const code=appState.pendingBeitreten; appState.pendingBeitreten=null;
+    await zeigeGruppenScreen();
+    document.getElementById('gruppe-id-input').value=code;
+    document.getElementById('gruppe-beitreten-fehler').textContent='';
+    oeffneModal('modal-gruppe-beitreten');
+    setTimeout(()=>document.getElementById('gruppe-id-input').focus(),150);
+    sageLaut('Du wurdest zu einer Gruppe eingeladen. Klicke auf Anfrage senden um beizutreten.');
+  } else { starteSpiel(); }
 });
 document.getElementById('spitzname-input').addEventListener('keydown',function(e){ if (e.key==='Enter') { e.preventDefault(); document.getElementById('btn-spitzname-bestaetigen').click(); } });
 document.getElementById('btn-google-spitzname').addEventListener('click',async()=>{
@@ -119,13 +128,12 @@ document.getElementById('btn-gruppe-anfrage-senden').addEventListener('click',as
   if (erg===false) fehler.textContent='Gruppe nicht gefunden.';
   else if (erg==='bereits') fehler.textContent='Du bist bereits Mitglied.';
   else if (erg==='ausstehend') fehler.textContent='Du hast bereits eine Anfrage gesendet.';
-  else { sageLaut('Anfrage gesendet.'); schliesseModal('modal-gruppe-beitreten'); }
+  else { sageLaut('Anfrage gesendet.'); schliesseModal('modal-gruppe-beitreten'); await zeigeGruppenScreen(); }
 });
 document.getElementById('gruppe-id-input').addEventListener('keydown',function(e){ if (e.key==='Enter') { e.preventDefault(); document.getElementById('btn-gruppe-anfrage-senden').click(); } });
 document.getElementById('btn-gruppe-verlassen-bestaetigen').addEventListener('click',async()=>{
   if (!appState.gruppenVerlassenAuswahl) return;
   const g=appState.gruppenVerlassenAuswahl;
-  if (!confirm(`Moechtest du wirklich die Gruppe "${g.name}" verlassen?`)) return;
   await verlasseGruppe(g.id);
   sageLaut(`Gruppe "${g.name}" verlassen.`);
   schliesseModal('modal-gruppe-verlassen');

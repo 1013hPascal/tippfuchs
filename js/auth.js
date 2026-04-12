@@ -6,7 +6,8 @@ import { TAGES_IDX, HEUTE_KEY } from './tageswort.js';
 import { getDatum } from './hilfsfunktionen.js';
 import { ladeSpitzname, spitznameVorhanden, speichereSpitzname, aendereSpitzname } from './firebase-basis.js';
 import { db, ref, set } from './firebase-config.js';
-import { syncGruppenBeiLogin } from './gruppen.js';
+import { syncGruppenBeiLogin, sendeAnfrage } from './gruppen.js';
+import { zeigeGruppenScreen } from './gruppen-ui.js';
 import { zeigeScreen } from './screens.js';
 import { aktualisiereStartStats } from './lokaler-zustand.js';
 import { sageLaut } from './live-region.js';
@@ -20,6 +21,22 @@ onAuthStateChanged(auth, async (user) => {
     appState.currentSpitzname = await ladeSpitzname(user.uid);
     // Gruppen-Selbst-Sync: prüfe ob du irgendwo als Mitglied eingetragen bist
     await syncGruppenBeiLogin(user.uid);
+    // Ausstehenden Beitritts-Link verarbeiten (z.B. via ?beitreten=CODE geöffnet)
+    if (appState.pendingBeitreten && appState.currentSpitzname) {
+      const code = appState.pendingBeitreten;
+      appState.pendingBeitreten = null;
+      aktualisiereStartseite();
+      // Gruppen-Screen öffnen und Modal mit vorausgefülltem Code anzeigen
+      setTimeout(async () => {
+        await zeigeGruppenScreen();
+        document.getElementById('gruppe-id-input').value = code;
+        document.getElementById('gruppe-beitreten-fehler').textContent = '';
+        oeffneModal('modal-gruppe-beitreten');
+        setTimeout(() => document.getElementById('gruppe-id-input').focus(), 150);
+        sageLaut('Du wurdest zu einer Gruppe eingeladen. Klicke auf Anfrage senden um beizutreten.');
+      }, 300);
+      return;
+    }
   } else {
     appState.currentUser = null;
     appState.currentSpitzname = null;

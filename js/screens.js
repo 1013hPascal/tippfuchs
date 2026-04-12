@@ -18,6 +18,13 @@ export function zeigeScreen(id) {
       topZurueck.style.display = 'block';
       // Klickt den unteren Zurück-Button der aktiven Sektion
       topBtn.onclick = () => {
+        // Erst prüfen ob ein Modal offen ist — dann nur dieses schließen
+        const offeneModal = document.querySelector('.modal-overlay.open');
+        if (offeneModal) {
+          offeneModal.classList.remove('open');
+          offeneModal.setAttribute('aria-hidden', 'true');
+          return;
+        }
         const aktiv = document.getElementById(id);
         if (!aktiv) return;
         const zurueckBtn = aktiv.querySelector('[id^="btn-zurueck"]');

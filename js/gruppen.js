@@ -83,8 +83,31 @@ export async function sendeAnfrage(gruppenId) {
     await set(ref(db, `gruppen/${gruppenId}/anfragen/${appState.currentUser.uid}`), {
       name:appState.currentSpitzname, uid:appState.currentUser.uid, zeit:Date.now()
     });
+    // Auch auf user-Seite speichern, damit eigene ausstehende Anfragen angezeigt werden können
+    await set(ref(db, `spieler/${appState.currentUser.uid}/anfragen/${gruppenId}`), {
+      name:gd.name, zeit:Date.now()
+    });
     return true;
   } catch(e) { return false; }
+}
+export async function ladeEigeneAnfragen() {
+  if (!appState.currentUser) return [];
+  try {
+    const snap = await get(child(ref(db), `spieler/${appState.currentUser.uid}/anfragen`));
+    if (!snap.exists()) return [];
+    const anfragen = [];
+    for (const [gruppenId, daten] of Object.entries(snap.val())) {
+      // Prüfen ob die Anfrage noch wirklich aussteht (nicht schon angenommen/abgelehnt)
+      const gruppenAnfrageSnap = await get(child(ref(db), `gruppen/${gruppenId}/anfragen/${appState.currentUser.uid}`));
+      if (gruppenAnfrageSnap.exists()) {
+        anfragen.push({ id: gruppenId, name: daten.name });
+      } else {
+        // Nicht mehr ausstehend — aufräumen
+        await remove(ref(db, `spieler/${appState.currentUser.uid}/anfragen/${gruppenId}`));
+      }
+    }
+    return anfragen;
+  } catch(e) { return []; }
 }
 export async function nimmAnfrageAn(gruppenId, uid, name) {
   try {

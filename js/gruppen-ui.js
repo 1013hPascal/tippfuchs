@@ -2,7 +2,7 @@ import { appState } from './state.js';
 import { db, ref, get, child } from './firebase-config.js';
 import { TAGES_IDX } from './tageswort.js';
 import { getDatumVonIdx } from './hilfsfunktionen.js';
-import { ladeGruppen, ladeGruppe, nimmAnfrageAn, lehnAnfrageAb, ladeGruppenBestOfTime } from './gruppen.js';
+import { ladeGruppen, ladeGruppe, nimmAnfrageAn, lehnAnfrageAb, ladeGruppenBestOfTime, ladeEigeneAnfragen } from './gruppen.js';
 import { ladeRanglisteFirebase } from './firebase-basis.js';
 import { formatZeit } from './timer.js';
 import { zeigeScreen } from './screens.js';
@@ -24,9 +24,17 @@ export async function zeigeGruppenScreen() {
 export async function ladeMeineGruppenListe() {
   const liste=document.getElementById('meine-gruppen-liste');
   liste.innerHTML='<p style="font-size:.9rem;color:var(--text-muted);">Wird geladen...</p>';
-  const gruppen=await ladeGruppen();
+  const [gruppen, eigeneAnfragen]=await Promise.all([ladeGruppen(), ladeEigeneAnfragen()]);
   liste.innerHTML='';
-  if (gruppen.length===0) { liste.innerHTML='<p style="font-size:.9rem;color:var(--text-muted);">Du bist noch in keiner Tippfuchs Gruppe.</p>'; return; }
+  if (gruppen.length===0 && eigeneAnfragen.length===0) {
+    liste.innerHTML='<p style="font-size:.9rem;color:var(--text-muted);">Du bist noch in keiner Tippfuchs Gruppe.</p>';
+    return;
+  }
+  if (gruppen.length===0) {
+    const p=document.createElement('p'); p.style.cssText='font-size:.9rem;color:var(--text-muted);';
+    p.textContent='Du bist noch in keiner Tippfuchs Gruppe.';
+    liste.appendChild(p);
+  }
   gruppen.forEach(g=>{
     const anzM=g.mitglieder?Object.keys(g.mitglieder).length:0;
     const anzA=g.anfragen?Object.keys(g.anfragen).length:0;
@@ -45,6 +53,13 @@ export async function ladeMeineGruppenListe() {
       liste.appendChild(hinweis);
     }
   });
+  // Eigene ausstehende Anfragen anzeigen (Gruppen, bei denen man noch nicht Mitglied ist)
+  eigeneAnfragen.forEach(a=>{
+    const hinweis=document.createElement('p');
+    hinweis.style.cssText='font-size:.9rem;color:var(--accent);padding:4px 0;';
+    hinweis.textContent=`📬 Du hast eine Anfrage bei "${a.name}" gestellt.`;
+    liste.appendChild(hinweis);
+  });
 }
 
 export async function zeigeGruppeDetail(gruppenId) {
@@ -58,19 +73,33 @@ export async function zeigeGruppeDetail(gruppenId) {
 
   const btnTeilen = document.getElementById('btn-gruppe-code-teilen');
   if (btnTeilen) {
+    btnTeilen.textContent = '🦊 Beitrittslink teilen';
     btnTeilen.onclick = () => {
       const gruppenName = gruppe?.name || 'Tippfuchs Gruppe';
-      const code = gruppenId;
-      const text = `Ich lade dich ein zu meiner Tippfuchs Gruppe "${gruppenName}"!\n\nTippfuchs ist ein tägliches Worträtsel, 5 Buchstaben, 6 Versuche, jeden Tag ein neues Wort. Für alle spielbar!\n\nÖffne die Seite: https://blindmove.blogspot.com/p/tippfuchs.html\nGehe zu Statistiken, dann Meine Tippfuchs Gruppen, dann Gruppe beitreten.\nGib diesen Beitrittscode ein: ${code}\n\nIch freue mich darauf mit dir zu spielen!`;
-      if (navigator.share) {
-        navigator.share({ text }).catch(() => {});
+      const link = `https://blindmove.blogspot.com/p/tippfuchs.html?beitreten=${gruppenId}`;
+      const text = `Ich lade dich ein zu meiner Tippfuchs Gruppe "${gruppenName}"!\n\nTippfuchs ist ein tägliches Worträtsel, 5 Buchstaben, 6 Versuche, jeden Tag ein neues Wort. Für alle spielbar!\n\nKlicke auf diesen Link um direkt beizutreten:\n${link}`;
+      // Zuverlässige Kopiermethode: temporäres textarea-Element
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('aria-hidden', 'true');
+      ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      let kopiert = false;
+      try { kopiert = document.execCommand('copy'); } catch(e) {}
+      document.body.removeChild(ta);
+      if (kopiert) {
+        btnTeilen.textContent = '✓ Kopiert!';
+        sageLaut('Einladungslink in die Zwischenablage kopiert.');
+        setTimeout(() => { btnTeilen.textContent = '🦊 Beitrittslink teilen'; }, 2500);
       } else if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(() => {
           btnTeilen.textContent = '✓ Kopiert!';
-          setTimeout(() => { btnTeilen.innerHTML = '🦊 Beitrittscode teilen'; }, 2500);
-        });
+          sageLaut('Einladungslink in die Zwischenablage kopiert.');
+          setTimeout(() => { btnTeilen.textContent = '🦊 Beitrittslink teilen'; }, 2500);
+        }).catch(() => { sageLaut('Link: ' + link); });
       } else {
-        prompt('Text kopieren:', text);
+        sageLaut('Link: ' + link);
       }
     };
   }

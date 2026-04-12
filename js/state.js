@@ -7,6 +7,7 @@ export const appState = {
   gruppenVerlassenAuswahl: null,
   timerInterval: null,
   TAGESWORT: null,
+  pendingBeitreten: null,
 };
 
 // Spielzustand — als Objekt direkt mutierbar nach Import
