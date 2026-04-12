@@ -1350,6 +1350,24 @@
   <div style="display:flex;flex-direction:column;gap:14px;padding:16px 0;">
     <h1 id="gruppe-detail-titel" style="font-family:var(--font-display);font-size:1.4rem;">Gruppe</h1>
 
+    <!-- GRUPPE-TAGESERGEBNISSE ANFANG -->
+    <div class="stats-box">
+      <h2>Tagesergebnisse 📅</h2>
+      <label for="gruppe-tage-select" style="font-size:.85rem;color:var(--text-muted);">Datum auswaehlen:</label>
+      <select class="datum-select" id="gruppe-tage-select" aria-label="Tag auswaehlen"></select>
+      <div id="gruppe-tage-ergebnis" class="tages-ergebnis" style="display:none;"></div>
+    </div>
+    <!-- GRUPPE-TAGESERGEBNISSE ENDE -->
+
+    <!-- GRUPPE-BESTOFTIME ANFANG -->
+    <div class="stats-box">
+      <h2>Best of all Time <span id="gruppe-bot-anzahl" style="font-size:.8rem;color:var(--text-muted);font-family:var(--font-body);font-weight:400;"></span></h2>
+      <div class="info-box">Nur Tage an denen alle Mitglieder gespielt haben werden gewertet.</div>
+      <div id="gruppe-bot-mein-platz" class="mein-platz-box" style="display:none;font-size:.9rem;"></div>
+      <ul class="best-of-liste" id="gruppe-bot-liste" aria-label="Gruppenrangliste Best of Time"></ul>
+    </div>
+    <!-- GRUPPE-BESTOFTIME ENDE -->
+
     <!-- GRUPPENINFO ANFANG -->
     <div class="stats-box">
       <h2>Gruppeninfo ℹ️</h2>
@@ -1370,24 +1388,6 @@
       </div>
     </div>
     <!-- GRUPPENINFO ENDE -->
-
-    <!-- GRUPPE-BESTOFTIME ANFANG -->
-    <div class="stats-box">
-      <h2>Best of all Time <span id="gruppe-bot-anzahl" style="font-size:.8rem;color:var(--text-muted);font-family:var(--font-body);font-weight:400;"></span></h2>
-      <div class="info-box">Nur Tage an denen alle Mitglieder gespielt haben werden gewertet.</div>
-      <div id="gruppe-bot-mein-platz" class="mein-platz-box" style="display:none;font-size:.9rem;"></div>
-      <ul class="best-of-liste" id="gruppe-bot-liste" aria-label="Gruppenrangliste Best of Time"></ul>
-    </div>
-    <!-- GRUPPE-BESTOFTIME ENDE -->
-
-    <!-- GRUPPE-LETZTE-TAGE ANFANG -->
-    <div class="stats-box">
-      <h2>Letzte Tage 📅</h2>
-      <label for="gruppe-tage-select" style="font-size:.85rem;color:var(--text-muted);">Datum auswaehlen:</label>
-      <select class="datum-select" id="gruppe-tage-select" aria-label="Tag auswaehlen"></select>
-      <div id="gruppe-tage-ergebnis" class="tages-ergebnis" style="display:none;"></div>
-    </div>
-    <!-- GRUPPE-LETZTE-TAGE ENDE -->
 
     <button class="btn-secondary" id="btn-zurueck-von-gruppe-detail">Zurueck zu Meine Tippfuchs Gruppen</button>
   </div>

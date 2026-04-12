@@ -6,7 +6,7 @@ import { zeigeStart, aktualisiereStartseite, googleLogin, abmelden, loescheAccou
 import { starteSpiel, verarbeiteWort, zeigeErgebnis } from './spiellogik.js';
 import { zeigeTagesrangliste } from './rangliste.js';
 import { ladeBotListe, ladeTagsSelect, ladeMonatSelect, ladeJahrSelect } from './statistik.js';
-import { zeigeGruppenScreen, zeigeGruppeVerlassenModal, ladeMeineGruppenListe, zeigeGruppeDetail } from './gruppen-ui.js';
+import { zeigeGruppenScreen, zeigeGruppeVerlassenModal, ladeMeineGruppenListe, zeigeGruppeDetail, stoppeGruppenRefresh } from './gruppen-ui.js';
 import { erstelleGruppe, ladeGruppe, sendeAnfrage, verlasseGruppe } from './gruppen.js';
 import { teile, teileRangliste } from './teilen.js';
 import { oeffneModal, schliesseModal, schliesseAlleModals } from './modal.js';
@@ -139,7 +139,7 @@ document.getElementById('btn-gruppe-verlassen-bestaetigen').addEventListener('cl
   schliesseModal('modal-gruppe-verlassen');
   await ladeMeineGruppenListe();
 });
-document.getElementById('btn-zurueck-von-gruppen').addEventListener('click', zeigeStart);
+document.getElementById('btn-zurueck-von-gruppen').addEventListener('click', () => { stoppeGruppenRefresh(); zeigeStart(); });
 document.getElementById('btn-zurueck-von-gruppe-detail').addEventListener('click', zeigeGruppenScreen);
 document.getElementById('spitzname-modal-close').addEventListener('click',()=>schliesseModal('modal-spitzname'));
 document.getElementById('gruppe-erstellen-close').addEventListener('click',()=>schliesseModal('modal-gruppe-erstellen'));

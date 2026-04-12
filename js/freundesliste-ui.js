@@ -35,6 +35,10 @@ export async function ladeFreundeTagesErgebnis() {
   if (istHeute) {
     // Heute: nur zeigen wer gespielt hat, kein Ergebnis, kein Lösungswort
     div.innerHTML='';
+    const hinweis=document.createElement('p');
+    hinweis.style.cssText='font-size:.85rem;color:var(--text-muted);font-style:italic;margin-bottom:4px;';
+    hinweis.textContent='Ergebnisse morgen sichtbar.';
+    div.appendChild(hinweis);
     const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
     alleNamen.forEach(name=>{
       const hatGespielt=tL.some(e=>e.name.toLowerCase()===name.toLowerCase());

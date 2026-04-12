@@ -11,14 +11,31 @@ import { sageLaut } from './live-region.js';
 import { oeffneModal } from './modal.js';
 
 // GRUPPEN-UI ANFANG
+let gruppenRefreshInterval = null;
+
+export function stoppeGruppenRefresh() {
+  if (gruppenRefreshInterval) { clearInterval(gruppenRefreshInterval); gruppenRefreshInterval = null; }
+}
+
 export async function zeigeGruppenScreen() {
   zeigeScreen('gruppen-screen');
   const keinKonto=document.getElementById('gruppen-kein-konto');
   const inhalt=document.getElementById('gruppen-inhalt');
-  if (!appState.currentUser) { keinKonto.style.display='flex'; inhalt.style.display='none'; return; }
+  if (!appState.currentUser) { keinKonto.style.display='flex'; inhalt.style.display='none'; stoppeGruppenRefresh(); return; }
   keinKonto.style.display='none'; inhalt.style.display='flex';
   await ladeMeineGruppenListe();
   await ladeFreundeslisteUI();
+  // Auto-Refresh: alle 15 Sekunden Gruppen- und Freundesliste aktualisieren
+  stoppeGruppenRefresh();
+  gruppenRefreshInterval = setInterval(async () => {
+    // Nur refreshen wenn der Gruppen-Screen noch aktiv ist
+    if (document.getElementById('gruppen-screen')?.classList.contains('active')) {
+      await ladeMeineGruppenListe();
+      await ladeFreundeslisteUI();
+    } else {
+      stoppeGruppenRefresh();
+    }
+  }, 15000);
 }
 
 export async function ladeMeineGruppenListe() {
@@ -170,6 +187,10 @@ export async function ladeGruppeTagesErgebnis() {
   if (istHeute) {
     // Heute: nur zeigen wer gespielt hat, kein Ergebnis, kein Lösungswort
     div.innerHTML='';
+    const hinweis=document.createElement('p');
+    hinweis.style.cssText='font-size:.85rem;color:var(--text-muted);font-style:italic;margin-bottom:4px;';
+    hinweis.textContent='Ergebnisse morgen sichtbar.';
+    div.appendChild(hinweis);
     const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
     mitglieder.forEach(m=>{
       const hatGespielt = tL.some(e=>e.name.toLowerCase()===m.name.toLowerCase());
