@@ -32,9 +32,18 @@ export async function ladeMeineGruppenListe() {
     const anzA=g.anfragen?Object.keys(g.anfragen).length:0;
     const btn=document.createElement('button');
     btn.className='gruppe-btn';
-    btn.innerHTML=`<span class="gruppe-btn-name">${g.name}${anzA>0?' ('+anzA+' Anfrage'+(anzA!==1?'n':'')+') 📬':''}</span><span class="gruppe-btn-info">${anzM} Mitglied${anzM!==1?'er':''}</span>`;
+    btn.innerHTML=`<span class="gruppe-btn-name">${g.name}</span><span class="gruppe-btn-info">${anzM} Mitglied${anzM!==1?'er':''}</span>`;
     btn.addEventListener('click',()=>zeigeGruppeDetail(g.id));
     liste.appendChild(btn);
+    // Ausstehende Anfragen als eigenen Hinweis anzeigen
+    if (anzA>0) {
+      const hinweis=document.createElement('button');
+      hinweis.className='gruppe-btn';
+      hinweis.style.cssText='background:var(--surface);border:2px solid var(--accent);color:var(--accent);font-size:.85rem;';
+      hinweis.innerHTML=`<span>📬 Ausstehende Gruppenanfrage${anzA!==1?'n':''} bei "${g.name}"</span><span>${anzA} Anfrage${anzA!==1?'n':''}</span>`;
+      hinweis.addEventListener('click',()=>zeigeGruppeDetail(g.id));
+      liste.appendChild(hinweis);
+    }
   });
 }
 

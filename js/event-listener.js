@@ -162,6 +162,8 @@ registriereToggle('btn-gruppen-toggle',   'start-gruppen-inhalt',    'Meine Tipp
 registriereToggle('btn-stats-toggle',     'stats-inhalt',            'Statistik aller Tippfüchse');
 registriereToggle('btn-account-toggle',   'account-inhalt',          'Account');
 registriereToggle('btn-design-toggle',    'design-inhalt',           'Design auswaehlen');
-registriereToggle('btn-anleitung-toggle', 'anleitung-toggle-inhalt', 'Anleitung und Hilfe');
+registriereToggle('btn-anleitung-toggle',         'anleitung-toggle-inhalt',  'Anleitung und Hilfe');
+registriereToggle('btn-gruppen-verwalten-toggle', 'gruppen-verwalten-inhalt', 'Tippfuchsgruppen verwalten');
+registriereToggle('btn-freunde-verwalten-toggle', 'freunde-verwalten-inhalt', 'Freundesliste verwalten');
 
 

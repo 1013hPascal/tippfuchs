@@ -1286,48 +1286,58 @@
 <!-- GRUPPEN-SCREEN ANFANG -->
 <section id="gruppen-screen" aria-label="Meine Tippfuchs Gruppen" aria-live="polite">
   <div style="display:flex;flex-direction:column;gap:16px;padding:16px 0;">
-    <h1 style="font-family:var(--font-display);font-size:1.6rem;">Meine Tippfuchs Gruppen 👥</h1>
+    <h1 style="font-family:var(--font-display);font-size:1.6rem;">Willkommen bei deinen Gruppen und Freundesliste</h1>
     <div id="gruppen-kein-konto" style="display:none;flex-direction:column;gap:12px;">
       <p style="font-size:.9rem;color:var(--text-muted);">Du musst mit einem Google-Konto angemeldet sein um Tippfuchs Gruppen zu nutzen.</p>
       <button class="btn-primary" id="btn-gruppen-login">Mit Google anmelden</button>
     </div>
     <div id="gruppen-inhalt" style="display:none;flex-direction:column;gap:16px;">
 
-      <!-- GRUPPEN-VERWALTUNG ANFANG -->
-      <div class="stats-box">
-        <h2>Tippfuchs Gruppen verwalten</h2>
-        <button class="btn-primary" id="btn-gruppe-erstellen-oeffnen">Neue Tippfuchs Gruppe erstellen ➕</button>
-        <button class="btn-secondary" id="btn-gruppe-beitreten-oeffnen">Tippfuchs Gruppe beitreten 🔑</button>
-        <button class="btn-danger" id="btn-gruppe-verlassen-oeffnen">Tippfuchs Gruppe verlassen 🚪</button>
-      </div>
-      <!-- GRUPPEN-VERWALTUNG ENDE -->
-
       <!-- GRUPPEN-LISTE ANFANG -->
       <div class="stats-box">
-        <h2>Meine Tippfuchs Gruppen 👥</h2>
+        <h2>Meine Tippfuchsgruppen 👥</h2>
         <div id="meine-gruppen-liste" style="display:flex;flex-direction:column;gap:8px;">
           <p style="font-size:.9rem;color:var(--text-muted);">Wird geladen...</p>
         </div>
       </div>
       <!-- GRUPPEN-LISTE ENDE -->
 
-      <!-- FREUNDESLISTE ANFANG -->
+      <!-- FREUNDESLISTE STATISTIK ANFANG -->
       <div class="stats-box">
         <h2>Freundesliste 👤</h2>
         <div class="info-box">Deine persoenliche Freundesliste - nur fuer dich sichtbar.</div>
-        <h3>Letzte Tage 📅</h3>
         <label for="freunde-tage-select" style="font-size:.85rem;color:var(--text-muted);">Datum auswaehlen:</label>
         <select class="datum-select" id="freunde-tage-select" aria-label="Tag auswaehlen"></select>
         <div id="freunde-tage-ergebnis" class="tages-ergebnis" style="display:none;"></div>
-        <h3>Freunde hinzufuegen ➕</h3>
-        <input type="text" id="freunde-suche" placeholder="Spielernamen suchen..." aria-label="Spielernamen suchen" class="text-input" style="font-size:.9rem;padding:8px 12px;">
-        <div id="freunde-suche-ergebnis" class="checkbox-liste" style="display:none;" role="group" aria-label="Spieler auswaehlen"></div>
-        <button class="btn-primary" id="btn-freunde-hinzufuegen" style="display:none;">Ausgewaehlte Freunde hinzufuegen ➕</button>
-        <h3>Freunde entfernen ➖</h3>
-        <div id="freunde-entfernen-liste" class="checkbox-liste" role="group" aria-label="Freunde zum Entfernen auswaehlen"></div>
-        <button class="btn-danger" id="btn-freunde-entfernen" style="display:none;">Ausgewaehlte Freunde entfernen ➖</button>
       </div>
-      <!-- FREUNDESLISTE ENDE -->
+      <!-- FREUNDESLISTE STATISTIK ENDE -->
+
+      <!-- VERWALTUNG ANFANG -->
+      <h2>Gruppen und Freundesliste verwalten</h2>
+
+      <div class="stats-box" style="gap:8px;">
+        <h3><button id="btn-gruppen-verwalten-toggle" aria-expanded="false" aria-controls="gruppen-verwalten-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Tippfuchsgruppen verwalten</button></h3>
+        <div id="gruppen-verwalten-inhalt" style="display:none;flex-direction:column;gap:8px;">
+          <button class="btn-primary" id="btn-gruppe-erstellen-oeffnen">Neue Tippfuchs Gruppe erstellen ➕</button>
+          <button class="btn-secondary" id="btn-gruppe-beitreten-oeffnen">Tippfuchs Gruppe beitreten 🔑</button>
+          <button class="btn-danger" id="btn-gruppe-verlassen-oeffnen">Tippfuchs Gruppe verlassen 🚪</button>
+        </div>
+      </div>
+
+      <div class="stats-box" style="gap:8px;">
+        <h3><button id="btn-freunde-verwalten-toggle" aria-expanded="false" aria-controls="freunde-verwalten-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Freundesliste verwalten</button></h3>
+        <div id="freunde-verwalten-inhalt" style="display:none;flex-direction:column;gap:8px;">
+          <p style="font-size:.85rem;color:var(--text-muted);">Spielernamen suchen und hinzufuegen:</p>
+          <input type="text" id="freunde-suche" placeholder="Spielernamen suchen..." aria-label="Spielernamen suchen" class="text-input" style="font-size:.9rem;padding:8px 12px;">
+          <div id="freunde-suche-ergebnis" class="checkbox-liste" style="display:none;" role="group" aria-label="Spieler auswaehlen"></div>
+          <button class="btn-primary" id="btn-freunde-hinzufuegen" style="display:none;">Ausgewaehlte Freunde hinzufuegen ➕</button>
+          <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
+          <p style="font-size:.85rem;color:var(--text-muted);">Freunde aus der Liste entfernen:</p>
+          <div id="freunde-entfernen-liste" class="checkbox-liste" role="group" aria-label="Freunde zum Entfernen auswaehlen"></div>
+          <button class="btn-danger" id="btn-freunde-entfernen" style="display:none;">Ausgewaehlte Freunde entfernen ➖</button>
+        </div>
+      </div>
+      <!-- VERWALTUNG ENDE -->
 
     </div>
     <button class="btn-secondary" id="btn-zurueck-von-gruppen">Zurueck</button>
