@@ -138,6 +138,11 @@
 
 <main id="app">
 
+<!-- GLOBALER ZURÜCK-BUTTON — erscheint oben auf jeder Unterseite -->
+<div id="global-top-zurueck" style="display:none;padding:4px 0 8px 0;">
+  <button class="btn-secondary" id="btn-global-zurueck-top" style="width:auto;padding:8px 20px;">← Zurück</button>
+</div>
+
 <!-- STARTSEITE ANFANG -->
 <section id="start-screen">
 <!-- HAUS-DEKO ANFANG (nur visuell, aria-hidden) -->
@@ -819,8 +824,8 @@
   <line x1="13" y1="30" x2="18" y2="24" stroke="#E8621A" stroke-width="2" stroke-linecap="round"/>
 </svg>
   </div>
-  <h2><button id="btn-gruppen-toggle" aria-expanded="false" aria-controls="gruppen-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Meine Tippfuchsgruppen</button></h2>
-  <div id="gruppen-inhalt" style="display:none;">
+  <h2><button id="btn-gruppen-toggle" aria-expanded="false" aria-controls="start-gruppen-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Meine Tippfuchsgruppen</button></h2>
+  <div id="start-gruppen-inhalt" style="display:none;">
   <button class="btn-secondary" id="btn-gruppen-start" style="text-align:left;padding-left:14px;">
     <span style="display:flex;align-items:center;gap:8px;">
       <svg width="28" height="28" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0;">

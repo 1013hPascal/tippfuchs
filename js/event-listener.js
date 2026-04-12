@@ -90,7 +90,7 @@ document.getElementById('btn-zurueck-von-rangliste').addEventListener('click',()
 document.getElementById('btn-alle-spieler-stats').addEventListener('click',async()=>{ zeigeScreen('alle-stats-screen'); await ladeBotListe(); await ladeTagsSelect(); await ladeMonatSelect(); await ladeJahrSelect(); });
 document.getElementById('btn-gruppen-stats').addEventListener('click',zeigeGruppenScreen);
 document.getElementById('btn-zurueck-von-statistik').addEventListener('click',zeigeStart);
-document.getElementById('btn-zurueck-von-alle').addEventListener('click',()=>zeigeScreen('statistik-screen'));
+document.getElementById('btn-zurueck-von-alle').addEventListener('click', zeigeStart);
 document.getElementById('btn-gruppen-login').addEventListener('click',async()=>{ const user=await googleLogin(); if (!user) return; appState.currentUser=user; appState.currentSpitzname=await ladeSpitzname(user.uid); aktualisiereStartseite(); zeigeGruppenScreen(); });
 document.getElementById('btn-gruppe-erstellen-oeffnen').addEventListener('click',()=>{ document.getElementById('gruppe-name-input').value=''; document.getElementById('gruppe-erstellen-fehler').textContent=''; oeffneModal('modal-gruppe-erstellen'); setTimeout(()=>document.getElementById('gruppe-name-input').focus(),100); });
 document.getElementById('btn-gruppe-beitreten-oeffnen').addEventListener('click',()=>{ document.getElementById('gruppe-id-input').value=''; document.getElementById('gruppe-beitreten-fehler').textContent=''; oeffneModal('modal-gruppe-beitreten'); setTimeout(()=>document.getElementById('gruppe-id-input').focus(),100); });
@@ -131,8 +131,8 @@ document.getElementById('btn-gruppe-verlassen-bestaetigen').addEventListener('cl
   schliesseModal('modal-gruppe-verlassen');
   await ladeMeineGruppenListe();
 });
-document.getElementById('btn-zurueck-von-gruppen').addEventListener('click',()=>zeigeScreen('statistik-screen'));
-document.getElementById('btn-zurueck-von-gruppe-detail').addEventListener('click',zeigeGruppenScreen);
+document.getElementById('btn-zurueck-von-gruppen').addEventListener('click', zeigeStart);
+document.getElementById('btn-zurueck-von-gruppe-detail').addEventListener('click', zeigeGruppenScreen);
 document.getElementById('spitzname-modal-close').addEventListener('click',()=>schliesseModal('modal-spitzname'));
 document.getElementById('gruppe-erstellen-close').addEventListener('click',()=>schliesseModal('modal-gruppe-erstellen'));
 document.getElementById('gruppe-beitreten-close').addEventListener('click',()=>schliesseModal('modal-gruppe-beitreten'));
@@ -158,7 +158,7 @@ function registriereToggle(btnId, inhaltId, label) {
 }
 
 registriereToggle('btn-erfolge-toggle',   'erfolge-inhalt',          'Persönliche Erfolge');
-registriereToggle('btn-gruppen-toggle',   'gruppen-inhalt',          'Meine Tippfuchsgruppen');
+registriereToggle('btn-gruppen-toggle',   'start-gruppen-inhalt',    'Meine Tippfuchsgruppen');
 registriereToggle('btn-stats-toggle',     'stats-inhalt',            'Statistik aller Tippfüchse');
 registriereToggle('btn-account-toggle',   'account-inhalt',          'Account');
 registriereToggle('btn-design-toggle',    'design-inhalt',           'Design auswaehlen');
