@@ -1,6 +1,6 @@
 import { appState } from './state.js';
 import { db, ref, get, set, child } from './firebase-config.js';
-import { LOESUNGSWOERTER } from './wortliste.js';
+import { LOESUNGSWOERTER } from './loesungswoerter.js';
 import { getTagesIndex } from './hilfsfunktionen.js';
 
 export const TAGES_IDX = getTagesIndex();

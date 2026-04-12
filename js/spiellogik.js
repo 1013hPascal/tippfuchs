@@ -1,6 +1,7 @@
 import { appState, state } from './state.js';
 import { db, ref, get, child } from './firebase-config.js';
-import { LOESUNGSWOERTER, EINGABEWOERTER } from './wortliste.js';
+import { LOESUNGSWOERTER } from './loesungswoerter.js';
+import { EINGABEWOERTER } from './eingabewoerter.js';
 import { ALLE_BUCHSTABEN } from './hilfsfunktionen.js';
 import { TAGES_IDX, ladeTageswort } from './tageswort.js';
 import { getDatum } from './hilfsfunktionen.js';
