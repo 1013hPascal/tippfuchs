@@ -816,7 +816,8 @@
   <line x1="13" y1="30" x2="18" y2="24" stroke="#E8621A" stroke-width="2" stroke-linecap="round"/>
 </svg>
   </div>
-  <h2>Meine Tippfuchsgruppen</h2>
+  <h2><button id="btn-gruppen-toggle" aria-expanded="false" aria-controls="gruppen-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Meine Tippfuchsgruppen</button></h2>
+  <div id="gruppen-inhalt" style="display:none;">
   <button class="btn-secondary" id="btn-gruppen-start" style="text-align:left;padding-left:14px;">
     <span style="display:flex;align-items:center;gap:8px;">
       <svg width="28" height="28" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0;">
@@ -839,7 +840,9 @@
       </span>
     </span>
   </button>
-  <h2>Statistik aller Tippfüchse</h2>
+  </div>
+  <h2><button id="btn-stats-toggle" aria-expanded="false" aria-controls="stats-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Statistik aller Tippfüchse</button></h2>
+  <div id="stats-inhalt" style="display:none;">
   <button class="btn-secondary" id="btn-stats-start" style="text-align:left;padding-left:14px;">
     <span style="display:flex;align-items:center;gap:8px;">
       <svg width="28" height="28" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0;">
@@ -859,6 +862,7 @@
       </span>
     </span>
   </button>
+  </div>
 </div>
 
 <!-- ANMELDEN-BLOCK -->
@@ -890,26 +894,28 @@
   <!-- Arm -->
   <line x1="17" y1="28" x2="19.5" y2="27" stroke="#E8621A" stroke-width="2" stroke-linecap="round"/>
 </svg>
-    <h2>Account</h2>
+    <h2><button id="btn-account-toggle" aria-expanded="false" aria-controls="account-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Account</button></h2>
   </div>
-  <p style="font-size:.85rem;color:var(--text-muted);">Mit Account werden deine Ergebnisse gespeichert, du kannst Gruppen erstellen und in der Statistik erscheinen.</p>
+  <div id="account-inhalt" style="display:none;flex-direction:column;gap:8px;">
+    <p style="font-size:.85rem;color:var(--text-muted);">Mit Account werden deine Ergebnisse gespeichert, du kannst Gruppen erstellen und in der Statistik erscheinen.</p>
 
-  <!-- Mit Account -->
-  <div style="display:flex;flex-direction:column;gap:8px;">
-    <h3>Mit Account spielen</h3>
-    <button class="btn-primary" id="btn-mit-email">Mit E-Mail anmelden</button>
-    <button class="btn-primary" id="btn-mit-konto">Mit Google Konto spielen</button>
-    <button class="btn-secondary" id="btn-spitzname-aendern-start">Spielername aendern ✏️</button>
-  </div>
+    <!-- Mit Account -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <h3>Mit Account spielen</h3>
+      <button class="btn-primary" id="btn-mit-email">Mit E-Mail anmelden</button>
+      <button class="btn-primary" id="btn-mit-konto">Mit Google Konto spielen</button>
+      <button class="btn-secondary" id="btn-spitzname-aendern-start">Spielername aendern ✏️</button>
+    </div>
 
-  <!-- Trennlinie -->
-  <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
+    <!-- Trennlinie -->
+    <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
 
-  <!-- Ohne Account -->
-  <div style="display:flex;flex-direction:column;gap:8px;">
-    <h3>Ohne Account spielen</h3>
-    <p style="font-size:.82rem;color:var(--text-muted);">Deine Ergebnisse werden nur lokal gespeichert und erscheinen nicht in der Rangliste.</p>
-    <button class="btn-secondary" id="btn-ohne-konto">Ohne Account spielen</button>
+    <!-- Ohne Account -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <h3>Ohne Account spielen</h3>
+      <p style="font-size:.82rem;color:var(--text-muted);">Deine Ergebnisse werden nur lokal gespeichert und erscheinen nicht in der Rangliste.</p>
+      <button class="btn-secondary" id="btn-ohne-konto">Ohne Account spielen</button>
+    </div>
   </div>
 </div>
 
@@ -942,8 +948,9 @@
   <rect x="19" y="9" width="2" height="7" fill="#8B5E3C" rx="0.5" transform="rotate(-20,20,13)"/>
   <ellipse cx="19.5" cy="9" rx="2" ry="1.5" fill="#E8621A" transform="rotate(-20,20,13)"/>
 </svg>
-    <h2>Design auswaehlen</h2>
+    <h2><button id="btn-design-toggle" aria-expanded="false" aria-controls="design-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Design auswaehlen</button></h2>
   </div>
+  <div id="design-inhalt" style="display:none;flex-direction:column;gap:8px;">
   <p style="font-size:.85rem;color:var(--text-muted);">Wähle ein Design und lege danach Hell- oder Dunkelmodus fest.</p>
 
   <!-- Design-Karten -->
@@ -1024,6 +1031,7 @@
     </div>
     <p style="font-size:.78rem;color:var(--text-muted);margin-top:5px;">Aus: keine Fuchs-Animation, keine Übergänge — für Menschen die Bewegung ablenkend finden.</p>
   </div>
+  </div>
 
 </div>
 <!-- DESIGN-AUSWAHL ENDE -->
@@ -1053,8 +1061,9 @@
   <!-- Lesezeichen -->
   <polygon points="36,14 39,14 39,20 37.5,18.5 36,20" fill="#E8621A"/>
 </svg>
-    <h2>Anleitung und Hilfe</h2>
+    <h2><button id="btn-anleitung-toggle" aria-expanded="false" aria-controls="anleitung-toggle-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Anleitung und Hilfe</button></h2>
   </div>
+  <div id="anleitung-toggle-inhalt" style="display:none;flex-direction:column;gap:8px;">
   <div id="anleitung-liste" style="display:flex;flex-direction:column;gap:8px;">
 
     <button class="btn-secondary anleitung-btn" data-thema="spielprinzip">Erklaerung Spielprinzip</button>
@@ -1067,6 +1076,7 @@
 
     <div id="anleitung-inhalt" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;" role="region" aria-live="polite"></div>
 
+  </div>
   </div>
 </div>
 

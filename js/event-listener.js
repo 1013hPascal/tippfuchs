@@ -134,13 +134,24 @@ document.getElementById('bot-suche').addEventListener('input',function(){ clearT
 document.getElementById('btn-zurueck-zum-menue').addEventListener('click', zeigeStart);
 document.getElementById('btn-zurueck-erg').addEventListener('click', zeigeStart);
 
-// Persönliche Erfolge — Ein-/Ausklappen
-document.getElementById('btn-erfolge-toggle').addEventListener('click', function() {
-  const expanded = this.getAttribute('aria-expanded') === 'true';
-  this.setAttribute('aria-expanded', String(!expanded));
-  const inhalt = document.getElementById('erfolge-inhalt');
-  inhalt.style.display = expanded ? 'none' : 'flex';
-  sageLaut(expanded ? 'Persönliche Erfolge eingeklappt.' : 'Persönliche Erfolge ausgeklappt.');
-});
+// Ausklappbare Bereiche — gemeinsame Hilfsfunktion
+function registriereToggle(btnId, inhaltId, label) {
+  const btn = document.getElementById(btnId);
+  const inhalt = document.getElementById(inhaltId);
+  if (!btn || !inhalt) return;
+  btn.addEventListener('click', function() {
+    const expanded = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', String(!expanded));
+    inhalt.style.display = expanded ? 'none' : 'flex';
+    sageLaut(expanded ? label + ' eingeklappt.' : label + ' ausgeklappt.');
+  });
+}
+
+registriereToggle('btn-erfolge-toggle',   'erfolge-inhalt',          'Persönliche Erfolge');
+registriereToggle('btn-gruppen-toggle',   'gruppen-inhalt',          'Meine Tippfuchsgruppen');
+registriereToggle('btn-stats-toggle',     'stats-inhalt',            'Statistik aller Tippfüchse');
+registriereToggle('btn-account-toggle',   'account-inhalt',          'Account');
+registriereToggle('btn-design-toggle',    'design-inhalt',           'Design auswaehlen');
+registriereToggle('btn-anleitung-toggle', 'anleitung-toggle-inhalt', 'Anleitung und Hilfe');
 
 
