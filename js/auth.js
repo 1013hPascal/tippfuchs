@@ -13,12 +13,15 @@ import { aktualisiereStartStats } from './lokaler-zustand.js';
 import { sageLaut } from './live-region.js';
 import { oeffneModal, schliesseModal } from './modal.js';
 import { zeigeAdminBereich } from './admin.js';
+import { ladePushPraeferenzen } from './push-benachrichtigungen.js';
 
 // AUTH ANFANG
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     appState.currentUser = user;
     appState.currentSpitzname = await ladeSpitzname(user.uid);
+    // Push-Präferenzen laden
+    ladePushPraeferenzen(user.uid);
     // Gruppen-Selbst-Sync: prüfe ob du irgendwo als Mitglied eingetragen bist
     await syncGruppenBeiLogin(user.uid);
     // Ausstehenden Beitritts-Link verarbeiten (z.B. via ?beitreten=CODE geöffnet)

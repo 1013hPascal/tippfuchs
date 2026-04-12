@@ -1,0 +1,38 @@
+name: Push-Erinnerungen senden
+
+on:
+  schedule:
+    # Zeiten in UTC — Deutschland ist UTC+2 (Sommer/CEST) bzw. UTC+1 (Winter/CET)
+    # Im Sommer stimmen die Zeiten genau, im Winter ist es 1 Stunde früher.
+    - cron: '00 05 * * *'   # 7:00 Uhr CEST (Sommer) / 6:00 Uhr CET (Winter)
+    - cron: '00 10 * * *'   # 12:00 Uhr CEST / 11:00 Uhr CET
+    - cron: '00 16 * * *'   # 18:00 Uhr CEST / 17:00 Uhr CET
+  workflow_dispatch:
+    inputs:
+      zeit_slot:
+        description: 'Welcher Zeitslot? (erinnerung7 / erinnerung12 / erinnerung18)'
+        required: false
+        default: 'erinnerung7'
+
+jobs:
+  push-senden:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Abhängigkeiten installieren
+        run: npm install
+        working-directory: .github/scripts
+
+      - name: Push-Benachrichtigungen senden
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GITHUB_EVENT_SCHEDULE: ${{ github.event.schedule }}
+          MANUELLER_SLOT: ${{ github.event.inputs.zeit_slot }}
+        run: node .github/scripts/push-senden.js
