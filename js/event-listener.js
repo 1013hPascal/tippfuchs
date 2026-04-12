@@ -162,6 +162,15 @@ function registriereToggle(btnId, inhaltId, label) {
     this.setAttribute('aria-expanded', String(!expanded));
     inhalt.style.display = expanded ? 'none' : 'flex';
     sageLaut(expanded ? label + ' eingeklappt.' : label + ' ausgeklappt.');
+    // Aufgeklappt: Fokus auf erstes Kind-Element setzen
+    if (!expanded) {
+      const erstesKind = inhalt.firstElementChild;
+      if (erstesKind) {
+        const fokussierbar = ['BUTTON','INPUT','SELECT','TEXTAREA','A'].includes(erstesKind.tagName);
+        if (!fokussierbar && !erstesKind.hasAttribute('tabindex')) erstesKind.setAttribute('tabindex', '-1');
+        setTimeout(() => erstesKind.focus(), 50);
+      }
+    }
   });
 }
 

@@ -6,7 +6,15 @@ export function zeigeScreen(id) {
     s.style.display = 'none'; s.classList.remove('active');
   });
   const el = document.getElementById(id);
-  if (el) { el.style.display = 'flex'; el.classList.add('active'); }
+  if (el) {
+    el.style.display = 'flex'; el.classList.add('active');
+    // Fokus auf erste Überschrift setzen (tabindex="-1": per JS fokussierbar, nicht per Tab)
+    const h1 = el.querySelector('h1');
+    if (h1) {
+      if (!h1.hasAttribute('tabindex')) h1.setAttribute('tabindex', '-1');
+      setTimeout(() => h1.focus(), 50);
+    }
+  }
 
   // Globaler Zurück-Button oben: sichtbar auf allen Seiten außer Start
   const topZurueck = document.getElementById('global-top-zurueck');
