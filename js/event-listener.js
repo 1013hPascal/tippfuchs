@@ -89,7 +89,7 @@ document.getElementById('btn-neuer-spitzname-bestaetigen').addEventListener('cli
   sageLaut('Spielername erfolgreich geaendert.'); schliesseModal('modal-spitzname');
 });
 document.getElementById('neuer-spitzname-input').addEventListener('keydown',function(e){ if (e.key==='Enter') { e.preventDefault(); document.getElementById('btn-neuer-spitzname-bestaetigen').click(); } });
-document.getElementById('wort-input').addEventListener('input',function(){ this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'').slice(0,5); });
+document.getElementById('wort-input').addEventListener('input',function(){ this.value=this.value.toUpperCase().replace(/[^A-ZÄÖÜẞ]/g,'').slice(0,5); });
 document.getElementById('wort-input').addEventListener('keydown',function(e){ if (e.key==='Enter') { e.preventDefault(); verarbeiteWort(); } if (e.key==='Escape') { this.value=''; this.blur(); sageLaut('Eingabe abgebrochen.'); } });
 
 

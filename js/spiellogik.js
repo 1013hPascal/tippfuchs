@@ -124,7 +124,7 @@ export async function verarbeiteWort() {
   state.versuche.push(wort);
   input.value=''; input.focus();
   aktualisiereVerlauf(); aktualisiereBuchstabenStatus(); speichereZustand();
-  sageLaut(erg.map((e,i)=>`${wort[i]}: ${e==='correct'?'richtige Stelle':e==='present'?'falsche Stelle':'kommt nicht vor'}`).join(', '));
+  sageLaut(erg.map((e,i)=>`${wort[i]}: ${e==='correct'?'richtige Stelle':e==='present'?'falsche Stelle':'kommt nicht vor'}`).join(' = '));
   const gewonnen = erg.every(e=>e==='correct');
   const korrektAnzahl = erg.filter(e=>e==='correct').length;
 
