@@ -134,4 +134,13 @@ document.getElementById('bot-suche').addEventListener('input',function(){ clearT
 document.getElementById('btn-zurueck-zum-menue').addEventListener('click', zeigeStart);
 document.getElementById('btn-zurueck-erg').addEventListener('click', zeigeStart);
 
+// Persönliche Erfolge — Ein-/Ausklappen
+document.getElementById('btn-erfolge-toggle').addEventListener('click', function() {
+  const expanded = this.getAttribute('aria-expanded') === 'true';
+  this.setAttribute('aria-expanded', String(!expanded));
+  const inhalt = document.getElementById('erfolge-inhalt');
+  inhalt.style.display = expanded ? 'none' : 'flex';
+  sageLaut(expanded ? 'Persönliche Erfolge eingeklappt.' : 'Persönliche Erfolge ausgeklappt.');
+});
+
 
