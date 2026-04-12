@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <!-- Hintergrund -->
+  <rect width="192" height="192" rx="32" fill="#E8621A"/>
+  <!-- Fuchs-Ohren -->
+  <polygon points="48,30 68,80 28,80" fill="#E8621A"/>
+  <polygon points="144,30 164,80 124,80" fill="#E8621A"/>
+  <polygon points="48,36 63,75 33,75" fill="#F5E6D0"/>
+  <polygon points="144,36 159,75 129,75" fill="#F5E6D0"/>
+  <!-- Fuchs-Kopf -->
+  <ellipse cx="96" cy="108" rx="64" ry="56" fill="#E8621A"/>
+  <!-- Gesicht -->
+  <ellipse cx="96" cy="116" rx="42" ry="36" fill="#F5E6D0"/>
+  <!-- Augen -->
+  <ellipse cx="76" cy="96" rx="10" ry="11" fill="white"/>
+  <ellipse cx="116" cy="96" rx="10" ry="11" fill="white"/>
+  <circle cx="78" cy="98" r="6" fill="#2A1A0A"/>
+  <circle cx="118" cy="98" r="6" fill="#2A1A0A"/>
+  <circle cx="80" cy="96" r="2" fill="white"/>
+  <circle cx="120" cy="96" r="2" fill="white"/>
+  <!-- Nase -->
+  <ellipse cx="96" cy="118" rx="8" ry="6" fill="#2A1A0A"/>
+  <!-- Mund -->
+  <path d="M88,126 Q96,134 104,126" stroke="#2A1A0A" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>

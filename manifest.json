@@ -1,0 +1,20 @@
+{
+  "name": "Tippfuchs",
+  "short_name": "Tippfuchs",
+  "description": "Das tägliche deutsche Wörterrätsel",
+  "lang": "de",
+  "start_url": "/tippfuchs/",
+  "scope": "/tippfuchs/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#E8621A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/tippfuchs/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
