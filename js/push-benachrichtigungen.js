@@ -7,7 +7,7 @@ import { sageLaut } from './live-region.js';
 // WICHTIG: VAPID Public Key aus Firebase Console holen:
 // Firebase Console → Projekteinstellungen → Cloud Messaging → Web-Push-Zertifikate → Schlüsselpaar generieren
 // Den angezeigten öffentlichen Schlüssel hier eintragen:
-const VAPID_KEY = 'HIER_VAPID_PUBLIC_KEY_EINTRAGEN';
+const VAPID_KEY = 'BODtxTHNXbFaOmpVg1j-Rw-_3FII9Nn4PyjpJDYqIM8tEGrrVnOERZ4cHfJDf4Ha11PX6XLtaQ4sK4LW-NH8H-M';
 
 let _messaging = null;
 function getMsg() {
