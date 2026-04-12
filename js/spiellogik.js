@@ -76,7 +76,7 @@ export function aktualisiereVerlauf() {
   liL.innerHTML = `<span class="sr-only">${loesAria}</span>${loesHtml}`;
   liste.appendChild(liL);
   const wi = document.getElementById('wort-input');
-  if (wi) wi.placeholder = enthullt.map((e,i)=>e?appState.TAGESWORT[i]:',').join('');
+  if (wi) wi.placeholder = '';
 }
 
 export function aktualisiereBuchstabenStatus() {
@@ -124,7 +124,7 @@ export async function verarbeiteWort() {
   state.versuche.push(wort);
   input.value=''; input.focus();
   aktualisiereVerlauf(); aktualisiereBuchstabenStatus(); speichereZustand();
-  sageLaut(erg.map((e,i)=>`${wort[i]}: ${e==='correct'?'richtige Stelle':e==='present'?'falsche Stelle':'kommt nicht vor'}`).join(' = '));
+  sageLaut(erg.map((e,i)=>`${wort[i]}: ${e==='correct'?'richtige Stelle':e==='present'?'falsche Stelle':'kommt nicht vor'}`).join(', '));
   // Zweiter sageLaut: aktueller Stand mit richtig erkannten Buchstaben
   const muster = Array(5).fill('=');
   for (const v of state.versuche) {
