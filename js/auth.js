@@ -30,7 +30,6 @@ onAuthStateChanged(auth, async (user) => {
 export function aktualisiereStartseite() {
   const titel = document.getElementById('start-spiel-titel');
   const btnSpielStarten = document.getElementById('btn-spiel-starten');
-  const willkommenBox = document.getElementById('start-willkommen-box');
   const accountNichtAngemeldet = document.getElementById('account-nicht-angemeldet');
   const accountAngemeldet = document.getElementById('account-angemeldet');
   const accountInfoText = document.getElementById('account-info-text');
@@ -51,7 +50,6 @@ export function aktualisiereStartseite() {
       if (titel) titel.textContent = 'Spiele das heutige Tippfuchs Rätsel';
       if (btnSpielStarten) btnSpielStarten.textContent = '🦊 Jetzt spielen';
     }
-    if (willkommenBox) willkommenBox.style.display = 'none';
     if (accountNichtAngemeldet) accountNichtAngemeldet.style.display = 'none';
     if (accountAngemeldet) accountAngemeldet.style.display = 'flex';
     if (accountInfoText) {
@@ -62,7 +60,6 @@ export function aktualisiereStartseite() {
     // Nicht angemeldet
     if (titel) titel.textContent = 'Anmelden und spielen';
     if (btnSpielStarten) btnSpielStarten.textContent = '🦊 Jetzt anmelden';
-    if (willkommenBox) willkommenBox.style.display = 'block';
     if (accountNichtAngemeldet) accountNichtAngemeldet.style.display = 'flex';
     if (accountAngemeldet) accountAngemeldet.style.display = 'none';
   }

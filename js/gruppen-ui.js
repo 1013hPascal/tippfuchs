@@ -113,7 +113,7 @@ export async function zeigeGruppeDetail(gruppenId) {
     botL.forEach((e,i)=>{ const medal=i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':''; const li=document.createElement('li'); li.className=`best-of-eintrag platz-${i+1}`; li.innerHTML=`<span class="best-of-platz">${medal}${i+1}.</span><span class="best-of-name">${e.name}</span><span class="best-of-punkte">${e.punkte} Pkt - ${e.spiele} Spiel${e.spiele!==1?'e':''}</span>`; botEl.appendChild(li); });
   }
   const gSel=document.getElementById('gruppe-tage-select'); gSel.innerHTML='';
-  for (let i=1;i<=30;i++) { const idx=TAGES_IDX-i; if (idx<0) break; const o=document.createElement('option'); o.value=idx; o.textContent=getDatumVonIdx(idx); gSel.appendChild(o); }
+  for (let i=0;i<=30;i++) { const idx=TAGES_IDX-i; if (idx<0) break; const o=document.createElement('option'); o.value=idx; o.textContent=i===0?`Heute (${getDatumVonIdx(idx)})`:getDatumVonIdx(idx); gSel.appendChild(o); }
   const newSel=gSel.cloneNode(true); gSel.parentNode.replaceChild(newSel,gSel);
   newSel.addEventListener('change',ladeGruppeTagesErgebnis);
   await ladeGruppeTagesErgebnis();
@@ -123,12 +123,29 @@ export async function ladeGruppeTagesErgebnis() {
   if (!appState.aktiveGruppeId||!appState.aktiveGruppeDaten) return;
   const idx=parseInt(document.getElementById('gruppe-tage-select').value);
   if (isNaN(idx)) return;
+  const istHeute = idx === TAGES_IDX;
   const div=document.getElementById('gruppe-tage-ergebnis');
   div.style.display='flex'; div.innerHTML='<span style="color:var(--text-muted);font-size:.9rem;">Wird geladen...</span>';
   const tL=await ladeRanglisteFirebase(idx);
+  const mitglieder=appState.aktiveGruppeDaten.mitglieder?Object.values(appState.aktiveGruppeDaten.mitglieder):[];
+
+  if (istHeute) {
+    // Heute: nur zeigen wer gespielt hat, kein Ergebnis, kein Lösungswort
+    div.innerHTML='';
+    const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
+    mitglieder.forEach(m=>{
+      const hatGespielt = tL.some(e=>e.name.toLowerCase()===m.name.toLowerCase());
+      const d=document.createElement('div'); d.className='tages-ergebnis-zeile';
+      if (hatGespielt) { d.innerHTML=`<span>${m.name}</span><span>Hat gespielt ✓</span>`; }
+      else { d.style.color='var(--text-muted)'; d.innerHTML=`<span>${m.name}</span><span>Noch nicht gespielt</span>`; }
+      topDiv.appendChild(d);
+    });
+    return;
+  }
+
+  // Vergangene Tage: Lösungswort + Rangliste
   let loesung='-';
   try { const wSnap=await get(child(ref(db),`tageswoerter/${idx}`)); if(wSnap.exists()) loesung=wSnap.val(); } catch(e) {}
-  const mitglieder=appState.aktiveGruppeDaten.mitglieder?Object.values(appState.aktiveGruppeDaten.mitglieder):[];
   div.innerHTML=`<div class="tages-info-zeile"><span>Loesungswort: <strong>${loesung}</strong></span></div>`;
   const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
   const mMitPlatz=mitglieder.map(m=>{ const e=tL.find(e=>e.name.toLowerCase()===m.name.toLowerCase()); return e?{...e,gespielt:true}:{name:m.name,gespielt:false}; })

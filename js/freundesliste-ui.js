@@ -1,4 +1,5 @@
 import { appState } from './state.js';
+import { db, ref, get, child } from './firebase-config.js';
 import { TAGES_IDX } from './tageswort.js';
 import { getDatumVonIdx } from './hilfsfunktionen.js';
 import { ladeFriendesliste, fuegeFreundHinzu, entferneFreund, sucheSpielernamen } from './freundesliste.js';
@@ -11,7 +12,7 @@ export async function ladeFreundeslisteUI() {
   if (!appState.currentUser) return;
   const freunde=await ladeFriendesliste();
   const fSel=document.getElementById('freunde-tage-select'); fSel.innerHTML='';
-  for (let i=1;i<=30;i++) { const idx=TAGES_IDX-i; if (idx<0) break; const o=document.createElement('option'); o.value=idx; o.textContent=getDatumVonIdx(idx); fSel.appendChild(o); }
+  for (let i=0;i<=30;i++) { const idx=TAGES_IDX-i; if (idx<0) break; const o=document.createElement('option'); o.value=idx; o.textContent=i===0?`Heute (${getDatumVonIdx(idx)})`:getDatumVonIdx(idx); fSel.appendChild(o); }
   const newFSel=fSel.cloneNode(true); fSel.parentNode.replaceChild(newFSel,fSel);
   newFSel.addEventListener('change',ladeFreundeTagesErgebnis);
   await ladeFreundeTagesErgebnis();
@@ -22,17 +23,34 @@ export async function ladeFreundeTagesErgebnis() {
   if (!appState.currentUser) return;
   const idx=parseInt(document.getElementById('freunde-tage-select').value);
   if (isNaN(idx)) return;
+  const istHeute = idx === TAGES_IDX;
   const div=document.getElementById('freunde-tage-ergebnis');
   div.style.display='flex'; div.innerHTML='<span style="color:var(--text-muted);font-size:.9rem;">Wird geladen...</span>';
   const freunde=await ladeFriendesliste();
   if (freunde.length===0) { div.innerHTML='<div class="tages-ergebnis-zeile">Noch keine Freunde in der Liste.</div>'; return; }
   const tL=await ladeRanglisteFirebase(idx);
+  const alleNamen=[...freunde.map(f=>f.name)];
+  if (appState.currentSpitzname&&!alleNamen.find(n=>n.toLowerCase()===appState.currentSpitzname.toLowerCase())) alleNamen.unshift(appState.currentSpitzname);
+
+  if (istHeute) {
+    // Heute: nur zeigen wer gespielt hat, kein Ergebnis, kein Lösungswort
+    div.innerHTML='';
+    const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
+    alleNamen.forEach(name=>{
+      const hatGespielt=tL.some(e=>e.name.toLowerCase()===name.toLowerCase());
+      const d=document.createElement('div'); d.className='tages-ergebnis-zeile';
+      if (hatGespielt) { d.innerHTML=`<span>${name}</span><span>Hat gespielt ✓</span>`; }
+      else { d.style.color='var(--text-muted)'; d.innerHTML=`<span>${name}</span><span>Noch nicht gespielt</span>`; }
+      topDiv.appendChild(d);
+    });
+    return;
+  }
+
+  // Vergangene Tage: Lösungswort + Rangliste
   let loesung='-';
   try { const wSnap=await get(child(ref(db),`tageswoerter/${idx}`)); if(wSnap.exists()) loesung=wSnap.val(); } catch(e) {}
   div.innerHTML=`<div class="tages-info-zeile"><span>Loesungswort: <strong>${loesung}</strong></span></div>`;
   const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
-  const alleNamen=[...freunde.map(f=>f.name)];
-  if (appState.currentSpitzname&&!alleNamen.find(n=>n.toLowerCase()===appState.currentSpitzname.toLowerCase())) alleNamen.unshift(appState.currentSpitzname);
   const mMitPlatz=alleNamen.map(name=>{ const e=tL.find(e=>e.name.toLowerCase()===name.toLowerCase()); return e?{...e,gespielt:true}:{name,gespielt:false}; })
     .sort((a,b)=>{ if (!a.gespielt&&!b.gespielt) return 0; if (!a.gespielt) return 1; if (!b.gespielt) return -1; if (a.versuche!==b.versuche) return a.versuche-b.versuche; return a.sekunden-b.sekunden; });
   mMitPlatz.forEach((e,i)=>{ const d=document.createElement('div'); d.className='tages-ergebnis-zeile'; if (e.gespielt) { const medal=i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':''; d.innerHTML=`<span>${medal}${i+1}. ${e.name}</span><span>${e.versuche} Versuch${e.versuche!==1?'e':''} - ${formatZeit(e.sekunden)}</span>`; } else { d.style.color='var(--text-muted)'; d.innerHTML=`<span>${e.name}</span><span>Nicht gespielt</span>`; } topDiv.appendChild(d); });

@@ -125,12 +125,12 @@ export async function ladeHistorieBereich() {
 
   const sel = document.getElementById('historie-select');
   sel.innerHTML = '';
-  for (let i=1; i<=30; i++) {
+  for (let i=0; i<=30; i++) {
     const idx = TAGES_IDX - i;
     if (idx < 0) break;
     const opt = document.createElement('option');
     opt.value = idx;
-    opt.textContent = getDatumVonIdx(idx);
+    opt.textContent = i === 0 ? `Heute (${getDatumVonIdx(idx)})` : getDatumVonIdx(idx);
     sel.appendChild(opt);
   }
 
@@ -147,37 +147,86 @@ export async function ladeHistorieErgebnis() {
   const div = document.getElementById('historie-ergebnis');
   div.style.display = 'flex';
   div.innerHTML = '<span style="font-size:.85rem;color:var(--text-muted);">Wird geladen...</span>';
+  div.innerHTML = '';
 
-  // Lösungswort laden
+  const istHeute = idx === TAGES_IDX;
+
+  if (istHeute) {
+    // Heute: Daten aus localStorage, keine Platzierung, kein Firebase-Abruf
+    let lokalDaten = null;
+    try {
+      const raw = localStorage.getItem(HEUTE_KEY);
+      if (raw) lokalDaten = JSON.parse(raw);
+    } catch(e) {}
+
+    if (!lokalDaten || !lokalDaten.versuche || lokalDaten.versuche.length === 0) {
+      div.innerHTML = '<span style="font-size:.85rem;color:var(--text-muted);">Du hast heute noch nicht gespielt.</span>';
+      return;
+    }
+
+    const loesung = lokalDaten.tageswort || appState.TAGESWORT || null;
+
+    if (loesung) {
+      const loesDiv = document.createElement('div');
+      loesDiv.style.cssText = 'font-size:.9rem;';
+      loesDiv.innerHTML = `<span style="font-weight:700;color:var(--text-muted);">Lösungswort:</span> <strong style="color:var(--text);">${loesung}</strong>`;
+      div.appendChild(loesDiv);
+    }
+
+    const versuche = lokalDaten.versuche.length;
+    const sekunden = lokalDaten.endZeit && lokalDaten.startZeit ? Math.floor((lokalDaten.endZeit - lokalDaten.startZeit) / 1000) : null;
+    const versuchDiv = document.createElement('div');
+    versuchDiv.style.cssText = 'font-size:.9rem;';
+    versuchDiv.innerHTML = `<span style="font-weight:700;color:var(--text-muted);">Versuche${sekunden ? ' und Zeit' : ''}:</span> <strong style="color:var(--text);">${versuche} Versuch${versuche!==1?'e':''}${sekunden ? ' — ' + formatZeit(sekunden) : ''}</strong>`;
+    div.appendChild(versuchDiv);
+
+    if (loesung && lokalDaten.versuche.length > 0) {
+      const woerterLabel = document.createElement('div');
+      woerterLabel.style.cssText = 'font-size:.9rem;font-weight:700;color:var(--text-muted);margin-top:4px;';
+      woerterLabel.textContent = 'Eingegebene Wörter:';
+      div.appendChild(woerterLabel);
+      lokalDaten.versuche.forEach((wort, idx2) => {
+        const erg = bewerteVersuch(wort, loesung);
+        const wortDiv = document.createElement('div');
+        wortDiv.style.cssText = 'display:flex;gap:4px;align-items:center;';
+        let html = `<span style="font-size:.85rem;color:var(--text-muted);min-width:20px;">${idx2+1}.</span>`;
+        let srText = '';
+        erg.forEach((e, i) => {
+          const cls = e==='correct'?'correct':e==='present'?'present':'absent';
+          const s = e==='correct'?'richtig':e==='present'?'falsche Stelle':'nicht vorhanden';
+          html += `<span class="vb ${cls}" aria-hidden="true">${wort[i]}</span>`;
+          srText += `${wort[i]}: ${s}, `;
+        });
+        html += `<span class="sr-only">${wort} — ${srText}</span>`;
+        wortDiv.innerHTML = html;
+        div.appendChild(wortDiv);
+      });
+    }
+    return;
+  }
+
+  // Vergangene Tage: wie bisher
   let loesung = '-';
   try {
     const wSnap = await get(child(ref(db), `tageswoerter/${idx}`));
     if (wSnap.exists()) loesung = wSnap.val();
   } catch(e) {}
 
-  // Rangliste laden für Platzierung
   const rangliste = await ladeRanglisteFirebase(idx);
   const platz = rangliste.findIndex(e => e.name.toLowerCase() === appState.currentSpitzname.toLowerCase()) + 1;
   const rangEintrag = rangliste.find(e => e.name.toLowerCase() === appState.currentSpitzname.toLowerCase());
-
-  // Eigene Historie laden
   const historie = await ladeHistorieFirebase(appState.currentUser.uid, idx);
 
-  div.innerHTML = '';
-
-  // Nicht gespielt
   if (platz === 0 && !historie) {
     div.innerHTML = '<span style="font-size:.85rem;color:var(--text-muted);">Du hast an diesem Tag nicht gespielt mit deinem Account.</span>';
     return;
   }
 
-  // Lösungswort
   const loesDiv = document.createElement('div');
   loesDiv.style.cssText = 'font-size:.9rem;';
   loesDiv.innerHTML = `<span style="font-weight:700;color:var(--text-muted);">Lösungswort:</span> <strong style="color:var(--text);">${loesung}</strong>`;
   div.appendChild(loesDiv);
 
-  // Platzierung
   if (platz > 0) {
     const medal = platz===1?'🥇 ':platz===2?'🥈 ':platz===3?'🥉 ':'';
     const platzDiv = document.createElement('div');
@@ -186,7 +235,6 @@ export async function ladeHistorieErgebnis() {
     div.appendChild(platzDiv);
   }
 
-  // Versuche und Zeit in einer Zeile
   const versuche = historie ? historie.woerter.length : (rangEintrag ? rangEintrag.versuche : '-');
   const sekunden = historie ? historie.sekunden : (rangEintrag ? rangEintrag.sekunden : null);
   const zeitStr = sekunden ? formatZeit(sekunden) : '-';
@@ -195,13 +243,11 @@ export async function ladeHistorieErgebnis() {
   versuchDiv.innerHTML = `<span style="font-weight:700;color:var(--text-muted);">Versuche und Zeit:</span> <strong style="color:var(--text);">${versuche} Versuch${versuche!==1?'e':''} — ${zeitStr}</strong>`;
   div.appendChild(versuchDiv);
 
-  // Eingegebene Wörter nur wenn Historie vorhanden
   if (historie && historie.woerter && loesung !== '-') {
     const woerterLabel = document.createElement('div');
     woerterLabel.style.cssText = 'font-size:.9rem;font-weight:700;color:var(--text-muted);margin-top:4px;';
     woerterLabel.textContent = 'Eingegebene Wörter:';
     div.appendChild(woerterLabel);
-
     historie.woerter.forEach((wort, idx2) => {
       const erg = bewerteVersuch(wort, loesung);
       const wortDiv = document.createElement('div');
