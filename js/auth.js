@@ -1,10 +1,11 @@
 import { appState } from './state.js';
 import { auth, provider, signInWithPopup, onAuthStateChanged,
          createUserWithEmailAndPassword, signInWithEmailAndPassword,
-         sendPasswordResetEmail } from './firebase-config.js';
-import { TAGES_IDX } from './tageswort.js';
+         sendPasswordResetEmail, signOut, deleteUser } from './firebase-config.js';
+import { TAGES_IDX, HEUTE_KEY } from './tageswort.js';
 import { getDatum } from './hilfsfunktionen.js';
 import { ladeSpitzname, spitznameVorhanden, speichereSpitzname, aendereSpitzname } from './firebase-basis.js';
+import { db, ref, set } from './firebase-config.js';
 import { syncGruppenBeiLogin } from './gruppen.js';
 import { zeigeScreen } from './screens.js';
 import { aktualisiereStartStats } from './lokaler-zustand.js';
@@ -27,20 +28,43 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 export function aktualisiereStartseite() {
+  const titel = document.getElementById('start-spiel-titel');
   const btnSpielStarten = document.getElementById('btn-spiel-starten');
-  const btnMitKonto = document.getElementById('btn-mit-konto');
-  const btnEmail = document.getElementById('btn-mit-email');
+  const willkommenBox = document.getElementById('start-willkommen-box');
+  const accountNichtAngemeldet = document.getElementById('account-nicht-angemeldet');
+  const accountAngemeldet = document.getElementById('account-angemeldet');
+  const accountInfoText = document.getElementById('account-info-text');
+
+  // Prüfen ob heute schon gespielt
+  let heuteGespielt = false;
+  try {
+    const raw = localStorage.getItem(HEUTE_KEY);
+    if (raw) { const s = JSON.parse(raw); heuteGespielt = s.spielende === true; }
+  } catch(e) {}
 
   if (appState.currentUser && appState.currentSpitzname) {
-    // Angemeldet: großer Button oben + Google-Button anpassen
-    btnSpielStarten.textContent = `🦊 Spiel starten als ${appState.currentSpitzname}`;
-    btnMitKonto.textContent = `Mit Google Konto spielen (angemeldet als ${appState.currentSpitzname})`;
-    btnEmail.style.display = 'none';
+    // Angemeldet
+    if (heuteGespielt) {
+      if (titel) titel.textContent = 'Du hast heute schon gespielt';
+      if (btnSpielStarten) btnSpielStarten.textContent = '🦊 Ergebnis ansehen';
+    } else {
+      if (titel) titel.textContent = 'Spiele das heutige Tippfuchs Rätsel';
+      if (btnSpielStarten) btnSpielStarten.textContent = '🦊 Jetzt spielen';
+    }
+    if (willkommenBox) willkommenBox.style.display = 'none';
+    if (accountNichtAngemeldet) accountNichtAngemeldet.style.display = 'none';
+    if (accountAngemeldet) accountAngemeldet.style.display = 'flex';
+    if (accountInfoText) {
+      const methode = appState.currentUser.providerData[0]?.providerId === 'google.com' ? 'Google' : 'E-Mail';
+      accountInfoText.textContent = `Du bist als ${appState.currentSpitzname} mit ${methode} angemeldet.`;
+    }
   } else {
-    // Nicht angemeldet: großer Button scrollt nach unten zum Anmelde-Block
-    btnSpielStarten.textContent = '🦊 Spielen / Anmelden';
-    btnMitKonto.textContent = 'Mit Google Konto spielen';
-    btnEmail.style.display = 'block';
+    // Nicht angemeldet
+    if (titel) titel.textContent = 'Anmelden und spielen';
+    if (btnSpielStarten) btnSpielStarten.textContent = '🦊 Jetzt anmelden';
+    if (willkommenBox) willkommenBox.style.display = 'block';
+    if (accountNichtAngemeldet) accountNichtAngemeldet.style.display = 'flex';
+    if (accountAngemeldet) accountAngemeldet.style.display = 'none';
   }
 
   // Tagessieger Meldung prüfen
@@ -49,7 +73,6 @@ export function aktualisiereStartseite() {
     const gespeichert = localStorage.getItem('tippfuchs_tagessieger');
     if (gespeichert && appState.currentUser) {
       const daten = JSON.parse(gespeichert);
-      // Nur anzeigen wenn es von gestern ist
       if (daten.tagIdx === TAGES_IDX - 1) {
         siegBox.style.display = 'block';
         siegBox.textContent = `🏆 Du warst gestern Tagessieger! Das Wort war ${daten.wort} am ${daten.datum}. Herzlichen Glückwunsch!`;
@@ -60,13 +83,46 @@ export function aktualisiereStartseite() {
     } else {
       siegBox.style.display = 'none';
     }
-  } catch(e) {
-    siegBox.style.display = 'none';
-  }
+  } catch(e) { siegBox.style.display = 'none'; }
 
   aktualisiereStartStats();
   if (typeof window.aktualisiereHausPoolText === 'function') window.aktualisiereHausPoolText();
   zeigeAdminBereich();
+}
+
+export async function abmelden() {
+  try {
+    await signOut(auth);
+    appState.currentUser = null;
+    appState.currentSpitzname = null;
+    aktualisiereStartseite();
+    sageLaut('Du wurdest abgemeldet.');
+  } catch(e) {
+    sageLaut('Abmelden fehlgeschlagen.');
+  }
+}
+
+export async function loescheAccount() {
+  if (!appState.currentUser) return;
+  const user = appState.currentUser;
+  const uid = user.uid;
+  const name = appState.currentSpitzname;
+  try {
+    if (name) await set(ref(db, `spitznamen/${name.toLowerCase()}`), null);
+    await set(ref(db, `spieler/${uid}`), null);
+    await deleteUser(user);
+    appState.currentUser = null;
+    appState.currentSpitzname = null;
+    aktualisiereStartseite();
+    sageLaut('Dein Account wurde gelöscht.');
+  } catch(e) {
+    if (e.code === 'auth/requires-recent-login') {
+      sageLaut('Bitte melde dich erneut an um den Account zu löschen.');
+      alert('Für das Löschen des Accounts musst du dich erneut anmelden. Bitte melde dich ab, danach wieder an und versuche es dann erneut.');
+    } else {
+      sageLaut('Fehler beim Löschen des Accounts. Bitte versuche es erneut.');
+    }
+  }
 }
 export async function googleLogin() {
   try {

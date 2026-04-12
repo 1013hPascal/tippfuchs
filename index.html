@@ -731,12 +731,16 @@
     </svg>
   </div>
 
+  <!-- Überschrift — Text wird per JS gesetzt -->
+  <h2 id="start-spiel-titel" style="font-family:var(--font-display);font-size:1.3rem;margin:0;text-align:center;"></h2>
+
   <!-- Großer Spielen-Button — Text wird per JS gesetzt -->
   <button class="btn-primary" id="btn-spiel-starten" style="font-size:1.15rem;padding:18px;border-radius:10px;">🦊 Wird geladen...</button>
 
-  <!-- Willkommenstext -->
-  <div class="willkommen-box">
+  <!-- Willkommenstext — nur sichtbar wenn nicht angemeldet -->
+  <div class="willkommen-box" id="start-willkommen-box" style="display:none;">
     <strong>Jeden Tag ein neues Wort</strong> — 5 Buchstaben, 6 Versuche, null Ausreden. Miss dich mit Familie, Freunden und Arbeitskollegen und finde heraus wer beim Wörter raten die Nase vorne hat! <strong>#barrierefrei</strong> — Tippfuchs ist für alle spielbar.
+    Mit einem kostenlosen Account werden deine Ergebnisse gespeichert und du kannst Tippfuchs-Gruppen mit Familie und Freunden gründen.
   </div>
 </div>
 
@@ -897,24 +901,17 @@
     <h2><button id="btn-account-toggle" aria-expanded="false" aria-controls="account-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Account</button></h2>
   </div>
   <div id="account-inhalt" style="display:none;flex-direction:column;gap:8px;">
-    <p style="font-size:.85rem;color:var(--text-muted);">Mit Account werden deine Ergebnisse gespeichert, du kannst Gruppen erstellen und in der Statistik erscheinen.</p>
-
-    <!-- Mit Account -->
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <h3>Mit Account spielen</h3>
+    <!-- Nicht angemeldet -->
+    <div id="account-nicht-angemeldet" style="display:flex;flex-direction:column;gap:8px;">
       <button class="btn-primary" id="btn-mit-email">Mit E-Mail anmelden</button>
       <button class="btn-primary" id="btn-mit-konto">Mit Google Konto spielen</button>
-      <button class="btn-secondary" id="btn-spitzname-aendern-start">Spielername aendern ✏️</button>
     </div>
-
-    <!-- Trennlinie -->
-    <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
-
-    <!-- Ohne Account -->
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <h3>Ohne Account spielen</h3>
-      <p style="font-size:.82rem;color:var(--text-muted);">Deine Ergebnisse werden nur lokal gespeichert und erscheinen nicht in der Rangliste.</p>
-      <button class="btn-secondary" id="btn-ohne-konto">Ohne Account spielen</button>
+    <!-- Angemeldet -->
+    <div id="account-angemeldet" style="display:none;flex-direction:column;gap:8px;">
+      <p id="account-info-text" style="font-size:.9rem;color:var(--text-muted);"></p>
+      <button class="btn-secondary" id="btn-spitzname-aendern-start">Spitzname ändern ✏️</button>
+      <button class="btn-secondary" id="btn-abmelden">Abmelden</button>
+      <button class="btn-secondary" id="btn-account-loeschen">Account löschen</button>
     </div>
   </div>
 </div>

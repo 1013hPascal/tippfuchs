@@ -2,7 +2,7 @@ import { appState } from './state.js';
 import { TAGES_IDX } from './tageswort.js';
 import { ladeSpitzname, spitznameVorhanden, speichereSpitzname, aendereSpitzname } from './firebase-basis.js';
 import { zeigeScreen } from './screens.js';
-import { zeigeStart, aktualisiereStartseite, googleLogin } from './auth.js';
+import { zeigeStart, aktualisiereStartseite, googleLogin, abmelden, loescheAccount } from './auth.js';
 import { starteSpiel, verarbeiteWort, zeigeErgebnis } from './spiellogik.js';
 import { zeigeTagesrangliste } from './rangliste.js';
 import { ladeBotListe, ladeTagsSelect, ladeMonatSelect, ladeJahrSelect } from './statistik.js';
@@ -20,9 +20,15 @@ document.getElementById('btn-spiel-starten').addEventListener('click', () => {
     // Angemeldet → direkt spielen
     starteSpiel();
   } else {
-    // Nicht angemeldet → zum Anmelde-Block scrollen
+    // Nicht angemeldet → Account-Bereich aufklappen und scrollen
+    const accountInhalt = document.getElementById('account-inhalt');
+    const accountToggle = document.getElementById('btn-account-toggle');
+    if (accountInhalt && accountInhalt.style.display === 'none') {
+      accountInhalt.style.display = 'flex';
+      if (accountToggle) accountToggle.setAttribute('aria-expanded', 'true');
+    }
     document.getElementById('anmelden-block').scrollIntoView({behavior: 'smooth', block: 'start'});
-    sageLaut('Bitte melde dich an oder spiele ohne Account.');
+    sageLaut('Bitte melde dich an um zu spielen.');
   }
 });
 
@@ -36,7 +42,11 @@ document.getElementById('btn-mit-konto').addEventListener('click', async()=>{
   if (!name) { zeigeScreen('spitzname-screen'); setTimeout(()=>document.getElementById('spitzname-input').focus(),100); }
   else starteSpiel();
 });
-document.getElementById('btn-ohne-konto').addEventListener('click',()=>starteSpiel());
+document.getElementById('btn-abmelden').addEventListener('click', abmelden);
+document.getElementById('btn-account-loeschen').addEventListener('click', async () => {
+  if (!confirm('Möchtest du deinen Account wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) return;
+  await loescheAccount();
+});
 document.getElementById('btn-stats-start').addEventListener('click',async()=>{ zeigeScreen('alle-stats-screen'); await ladeBotListe(); await ladeTagsSelect(); await ladeMonatSelect(); await ladeJahrSelect(); });
 document.getElementById('btn-gruppen-start').addEventListener('click',zeigeGruppenScreen);
 
