@@ -25,8 +25,8 @@ function _botZeige(offset) {
       const medal = gi === 0 ? '🥇 ' : gi === 1 ? '🥈 ' : gi === 2 ? '🥉 ' : '';
       const li = document.createElement('li');
       li.className = `best-of-eintrag platz-${gi + 1}`;
-      const platz1 = medal ? medal : `${gi + 1}.`;
-    li.innerHTML = `<span class="best-of-platz">${platz1}</span> <span class="best-of-name">${e.name}</span>: <span class="best-of-punkte">${e.punkte} Sieg${e.punkte !== 1 ? 'e' : ''}</span>`;
+      const platz1 = medal ? medal.trim() : `${gi + 1}.`;
+    li.textContent = `${platz1} ${e.name}: ${e.punkte} Sieg${e.punkte !== 1 ? 'e' : ''}`;
       liste.appendChild(li);
     });
   }
@@ -106,8 +106,8 @@ function _tageZeige(offset) {
     const medal = gi === 0 ? '🥇 ' : gi === 1 ? '🥈 ' : gi === 2 ? '🥉 ' : '';
     const li = document.createElement('li');
     li.className = `best-of-eintrag platz-${gi + 1}`;
-    const platz2 = medal ? medal : `${gi + 1}.`;
-    li.innerHTML = `<span class="best-of-platz">${platz2}</span> <span class="best-of-name">${e.name}</span>: <span class="best-of-punkte">${e.versuche} Versuch${e.versuche !== 1 ? 'e' : ''} · ${formatZeit(e.sekunden)}</span>`;
+    const platz2 = medal ? medal.trim() : `${gi + 1}.`;
+    li.textContent = `${platz2} ${e.name}: ${e.versuche} Versuch${e.versuche !== 1 ? 'e' : ''} · ${formatZeit(e.sekunden)}`;
     ul.appendChild(li);
   });
 
@@ -221,7 +221,7 @@ export async function ladeMonatErgebnis() {
   }
   div.innerHTML=html;
   const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
-  sortiert.slice(0,20).forEach((e,i)=>{ const medal=i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':''; const d=document.createElement('div'); d.className='tages-ergebnis-zeile'; d.innerHTML=`<span>${medal?medal:`${i+1}.`} ${e.name}</span>: <span>${e.punkte} Sieg${e.punkte!==1?'e':''}</span>`; topDiv.appendChild(d); });
+  sortiert.slice(0,20).forEach((e,i)=>{ const medal=i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':''; const d=document.createElement('div'); d.className='tages-ergebnis-zeile'; d.textContent=`${medal?medal.trim():`${i+1}.`} ${e.name}: ${e.punkte} Sieg${e.punkte!==1?'e':''}`; topDiv.appendChild(d); });
   const wDiv=document.getElementById('monat-weitere');
   if (sortiert.length>20) { wDiv.style.display='flex'; const sel=document.getElementById('monat-weitere-dropdown'); sel.innerHTML=''; sortiert.slice(20).forEach((e,i)=>{ const o=document.createElement('option'); o.textContent=`${i+21}. ${e.name} - ${e.punkte} Sieg${e.punkte!==1?'e':''}`; sel.appendChild(o); }); }
   else { wDiv.style.display='none'; }
@@ -258,7 +258,7 @@ export async function ladeJahrErgebnis() {
   }
   div.innerHTML=html;
   const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
-  sortiert.slice(0,20).forEach((e,i)=>{ const medal=i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':''; const d=document.createElement('div'); d.className='tages-ergebnis-zeile'; d.innerHTML=`<span>${medal?medal:`${i+1}.`} ${e.name}</span>: <span>${e.punkte} Sieg${e.punkte!==1?'e':''}</span>`; topDiv.appendChild(d); });
+  sortiert.slice(0,20).forEach((e,i)=>{ const medal=i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':''; const d=document.createElement('div'); d.className='tages-ergebnis-zeile'; d.textContent=`${medal?medal.trim():`${i+1}.`} ${e.name}: ${e.punkte} Sieg${e.punkte!==1?'e':''}`; topDiv.appendChild(d); });
   const wDiv=document.getElementById('jahr-weitere');
   if (sortiert.length>20) { wDiv.style.display='flex'; const sel=document.getElementById('jahr-weitere-dropdown'); sel.innerHTML=''; sortiert.slice(20).forEach((e,i)=>{ const o=document.createElement('option'); o.textContent=`${i+21}. ${e.name} - ${e.punkte} Sieg${e.punkte!==1?'e':''}`; sel.appendChild(o); }); }
   else { wDiv.style.display='none'; }

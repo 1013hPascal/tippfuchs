@@ -21,15 +21,18 @@ document.getElementById('btn-spiel-starten').addEventListener('click', () => {
     // Angemeldet → direkt spielen
     starteSpiel();
   } else {
-    // Nicht angemeldet → Account-Bereich aufklappen und scrollen
+    // Nicht angemeldet → Account-Bereich aufklappen und Fokus auf erstes Element
     const accountInhalt = document.getElementById('account-inhalt');
     const accountToggle = document.getElementById('btn-account-toggle');
     if (accountInhalt && accountInhalt.style.display === 'none') {
       accountInhalt.style.display = 'flex';
       if (accountToggle) accountToggle.setAttribute('aria-expanded', 'true');
     }
-    document.getElementById('anmelden-block').scrollIntoView({behavior: 'smooth', block: 'start'});
     sageLaut('Bitte melde dich an um zu spielen.');
+    setTimeout(() => {
+      const erstesElement = document.getElementById('btn-mit-email');
+      if (erstesElement) { erstesElement.scrollIntoView({behavior: 'smooth', block: 'center'}); erstesElement.focus(); }
+    }, 50);
   }
 });
 
@@ -41,7 +44,7 @@ document.getElementById('btn-mit-konto').addEventListener('click', async()=>{
   const name=await ladeSpitzname(user.uid);
   appState.currentSpitzname=name; aktualisiereStartseite();
   if (!name) { zeigeScreen('spitzname-screen'); setTimeout(()=>document.getElementById('spitzname-input').focus(),100); }
-  else starteSpiel();
+  else { aktualisiereStartseite(); setTimeout(()=>document.getElementById('btn-spiel-starten').focus(),100); }
 });
 document.getElementById('btn-abmelden').addEventListener('click', abmelden);
 document.getElementById('btn-account-loeschen').addEventListener('click', async () => {

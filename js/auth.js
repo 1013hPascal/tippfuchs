@@ -218,7 +218,7 @@ document.getElementById('btn-email-login-bestaetigen').addEventListener('click',
       if (!name) {
         zeigeScreen('spitzname-screen');
         setTimeout(() => document.getElementById('spitzname-input').focus(), 100);
-      } else { starteSpiel(); }
+      } else { schliesseModal('modal-email-login'); aktualisiereStartseite(); setTimeout(()=>document.getElementById('btn-spiel-starten').focus(),100); }
     } catch(e) {
       if (e.code === 'auth/email-already-in-use') fehler.textContent = 'E-Mail wird bereits verwendet.';
       else if (e.code === 'auth/invalid-email') fehler.textContent = 'Ungueltige E-Mail-Adresse.';
@@ -235,7 +235,7 @@ document.getElementById('btn-email-login-bestaetigen').addEventListener('click',
       if (!name) {
         zeigeScreen('spitzname-screen');
         setTimeout(() => document.getElementById('spitzname-input').focus(), 100);
-      } else { starteSpiel(); }
+      } else { aktualisiereStartseite(); setTimeout(()=>document.getElementById('btn-spiel-starten').focus(),100); }
     } catch(e) {
       if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') fehler.textContent = 'E-Mail oder Passwort falsch.';
       else if (e.code === 'auth/invalid-email') fehler.textContent = 'Ungueltige E-Mail-Adresse.';
