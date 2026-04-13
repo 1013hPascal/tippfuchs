@@ -185,6 +185,7 @@ registriereToggle('btn-stats-toggle',     'stats-inhalt',            'Statistik 
 registriereToggle('btn-account-toggle',   'account-inhalt',          'Account');
 registriereToggle('btn-design-toggle',    'design-inhalt',           'Design auswaehlen');
 registriereToggle('btn-anleitung-toggle',         'anleitung-toggle-inhalt',  'Anleitung und Hilfe');
+registriereToggle('btn-philosophie-toggle',       'philosophie-inhalt',       'Philosophie');
 registriereToggle('btn-gruppen-verwalten-toggle', 'gruppen-verwalten-inhalt', 'Tippfuchsgruppen verwalten');
 registriereToggle('btn-freunde-verwalten-toggle', 'freunde-verwalten-inhalt', 'Freundesliste verwalten');
 
