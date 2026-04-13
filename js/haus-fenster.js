@@ -17,11 +17,13 @@ export function initialisiereHausFenster() {
     'anmelden':   {x: 360, y: 193},
     'design':     {x: 432, y: 193},
     'anleitung':  {x: 508, y: 193},
+    'philosophie':{x: 358, y: 345},
+    'quellen':    {x: 307, y: 325},
   };
 
   function oeffneFenster(name) {
     // Alle Panels verstecken
-    ['erfolge','statistik','gruppen','anmelden','design','anleitung'].forEach(n => {
+    ['erfolge','statistik','gruppen','anmelden','design','anleitung','philosophie','quellen'].forEach(n => {
       const p = document.getElementById(`haus-panel-${n}`);
       if (p) p.style.display = 'none';
     });

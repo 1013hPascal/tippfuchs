@@ -243,18 +243,35 @@
 <line x1="37" y1="73" x2="31" y2="79" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
 
 <!-- FUCHSWOLKE -->
+<!-- Wolken-Körper -->
 <ellipse cx="260" cy="58" rx="72" ry="25" fill="white" opacity="0.95"/>
 <ellipse cx="216" cy="65" rx="28" ry="20" fill="white" opacity="0.95"/>
 <ellipse cx="304" cy="63" rx="26" ry="18" fill="white" opacity="0.95"/>
 <ellipse cx="240" cy="46" rx="26" ry="18" fill="white" opacity="0.95"/>
 <ellipse cx="280" cy="44" rx="24" ry="17" fill="white" opacity="0.95"/>
-<ellipse cx="238" cy="31" rx="11" ry="14" fill="white" opacity="0.95" transform="rotate(-10,238,31)"/>
-<ellipse cx="281" cy="29" rx="10" ry="13" fill="white" opacity="0.95" transform="rotate(10,281,29)"/>
+<!-- Fuchs-Ohren (außen orange, innen creme) -->
+<ellipse cx="238" cy="31" rx="11" ry="14" fill="#E8621A" opacity="0.85" transform="rotate(-10,238,31)"/>
+<ellipse cx="281" cy="29" rx="10" ry="13" fill="#E8621A" opacity="0.85" transform="rotate(10,281,29)"/>
+<ellipse cx="238" cy="32" rx="7" ry="9" fill="#F5E6D0" opacity="0.9" transform="rotate(-10,238,32)"/>
+<ellipse cx="281" cy="30" rx="6" ry="8" fill="#F5E6D0" opacity="0.9" transform="rotate(10,281,30)"/>
+<!-- Weiße Wolkendecke über Ohren -->
+<ellipse cx="240" cy="46" rx="26" ry="18" fill="white" opacity="0.95"/>
+<ellipse cx="280" cy="44" rx="24" ry="17" fill="white" opacity="0.95"/>
+<!-- Fuchs-Augen in der Wolke -->
+<circle cx="246" cy="51" r="3" fill="white"/>
+<circle cx="246" cy="51" r="2" fill="#2A1A0A" opacity="0.75"/>
+<circle cx="245.5" cy="50.5" r="0.7" fill="white"/>
+<circle cx="274" cy="51" r="3" fill="white"/>
+<circle cx="274" cy="51" r="2" fill="#2A1A0A" opacity="0.75"/>
+<circle cx="273.5" cy="50.5" r="0.7" fill="white"/>
+<!-- Fuchs-Nase -->
+<ellipse cx="260" cy="57" rx="3.5" ry="2.5" fill="#2A1A0A" opacity="0.5"/>
+<!-- Schwanz der Wolke nach rechts -->
 <ellipse cx="330" cy="62" rx="18" ry="10" fill="white" opacity="0.9"/>
 <ellipse cx="351" cy="58" rx="13" ry="8" fill="white" opacity="0.85"/>
 <ellipse cx="366" cy="55" rx="9" ry="6" fill="white" opacity="0.8"/>
 <ellipse cx="375" cy="53" rx="5" ry="4" fill="#fff8f0" opacity="0.9"/>
-<text x="260" y="65" text-anchor="middle" font-family="Georgia,serif" font-size="19" font-weight="700" fill="#E8621A">Tippfuchs</text>
+<text x="260" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="19" font-weight="700" fill="#E8621A">Tippfuchs</text>
 
 <!-- HEISSLUFTBALLON rechts -->
 <!-- Seile -->
@@ -303,6 +320,27 @@
 <line x1="562" y1="138" x2="455" y2="70" stroke="#8B5E3C" stroke-width="2" stroke-linecap="round"/>
 <polygon points="455,70 448,64 461,65" fill="#2A1A0A"/>
 <rect x="451" y="64" width="9" height="7" fill="#F5C842" transform="rotate(-35,455,67)"/>
+
+<!-- LITFASSSÄULE links vor dem Zaun -->
+<!-- Basis/Sockel -->
+<rect x="55" y="354" width="24" height="6" fill="#6a3e20" rx="2"/>
+<!-- Säulenkörper -->
+<rect x="59" y="298" width="16" height="58" fill="#9a7050" rx="6"/>
+<!-- Säulen-Querschnitt oben -->
+<ellipse cx="67" cy="298" rx="11" ry="4.5" fill="#b08060"/>
+<ellipse cx="67" cy="296" rx="9" ry="3" fill="#c09070"/>
+<!-- Plakat / Werbefläche -->
+<rect x="60" y="310" width="14" height="22" fill="#fff8e0" stroke="#E8621A" stroke-width="1" rx="1"/>
+<!-- Kleiner Fuchs auf dem Plakat -->
+<ellipse cx="67" cy="317" rx="4.5" ry="4" fill="#E8621A"/>
+<polygon points="63,312 65,317 67,312" fill="#E8621A"/>
+<polygon points="67,312 69,317 71,312" fill="#E8621A"/>
+<ellipse cx="67" cy="318" rx="3" ry="2.5" fill="#F5E6D0"/>
+<circle cx="65.5" cy="315.5" r="0.8" fill="#2A1A0A"/>
+<circle cx="68.5" cy="315.5" r="0.8" fill="#2A1A0A"/>
+<!-- Text auf dem Plakat -->
+<text x="67" y="325.5" text-anchor="middle" font-family="Georgia,serif" font-size="4.5" font-weight="700" fill="#E8621A">Tipp</text>
+<text x="67" y="330" text-anchor="middle" font-family="Georgia,serif" font-size="4.5" font-weight="700" fill="#E8621A">fuchs</text>
 
 <!-- HAUS FASSADE -->
 <rect x="82" y="172" width="456" height="108" fill="url(#hg2-fassade)" stroke="#c4a882" stroke-width="1.5"/>
@@ -479,9 +517,16 @@
   <!-- Auge -->
   <circle cx="444" cy="211" r="1.3" fill="#2A1A0A"/>
   <circle cx="450" cy="211" r="1.3" fill="#2A1A0A"/>
-  <!-- Pinsel in Pfote -->
-  <line x1="440" y1="219" x2="428" y2="212" stroke="#8B5E3C" stroke-width="1.8" stroke-linecap="round"/>
-  <ellipse cx="427" cy="211" rx="2.5" ry="1.5" fill="#E8621A" transform="rotate(-30,427,211)"/>
+  <!-- Pinsel in Pfote: Stiel, Zwinge, Borsten -->
+  <!-- Stiel (Holz, warm braun) -->
+  <line x1="440" y1="220" x2="432" y2="214" stroke="#c4903a" stroke-width="3" stroke-linecap="round"/>
+  <!-- Zwinge (Metall, silbergrau) -->
+  <line x1="432" y1="214" x2="429" y2="212" stroke="#aaaaaa" stroke-width="3.5" stroke-linecap="butt"/>
+  <!-- Borsten (fächerförmig, orange-braun) -->
+  <path d="M429,212 L423,208 L425,205 L430,209 Z" fill="#E8621A" opacity="0.9"/>
+  <path d="M429,212 L422,210 L424,207 L429,211 Z" fill="#c4600a" opacity="0.6"/>
+  <!-- Farbtupfer an Spitze -->
+  <circle cx="423" cy="208" r="1.2" fill="#4a90d9" opacity="0.85"/>
   <!-- Fensterbank -->
   <rect x="396" y="257" width="72" height="7" fill="#c4a882" rx="2"/>
   <text x="432" y="272" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#6a3e20">Design</text>
@@ -606,9 +651,52 @@
 
 <!-- SPIELEN-BUTTON IM POOL — klar im Pool-Wasser, kein Überlapp mit Fuchs -->
 <text id="pool-btn-text" style="pointer-events:all;cursor:pointer;text-shadow:0 1px 3px rgba(0,0,0,0.4);" x="562" y="344" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="white">🦊 Spielen</text>
-<text id="pool-btn-subtext" style="pointer-events:all;cursor:pointer;" x="562" y="357" text-anchor="middle" font-family="Georgia,serif" font-size="8.5" fill="rgba(255,255,255,0.85)">Klick zum Starten</text>
+<text id="pool-btn-subtext" style="pointer-events:all;cursor:pointer;" x="562" y="357" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="rgba(255,255,255,0.9)">Klick zum Starten</text>
 <!-- Unsichtbarer klickbarer Bereich über Pool -->
 <ellipse id="pool-klick" cx="562" cy="348" rx="62" ry="22" fill="transparent" style="cursor:pointer;pointer-events:all;"/>
+
+<!-- SPRINGBRUNNEN Mitte — Becken klickbar (Quellen & Lizenzen) -->
+<!-- Stein-Rand des Brunnens -->
+<g class="haus-fenster" data-fenster="quellen" style="cursor:pointer;pointer-events:all;">
+  <ellipse cx="307" cy="336" rx="36" ry="13" fill="#b0a898" stroke="#8a8070" stroke-width="1.5"/>
+  <!-- Wasser im Becken -->
+  <ellipse cx="307" cy="335" rx="30" ry="10" fill="url(#hg2-pool)" opacity="0.85"/>
+  <!-- Wasserwellen -->
+  <path d="M282,334 Q295,331 307,334 Q319,337 332,334" fill="none" stroke="white" stroke-width="0.8" opacity="0.5"/>
+  <!-- Zentraler Pfosten/Säule -->
+  <rect x="304" y="315" width="6" height="22" fill="#c0b8a8" rx="2"/>
+  <ellipse cx="307" cy="314" rx="7" ry="4" fill="#d0c8b8"/>
+  <!-- Wasserstrahlen (dekorativ) -->
+  <path d="M307,314 Q303,304 298,296" fill="none" stroke="#80d0f0" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+  <path d="M307,314 Q311,303 316,295" fill="none" stroke="#80d0f0" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+  <path d="M307,314 Q307,302 307,293" fill="none" stroke="#a0e0ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <path d="M307,314 Q300,307 295,300" fill="none" stroke="#80d0f0" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+  <path d="M307,314 Q314,307 319,300" fill="none" stroke="#80d0f0" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+  <!-- Wassertropfen -->
+  <circle cx="298" cy="294" r="2" fill="#80d0f0" opacity="0.7"/>
+  <circle cx="316" cy="293" r="1.8" fill="#80d0f0" opacity="0.7"/>
+  <circle cx="307" cy="291" r="2.2" fill="#a0e0ff" opacity="0.6"/>
+  <circle cx="294" cy="299" r="1.5" fill="#80d0f0" opacity="0.5"/>
+  <circle cx="320" cy="298" r="1.5" fill="#80d0f0" opacity="0.5"/>
+  <!-- "Quellen" Label -->
+  <text x="307" y="337" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" font-weight="700" fill="white" opacity="0.9">Quellen</text>
+</g>
+
+<!-- PHILOSOPHIESTEIN auf der Wiese -->
+<g class="haus-fenster" data-fenster="philosophie" style="cursor:pointer;pointer-events:all;">
+  <!-- Stein Schatten -->
+  <ellipse cx="360" cy="360" rx="40" ry="8" fill="#3a7018" opacity="0.3"/>
+  <!-- Stein Körper (mehrschichtig für organische Form) -->
+  <ellipse cx="358" cy="352" rx="42" ry="13" fill="#8a8878" stroke="#6a6858" stroke-width="1.2"/>
+  <ellipse cx="355" cy="350" rx="38" ry="11" fill="#9a9888"/>
+  <ellipse cx="360" cy="349" rx="34" ry="9" fill="#b0ae9e"/>
+  <!-- Gravur/Text im Stein -->
+  <text x="358" y="352" text-anchor="middle" font-family="Georgia,serif" font-size="8" font-weight="700" fill="#5a5848">Philosophie</text>
+  <!-- Moos-Andeutungen -->
+  <ellipse cx="322" cy="353" rx="7" ry="3.5" fill="#4a7828" opacity="0.45"/>
+  <ellipse cx="392" cy="351" rx="5" ry="3" fill="#4a7828" opacity="0.35"/>
+  <ellipse cx="335" cy="356" rx="4" ry="2" fill="#5a8830" opacity="0.3"/>
+</g>
 
 <!-- TATZEN-MARKER auf aktivem Fenster (initial versteckt) -->
 <g id="tatze-marker" opacity="0" transform="translate(124,193)">
@@ -686,6 +774,20 @@
   </div>
 
   <!-- Anleitung -->
+  <!-- Philosophie -->
+  <div id="haus-panel-philosophie" style="display:none;">
+    <h3 style="color:#f5e6d0;font-family:Georgia,serif;font-size:.95rem;margin-bottom:8px;">💡 Philosophie</h3>
+    <p style="font-size:.82rem;color:#c8e8a8;margin-bottom:8px;">Barrierefreiheit ist kein Zusatz – sie ist ein Qualitätsmerkmal. Tippfuchs ist für alle spielbar, egal ob mit oder ohne Seheinschränkung.</p>
+    <button onclick="document.getElementById('haus-menue-feld').style.display='none';document.getElementById('btn-philosophie-toggle').click();document.getElementById('btn-philosophie-toggle').scrollIntoView({behavior:'smooth',block:'center'});" style="width:100%;background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:8px;cursor:pointer;font-size:.85rem;">💡 Philosophie vollständig lesen</button>
+  </div>
+
+  <!-- Quellen & Lizenzen -->
+  <div id="haus-panel-quellen" style="display:none;">
+    <h3 style="color:#f5e6d0;font-family:Georgia,serif;font-size:.95rem;margin-bottom:8px;">📖 Quellen &amp; Lizenzen</h3>
+    <p style="font-size:.82rem;color:#c8e8a8;margin-bottom:8px;">Die Wörterliste basiert auf dem <strong style="color:white;">german-wordlist</strong>-Projekt von gottcode, veröffentlicht unter CC0 1.0 (gemeinfrei).</p>
+    <button onclick="document.getElementById('haus-menue-feld').style.display='none';document.getElementById('btn-lizenzen-toggle').click();document.getElementById('btn-lizenzen-toggle').scrollIntoView({behavior:'smooth',block:'center'});" style="width:100%;background:rgba(0,0,0,.2);color:white;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:8px;cursor:pointer;font-size:.85rem;">📖 Quellen vollständig ansehen</button>
+  </div>
+
   <div id="haus-panel-anleitung" style="display:none;">
     <h3 style="color:#f5e6d0;font-family:Georgia,serif;font-size:.95rem;margin-bottom:8px;">📖 Anleitung und Hilfe</h3>
     <div style="display:flex;flex-direction:column;gap:4px;">
