@@ -65,10 +65,10 @@ export function aktualisiereStartseite() {
     // Angemeldet
     if (heuteGespielt) {
       if (titel) titel.textContent = 'Du hast heute schon gespielt';
-      if (btnSpielStarten) btnSpielStarten.textContent = '🦊 Ergebnis ansehen';
+      if (btnSpielStarten) btnSpielStarten.textContent = 'Ergebnis ansehen 🦊';
     } else {
       if (titel) titel.textContent = 'Spiele das heutige Tippfuchs Rätsel';
-      if (btnSpielStarten) btnSpielStarten.textContent = '🦊 Jetzt spielen';
+      if (btnSpielStarten) btnSpielStarten.textContent = 'Jetzt spielen 🦊';
     }
     if (accountNichtAngemeldet) accountNichtAngemeldet.style.display = 'none';
     if (accountAngemeldet) accountAngemeldet.style.display = 'flex';
@@ -79,7 +79,7 @@ export function aktualisiereStartseite() {
   } else {
     // Nicht angemeldet
     if (titel) titel.textContent = 'Anmelden und spielen';
-    if (btnSpielStarten) btnSpielStarten.textContent = '🦊 Jetzt anmelden';
+    if (btnSpielStarten) btnSpielStarten.textContent = 'Jetzt anmelden 🦊';
     if (accountNichtAngemeldet) accountNichtAngemeldet.style.display = 'flex';
     if (accountAngemeldet) accountAngemeldet.style.display = 'none';
   }

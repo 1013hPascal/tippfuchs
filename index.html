@@ -1218,7 +1218,7 @@
     <div class="erg-zeile"><span class="erg-label">Wort:</span><span class="erg-wert" id="erg-wort">-</span></div>
     <div class="erg-zeile"><span class="erg-label">Anzahl Versuche:</span><span class="erg-wert" id="erg-versuche">-</span></div>
     <div class="erg-zeile"><span class="erg-label">Zeit:</span><span class="erg-wert" id="erg-zeit">-</span></div>
-    <div class="erg-zeile" id="erg-platz-zeile" style="display:none;"><span class="erg-label">Dein Platz heute:</span><span class="erg-wert" id="erg-platz">-</span></div>
+    <div class="erg-zeile" id="erg-platz-zeile" style="display:none;"><span class="erg-label">Aktuelle Platzierung:</span><span class="erg-wert" id="erg-platz">-</span></div>
     <div class="erg-zeile" style="flex-direction:column;gap:6px;">
       <span class="erg-label">Eingegebene Woerter:</span>
       <ul class="erg-wortliste" id="erg-wortliste" aria-label="Eingegebene Woerter"></ul>
@@ -1273,10 +1273,18 @@
       <h2>Tippfuchs Champion aller Zeiten <span id="bot-anzahl" style="font-size:.8rem;color:var(--text-muted);font-family:var(--font-body);font-weight:400;"></span></h2>
       <div id="bot-mein-platz" class="mein-platz-box" style="display:none;font-size:.9rem;"></div>
       <input type="text" id="bot-suche" placeholder="Spieler suchen..." aria-label="Spieler suchen" class="text-input" style="font-size:.9rem;padding:8px 12px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <label for="bot-pro-seite" style="font-size:.85rem;color:var(--text-muted);">Einträge pro Seite:</label>
+        <input type="number" id="bot-pro-seite" value="20" min="5" max="100" step="5" style="width:70px;padding:4px 8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:.9rem;" aria-label="Eintraege pro Seite">
+      </div>
+      <div id="bot-nav" style="display:none;flex-direction:column;gap:6px;">
+        <button id="bot-vorherige" class="btn-secondary" style="display:none;font-size:.85rem;padding:8px 12px;" aria-label="Vorherige Eintraege"></button>
+        <button id="bot-naechste" class="btn-secondary" style="display:none;font-size:.85rem;padding:8px 12px;" aria-label="Naechste Eintraege"></button>
+      </div>
       <ul class="best-of-liste" id="bot-liste" aria-label="Champion aller Zeiten Liste"></ul>
-      <div id="bot-mehr" style="display:none;" class="platzierung-navigator">
-        <span style="font-size:.82rem;color:var(--text-muted);white-space:nowrap;">Weitere Plaetze:</span>
-        <select id="bot-dropdown" aria-label="Weitere Plaetze"></select>
+      <div id="bot-nav-unten" style="display:none;flex-direction:column;gap:6px;">
+        <button id="bot-vorherige-unten" class="btn-secondary" style="display:none;font-size:.85rem;padding:8px 12px;" aria-label="Vorherige Eintraege"></button>
+        <button id="bot-naechste-unten" class="btn-secondary" style="display:none;font-size:.85rem;padding:8px 12px;" aria-label="Naechste Eintraege"></button>
       </div>
     </div>
     <div class="stats-box">

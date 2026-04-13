@@ -6,46 +6,87 @@ import { ladeRanglisteFirebase, ladeBestOfTime } from './firebase-basis.js';
 import { formatZeit } from './timer.js';
 
 // ALLE-SPIELER-STATISTIK ANFANG
-export async function ladeBotListe(suchtext='') {
-  const botListe=document.getElementById('bot-liste');
-  const botAnzahl=document.getElementById('bot-anzahl');
-  const botMeinPlatz=document.getElementById('bot-mein-platz');
-  botListe.innerHTML='<li style="color:var(--text-muted);font-size:.9rem;padding:8px 0;">Wird geladen...</li>';
-  const alle = await ladeBestOfTime();
-  botAnzahl.textContent=`(${alle.length} Spielende in der Liste)`;
-  botMeinPlatz.style.display='none';
+let _botAlle = [];
+let _botGefiltert = [];
+let _botOffset = 0;
+
+function _botZeige(offset) {
+  _botOffset = offset;
+  const proSeite = Math.max(1, parseInt(document.getElementById('bot-pro-seite')?.value) || 20);
+  const liste = document.getElementById('bot-liste');
+  const sichtbar = _botGefiltert.slice(offset, offset + proSeite);
+
+  liste.innerHTML = '';
+  if (_botGefiltert.length === 0) {
+    liste.innerHTML = '<li style="color:var(--text-muted);font-size:.9rem;padding:8px 0;">Keine Spieler gefunden.</li>';
+  } else {
+    sichtbar.forEach((e, i) => {
+      const gi = offset + i; // globaler Index
+      const medal = gi === 0 ? '🥇 ' : gi === 1 ? '🥈 ' : gi === 2 ? '🥉 ' : '';
+      const li = document.createElement('li');
+      li.className = `best-of-eintrag platz-${gi + 1}`;
+      li.innerHTML = `<span class="best-of-platz">${medal}${gi + 1}.</span><span class="best-of-name">${e.name}</span><span class="best-of-punkte">${e.punkte} Sieg${e.punkte !== 1 ? 'e' : ''}</span>`;
+      liste.appendChild(li);
+    });
+  }
+
+  // Navigation aktualisieren (oben + unten gleich)
+  const gesamt = _botGefiltert.length;
+  const hasPrev = offset > 0;
+  const hasNext = offset + proSeite < gesamt;
+  const prevVon = Math.max(0, offset - proSeite) + 1;
+  const prevBis = offset;
+  const nextVon = offset + proSeite + 1;
+  const nextBis = Math.min(offset + 2 * proSeite, gesamt);
+
+  ['', '-unten'].forEach(suf => {
+    const nav = document.getElementById(`bot-nav${suf}`);
+    const vorBtn = document.getElementById(`bot-vorherige${suf}`);
+    const naechBtn = document.getElementById(`bot-naechste${suf}`);
+    nav.style.display = (hasPrev || hasNext) ? 'flex' : 'none';
+    vorBtn.style.display = hasPrev ? 'block' : 'none';
+    vorBtn.textContent = `Vorherige ${prevVon} bis ${prevBis}`;
+    naechBtn.style.display = hasNext ? 'block' : 'none';
+    naechBtn.textContent = `Nächste ${nextVon} bis ${nextBis}`;
+  });
+}
+
+export async function ladeBotListe(suchtext = '') {
+  const botListe = document.getElementById('bot-liste');
+  const botAnzahl = document.getElementById('bot-anzahl');
+  const botMeinPlatz = document.getElementById('bot-mein-platz');
+  botListe.innerHTML = '<li style="color:var(--text-muted);font-size:.9rem;padding:8px 0;">Wird geladen...</li>';
+
+  _botAlle = await ladeBestOfTime();
+  botAnzahl.textContent = `(${_botAlle.length} Spielende in der Liste)`;
+  botMeinPlatz.style.display = 'none';
+
   if (appState.currentSpitzname) {
-    const platz=alle.findIndex(e=>e.name.toLowerCase()===appState.currentSpitzname.toLowerCase())+1;
-    if (platz>0) {
-      const medal = platz===1?'🥇 ':platz===2?'🥈 ':platz===3?'🥉 ':'';
-      botMeinPlatz.textContent=`${medal}Du bist auf Platz ${platz} (${alle[platz-1].punkte} Sieg${alle[platz-1].punkte!==1?'e':''})`;
-      botMeinPlatz.style.display='block';
+    const platz = _botAlle.findIndex(e => e.name.toLowerCase() === appState.currentSpitzname.toLowerCase()) + 1;
+    if (platz > 0) {
+      const medal = platz === 1 ? '🥇 ' : platz === 2 ? '🥈 ' : platz === 3 ? '🥉 ' : '';
+      botMeinPlatz.textContent = `${medal}Du bist auf Platz ${platz} (${_botAlle[platz - 1].punkte} Sieg${_botAlle[platz - 1].punkte !== 1 ? 'e' : ''})`;
+      botMeinPlatz.style.display = 'block';
     } else {
-      botMeinPlatz.textContent='Du hast es noch nicht in die Liste geschafft.';
-      botMeinPlatz.style.display='block';
+      botMeinPlatz.textContent = 'Du hast es noch nicht in die Liste geschafft.';
+      botMeinPlatz.style.display = 'block';
     }
   }
-  const gefiltert=suchtext?alle.filter(e=>e.name.toLowerCase().includes(suchtext.toLowerCase())):alle;
-  botListe.innerHTML='';
-  gefiltert.slice(0,20).forEach((e,i)=>{
-    const medal = i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':'';
-    const li=document.createElement('li');
-    li.className=`best-of-eintrag platz-${i+1}`;
-    li.innerHTML=`<span class="best-of-platz">${medal}${i+1}.</span><span class="best-of-name">${e.name}</span><span class="best-of-punkte">${e.punkte} Sieg${e.punkte!==1?'e':''}</span>`;
-    botListe.appendChild(li);
+
+  _botGefiltert = suchtext ? _botAlle.filter(e => e.name.toLowerCase().includes(suchtext.toLowerCase())) : _botAlle;
+  _botZeige(0);
+
+  // Klick-Handler für Buttons (einmalig registrieren via onclick)
+  ['', '-unten'].forEach(suf => {
+    document.getElementById(`bot-vorherige${suf}`).onclick = () => {
+      const ps = Math.max(1, parseInt(document.getElementById('bot-pro-seite')?.value) || 20);
+      _botZeige(Math.max(0, _botOffset - ps));
+    };
+    document.getElementById(`bot-naechste${suf}`).onclick = () => {
+      const ps = Math.max(1, parseInt(document.getElementById('bot-pro-seite')?.value) || 20);
+      _botZeige(_botOffset + ps);
+    };
   });
-  if (gefiltert.length===0) botListe.innerHTML='<li style="color:var(--text-muted);font-size:.9rem;padding:8px 0;">Keine Spieler gefunden.</li>';
-  const botMehr=document.getElementById('bot-mehr');
-  if (gefiltert.length>20) {
-    botMehr.style.display='flex';
-    const sel=document.getElementById('bot-dropdown');
-    sel.innerHTML='';
-    gefiltert.slice(20).forEach((e,i)=>{
-      const opt=document.createElement('option');
-      opt.textContent=`${i+21}. ${e.name} - ${e.punkte} Sieg${e.punkte!==1?'e':''}`;
-      sel.appendChild(opt);
-    });
-  } else { botMehr.style.display='none'; }
 }
 
 export async function ladeTagsSelect() {
