@@ -83,13 +83,6 @@ const DESIGN_SVG_INHALTE = {
 <path d="M350,0 Q340,4% 360,7%" fill="none" stroke="#5a3520" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
 <path d="M500,0 Q510,5% 495,8%" fill="none" stroke="#5a3520" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
 <path d="M650,0 Q645,4% 660,7%" fill="none" stroke="#5a3520" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
-<rect x="3%" y="60%" width="10%" height="32%" fill="#7a4020" rx="3"/>
-<rect x="4%" y="62%" width="8%" height="5%" fill="#c84020"/>
-<ellipse cx="8%" cy="63%" rx="3%" ry="2%" fill="#ff8040" opacity="0.9"/>
-<ellipse cx="8%" cy="62.5%" rx="2%" ry="1.5%" fill="#ffcc40" opacity="0.8"/>
-<ellipse cx="7.5%" cy="62%" rx="1%" ry="1.5%" fill="white" opacity="0.6"/>
-<ellipse cx="8.5%" cy="62%" rx="0.8%" ry="1.2%" fill="white" opacity="0.5"/>
-<rect x="4%" y="67%" width="8%" height="1%" fill="#5a3010" opacity="0.5"/>
 <rect x="75%" y="70%" width="18%" height="22%" fill="#8B5E3C" rx="4"/>
 <rect x="76%" y="71%" width="16%" height="8%" fill="#a07040" rx="2"/>
 <rect x="77%" y="71.5%" width="6%" height="7%" fill="#c8a060" rx="1"/>
