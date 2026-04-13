@@ -17,7 +17,7 @@ export function initialisiereHausFenster() {
     'anmelden':   {x: 360, y: 193},
     'design':     {x: 432, y: 193},
     'anleitung':  {x: 508, y: 193},
-    'philosophie':{x: 358, y: 345},
+    'philosophie':{x: 534, y: 345},
     'quellen':    {x: 307, y: 325},
   };
 
