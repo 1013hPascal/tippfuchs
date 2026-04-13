@@ -2,7 +2,7 @@ import { appState, state } from './state.js';
 import { db, ref, get, child } from './firebase-config.js';
 import { TAGES_IDX, HEUTE_KEY } from './tageswort.js';
 import { getDatumVonIdx } from './hilfsfunktionen.js';
-import { ladeRanglisteFirebase, ladeRekordFirebase, speichereRekordFirebase, ladeHistorieFirebase } from './firebase-basis.js';
+import { ladeRanglisteFirebase, ladeRekordFirebase, speichereRekordFirebase, ladeHistorieFirebase, speichereStreakFirebase, ladeStreakFirebase } from './firebase-basis.js';
 import { formatZeit } from './timer.js';
 import { bewerteVersuch } from './spiellogik.js';
 
@@ -40,7 +40,7 @@ export function ladeStats() {
   }
 }
 export function speichereStats(s) { try { localStorage.setItem('wj_stats',JSON.stringify(s)); } catch(e) {} }
-export function aktualisiereStats(gewonnen, anzahl) {
+export async function aktualisiereStats(gewonnen, anzahl) {
   const s = ladeStats(); s.gespielt++;
   if (gewonnen) {
     s.gewonnen++;
@@ -50,6 +50,9 @@ export function aktualisiereStats(gewonnen, anzahl) {
     s.letzterGewinn = TAGES_IDX;
   } else { s.streak = 0; }
   speichereStats(s);
+  if (appState.currentUser) {
+    await speichereStreakFirebase(appState.currentUser.uid, s.streak, s.maxStreak, s.letzterGewinn);
+  }
 }
 
 // STREAK-UND-REKORD ANFANG
@@ -91,7 +94,22 @@ export async function ladeRekordFuerAnzeige() {
   return ladeRekordLokal();
 }
 export async function aktualisiereStartStats() {
-  const stats = ladeStats();
+  let stats = ladeStats();
+  // Firebase-Streak laden und mit lokalem Wert zusammenführen
+  if (appState.currentUser) {
+    const fbStreak = await ladeStreakFirebase(appState.currentUser.uid);
+    if (fbStreak) {
+      // maxStreak: immer den höheren Wert nehmen
+      const besteMaxStreak = Math.max(stats.maxStreak || 0, fbStreak.maxStreak || 0);
+      // Aktuelle Streak: den aktuelleren letzterGewinn-Wert verwenden
+      if ((fbStreak.letzterGewinn || -1) > (stats.letzterGewinn || -1)) {
+        stats.streak = fbStreak.streak;
+        stats.letzterGewinn = fbStreak.letzterGewinn;
+      }
+      stats.maxStreak = besteMaxStreak;
+      speichereStats(stats);
+    }
+  }
   const streak = stats.streak || 0;
   const streakBox = document.getElementById('start-streak');
   const rekordBox = document.getElementById('start-rekord');

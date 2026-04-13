@@ -149,7 +149,7 @@ export async function verarbeiteWort() {
 
   if (gewonnen) {
     stoppeTimer(); state.spielende=true; state.gewonnen=true;
-    speichereZustand(); aktualisiereStats(true,state.versuche.length);
+    speichereZustand(); await aktualisiereStats(true,state.versuche.length);
     if (appState.currentUser&&appState.currentSpitzname) await speichereInRanglisteFirebase();
     const sek = state.endZeit ? Math.floor((state.endZeit-state.startZeit)/1000) : 9999;
     await aktualisiereRekord(state.versuche.length, sek, appState.TAGESWORT, getDatum(0));
@@ -157,7 +157,7 @@ export async function verarbeiteWort() {
     setTimeout(()=>zeigeErgebnis(true),800);
   } else if (state.versuche.length>=6) {
     stoppeTimer(); state.spielende=true; state.gewonnen=false;
-    speichereZustand(); aktualisiereStats(false,0);
+    speichereZustand(); await aktualisiereStats(false,0);
     fuchsAktion('verloren');
     if (appState.currentUser&&appState.currentSpitzname) await speichereInRanglisteFirebase();
     setTimeout(()=>zeigeErgebnis(false),800);

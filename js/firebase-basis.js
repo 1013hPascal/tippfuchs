@@ -102,6 +102,17 @@ export async function ladeBestOfTime() {
     return Object.values(snap.val()).sort((a,b) => b.punkte-a.punkte);
   } catch(e) { return []; }
 }
+export async function speichereStreakFirebase(uid, streak, maxStreak, letzterGewinn) {
+  try {
+    await set(ref(db, `spieler/${uid}/streak`), { streak, maxStreak, letzterGewinn });
+  } catch(e) {}
+}
+export async function ladeStreakFirebase(uid) {
+  try {
+    const snap = await get(child(ref(db), `spieler/${uid}/streak`));
+    return snap.exists() ? snap.val() : null;
+  } catch(e) { return null; }
+}
 export async function speichereRekordFirebase(uid, rekord) {
   try {
     await set(ref(db, `spieler/${uid}/rekord`), rekord);
