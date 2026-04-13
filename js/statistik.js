@@ -89,6 +89,49 @@ export async function ladeBotListe(suchtext = '') {
   });
 }
 
+let _tageListe = [];
+let _tageOffset = 0;
+
+function _tageZeige(offset) {
+  _tageOffset = offset;
+  const proSeite = Math.max(1, parseInt(document.getElementById('tage-pro-seite')?.value) || 20);
+  const ul = document.getElementById('tage-liste');
+  const sichtbar = _tageListe.slice(offset, offset + proSeite);
+
+  ul.innerHTML = '';
+  ul.style.display = sichtbar.length ? 'block' : 'none';
+  sichtbar.forEach((e, i) => {
+    const gi = offset + i;
+    const medal = gi === 0 ? '🥇 ' : gi === 1 ? '🥈 ' : gi === 2 ? '🥉 ' : '';
+    const li = document.createElement('li');
+    li.className = `best-of-eintrag platz-${gi + 1}`;
+    li.innerHTML = `<span class="best-of-platz">${medal}${gi + 1}.</span><span class="best-of-name">${e.name}</span><span class="best-of-punkte">${e.versuche} Versuch${e.versuche !== 1 ? 'e' : ''} · ${formatZeit(e.sekunden)}</span>`;
+    ul.appendChild(li);
+  });
+
+  const gesamt = _tageListe.length;
+  const hasPrev = offset > 0;
+  const hasNext = offset + proSeite < gesamt;
+  const prevVon = Math.max(0, offset - proSeite) + 1;
+  const prevBis = offset;
+  const nextVon = offset + proSeite + 1;
+  const nextBis = Math.min(offset + 2 * proSeite, gesamt);
+
+  ['', '-unten'].forEach(suf => {
+    const nav = document.getElementById(`tage-nav${suf}`);
+    const vorBtn = document.getElementById(`tage-vorherige${suf}`);
+    const naechBtn = document.getElementById(`tage-naechste${suf}`);
+    nav.style.display = (hasPrev || hasNext) ? 'flex' : 'none';
+    vorBtn.style.display = hasPrev ? 'block' : 'none';
+    vorBtn.textContent = `Vorherige ${prevVon} bis ${prevBis}`;
+    naechBtn.style.display = hasNext ? 'block' : 'none';
+    naechBtn.textContent = `Nächste ${nextVon} bis ${nextBis}`;
+  });
+
+  const psBereich = document.getElementById('tage-pro-seite-bereich');
+  if (psBereich) psBereich.style.display = gesamt > 0 ? 'flex' : 'none';
+}
+
 export async function ladeTagsSelect() {
   const sel=document.getElementById('tage-select');
   sel.innerHTML='';
@@ -103,36 +146,45 @@ export async function ladeTagsSelect() {
 }
 
 export async function ladeTagesErgebnis() {
-  const idx=parseInt(document.getElementById('tage-select').value);
+  const idx = parseInt(document.getElementById('tage-select').value);
   if (isNaN(idx)) return;
-  const div=document.getElementById('tage-ergebnis');
-  div.style.display='flex'; div.innerHTML='<span style="color:var(--text-muted);font-size:.9rem;">Wird geladen...</span>';
-  const liste=await ladeRanglisteFirebase(idx);
-  let loesung='-';
-  try { const wSnap=await get(child(ref(db),`tageswoerter/${idx}`)); if(wSnap.exists()) loesung=wSnap.val(); } catch(e) {}
-  let html=`<div class="tages-info-zeile"><span>Anzahl Spieler: <strong>${liste.length}</strong></span><span>Loesungswort: <strong>${loesung}</strong></span></div>`;
-  if (liste.length===0) { div.innerHTML=html+'<div class="tages-ergebnis-zeile">Keine Daten.</div>'; document.getElementById('tage-weitere').style.display='none'; return; }
+  const div = document.getElementById('tage-ergebnis');
+  div.style.display = 'flex';
+  div.innerHTML = '<span style="color:var(--text-muted);font-size:.9rem;">Wird geladen...</span>';
+  document.getElementById('tage-liste').style.display = 'none';
+  document.getElementById('tage-nav').style.display = 'none';
+  document.getElementById('tage-nav-unten').style.display = 'none';
+  document.getElementById('tage-pro-seite-bereich').style.display = 'none';
+
+  const liste = await ladeRanglisteFirebase(idx);
+  let loesung = '-';
+  try { const wSnap = await get(child(ref(db), `tageswoerter/${idx}`)); if (wSnap.exists()) loesung = wSnap.val(); } catch(e) {}
+
+  let html = `<div class="tages-info-zeile"><span>Anzahl Spieler: <strong>${liste.length}</strong></span><span>Lösungswort: <strong>${loesung}</strong></span></div>`;
+  if (liste.length === 0) { div.innerHTML = html + '<div class="tages-ergebnis-zeile">Keine Daten.</div>'; return; }
   if (appState.currentSpitzname) {
-    const platz=liste.findIndex(e=>e.name.toLowerCase()===appState.currentSpitzname.toLowerCase())+1;
-    if (platz>0) {
-      const medal=platz===1?'🥇 ':platz===2?'🥈 ':platz===3?'🥉 ':'';
-      html+=`<div class="tages-ergebnis-zeile" style="background:var(--accent);color:#fff;border-radius:4px;padding:6px 10px;font-weight:700;">${medal}Dein Platz: ${platz}.</div>`;
+    const platz = liste.findIndex(e => e.name.toLowerCase() === appState.currentSpitzname.toLowerCase()) + 1;
+    if (platz > 0) {
+      const medal = platz === 1 ? '🥇 ' : platz === 2 ? '🥈 ' : platz === 3 ? '🥉 ' : '';
+      html += `<div class="tages-ergebnis-zeile" style="background:var(--accent);color:#fff;border-radius:4px;padding:6px 10px;font-weight:700;">${medal}Dein Platz: ${platz}.</div>`;
     }
   }
-  div.innerHTML=html;
-  const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
-  liste.slice(0,20).forEach((e,i)=>{
-    const medal=i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':'';
-    const d=document.createElement('div'); d.className='tages-ergebnis-zeile';
-    d.innerHTML=`<span>${medal}${i+1}. ${e.name}</span><span>${e.versuche} Versuch${e.versuche!==1?'e':''} - ${formatZeit(e.sekunden)}</span>`;
-    topDiv.appendChild(d);
+  div.innerHTML = html;
+
+  _tageListe = liste;
+  _tageZeige(0);
+
+  // Klick-Handler registrieren
+  ['', '-unten'].forEach(suf => {
+    document.getElementById(`tage-vorherige${suf}`).onclick = () => {
+      const ps = Math.max(1, parseInt(document.getElementById('tage-pro-seite')?.value) || 20);
+      _tageZeige(Math.max(0, _tageOffset - ps));
+    };
+    document.getElementById(`tage-naechste${suf}`).onclick = () => {
+      const ps = Math.max(1, parseInt(document.getElementById('tage-pro-seite')?.value) || 20);
+      _tageZeige(_tageOffset + ps);
+    };
   });
-  const weitereDiv=document.getElementById('tage-weitere');
-  if (liste.length>20) {
-    weitereDiv.style.display='flex';
-    const sel=document.getElementById('tage-weitere-dropdown'); sel.innerHTML='';
-    liste.slice(20).forEach((e,i)=>{ const opt=document.createElement('option'); opt.textContent=`${i+21}. ${e.name} - ${e.versuche} Versuch${e.versuche!==1?'e':''} - ${formatZeit(e.sekunden)}`; sel.appendChild(opt); });
-  } else { weitereDiv.style.display='none'; }
 }
 
 export async function ladeMonatSelect() {

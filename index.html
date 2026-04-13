@@ -1264,9 +1264,18 @@
       <label for="tage-select" style="font-size:.85rem;color:var(--text-muted);">Datum auswaehlen:</label>
       <select class="datum-select" id="tage-select" aria-label="Tag auswaehlen"></select>
       <div id="tage-ergebnis" class="tages-ergebnis" style="display:none;"></div>
-      <div id="tage-weitere" style="display:none;" class="platzierung-navigator">
-        <span style="font-size:.82rem;color:var(--text-muted);white-space:nowrap;">Weitere Plaetze:</span>
-        <select id="tage-weitere-dropdown" aria-label="Weitere Plaetze"></select>
+      <div id="tage-pro-seite-bereich" style="display:none;flex-direction:row;align-items:center;gap:8px;flex-wrap:wrap;">
+        <label for="tage-pro-seite" style="font-size:.85rem;color:var(--text-muted);">Einträge pro Seite:</label>
+        <input type="number" id="tage-pro-seite" value="20" min="5" max="100" step="5" style="width:70px;padding:4px 8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:.9rem;" aria-label="Eintraege pro Seite">
+      </div>
+      <div id="tage-nav" style="display:none;flex-direction:column;gap:6px;">
+        <button id="tage-vorherige" class="btn-secondary" style="display:none;font-size:.85rem;padding:8px 12px;" aria-label="Vorherige Eintraege"></button>
+        <button id="tage-naechste" class="btn-secondary" style="display:none;font-size:.85rem;padding:8px 12px;" aria-label="Naechste Eintraege"></button>
+      </div>
+      <ul class="best-of-liste" id="tage-liste" style="display:none;" aria-label="Tagesergebnis Liste"></ul>
+      <div id="tage-nav-unten" style="display:none;flex-direction:column;gap:6px;">
+        <button id="tage-vorherige-unten" class="btn-secondary" style="display:none;font-size:.85rem;padding:8px 12px;" aria-label="Vorherige Eintraege"></button>
+        <button id="tage-naechste-unten" class="btn-secondary" style="display:none;font-size:.85rem;padding:8px 12px;" aria-label="Naechste Eintraege"></button>
       </div>
     </div>
     <div class="stats-box">
