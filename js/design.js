@@ -226,7 +226,7 @@ export function aktualisiereUhrZeiger(sekunden) {
 }
 
 export function ladeDesign() {
-  const gespeichert = localStorage.getItem('wj_design') || 'natur-tag';
+  const gespeichert = localStorage.getItem('wj_design') || 'standard';
   setzeDesign(gespeichert, false);
 }
 
