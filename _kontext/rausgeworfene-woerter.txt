@@ -1,0 +1,78 @@
+Rausgeworfene Wörter aus der Tippfuchs-Lösungswortliste
+
+=======================================================
+Gesamtzahl entfernt: 54 Wörter
+Verbleibende Wörter: 1252 von ursprünglich 1306
+
+
+Pronomen und Adverbien (keine echten Nomen):
+-------------------------------------------
+  ALLES  (Pronomen/Adverb)
+  ETWAS  (Pronomen/Adverb)
+  IMMER  (Pronomen/Adverb)
+  KEINE  (Pronomen/Adverb)
+  NICHT  (Adverb/Negation)
+  OBERE  (Adjektivform)
+  OBIGE  (Adjektivform)
+  SELBE  (Pronomen)
+  SONST  (Adverb)
+  UNSER  (Pronomen)
+  VIELE  (Pronomen/Adjektiv)
+  VORNE  (Adverb)
+  WIESO  (Adverb/Fragewort)
+
+Verbformen (keine Grundformen):
+------------------------------
+  FRISS  (Verbform (Imperativ))
+  PLANT  (Verbform (3. Person))
+  PUMPT  (Verbform (3. Person))
+  STIEG  (Verbform (Präteritum))
+  ZOOME  (Verbform (Imperativ/1. Person))
+
+Eigennamen:
+----------
+  ALPEN  (Eigenname (Gebirge))
+  ASIAT  (Eigenname (Ethnonym))
+  BALTE  (Eigenname (Ethnonym))
+  BAYER  (Eigenname/Adjektiv)
+  FURTH  (Eigenname (Stadt))
+  GOTEN  (Eigenname (hist. Volk))
+  GOUDA  (Eigenname (Stadt))
+  HINDI  (Eigenname (Sprache))
+  HINDU  (Eigenname (Religion/Ethnonym))
+  INDER  (Eigenname (Ethnonym))
+  KORSE  (Eigenname (Ethnonym))
+  LAURA  (Eigenname)
+  MEYER  (Eigenname (Nachname))
+  MOLLY  (Eigenname)
+  NATAL  (Eigenname (Provinz))
+  TENNO  (Eigenname (Kaisertitel))
+  THURN  (Eigenname)
+  UNGAR  (Eigenname (Ethnonym))
+  VENUS  (Eigenname (Planet/Göttin))
+
+Genitivformen:
+-------------
+  KRUGS  (Genitivform)
+  LASTS  (Genitivform)
+  LAUTS  (Genitivform)
+  LIEDS  (Genitivform)
+  LOBES  (Genitivform)
+  LOHNS  (Genitivform)
+  STABS  (Genitivform)
+  TODES  (Genitivform)
+  WAHNS  (Genitivform)
+
+Sehr vulgäre Begriffe:
+---------------------
+  FOTZE  (Sehr vulgär)
+  KOTZE  (Sehr vulgär)
+  NUTTE  (Sehr vulgär)
+
+Sehr seltene/obskure Begriffe:
+-----------------------------
+  FUDER  (Sehr selten/obskur)
+  LAFFE  (Sehr selten/obskur)
+  NODUS  (Sehr selten/obskur)
+  PYRIT  (Sehr selten/obskur)
+  USANZ  (Sehr selten/obskur)
