@@ -475,14 +475,24 @@ details[open] summary::after {
   padding: 8px 0 4px;
   width: 100%;
 }
+/* CSS Grid erzwingt exakte Spaltenbreiten unabhängig vom Inhalt */
 .tastatur-reihe {
-  display: flex;
+  display: grid;
   gap: 4px;
   width: 100%;
 }
+/* Reihe 1 + 2: 11 gleiche Spalten. minmax(0,1fr) erzwingt Schrumpfen unter Content-Breite */
+.tastatur-reihe:nth-child(1),
+.tastatur-reihe:nth-child(2) {
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+}
+/* Reihe 3: ⌫ breiter, ↵ am breitesten */
+.tastatur-reihe:nth-child(3) {
+  grid-template-columns: minmax(0, 1.5fr) repeat(8, minmax(0, 1fr)) minmax(0, 2fr);
+}
 .taste {
-  flex: 1;
-  min-width: 0;
+  -webkit-appearance: none;
+  appearance: none;
   height: 40px;
   padding: 0;
   border: 1px solid var(--border);
@@ -492,14 +502,14 @@ details[open] summary::after {
   font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
+  overflow: hidden;
   touch-action: manipulation;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s, color 0.15s;
 }
 .taste:active { transform: scale(0.9); }
-.taste-action { flex: 1.5; font-size: 0.75rem; }
-.taste-enter { flex: 2; }
+.taste-action { font-size: 0.75rem; }
 .taste[data-status="correct"] {
   background: #4a9e50;
   color: #fff;
