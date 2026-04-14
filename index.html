@@ -1407,7 +1407,7 @@
     <div class="eingabe-wrapper">
       <input type="text" id="wort-input" maxlength="5"
         autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
-        inputmode="none"
+        inputmode="text"
         placeholder=""
         aria-label="Dein Tipp"
         aria-describedby="fehler-msg">
@@ -1428,8 +1428,8 @@
       <div class="buchstaben-zeile unbenutzt" id="bz-unused">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z (Noch nicht verwendet)</div>
     </div>
   </div>
-  <!-- GRAFISCHE QWERTZ-TASTATUR (nur visuell, für Maus/Touch) -->
-  <div id="grafik-tastatur" aria-hidden="true">
+  <!-- GRAFISCHE QWERTZ-TASTATUR (nur visuell, für Maus/Touch) — im Standard-Design ausgeblendet -->
+  <div id="grafik-tastatur" aria-hidden="true" style="display:none">
     <div class="tastatur-reihe">
       <button class="taste" data-key="Q">Q</button>
       <button class="taste" data-key="W">W</button>
