@@ -467,3 +467,57 @@ details[open] summary::after {
   border-color: #2a3050;
 }
 
+/* GRAFISCHE QWERTZ-TASTATUR */
+#grafik-tastatur {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 0 4px;
+  width: 100%;
+}
+.tastatur-reihe {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+.taste {
+  min-width: 28px;
+  height: 40px;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, color 0.15s;
+}
+.taste:active { transform: scale(0.9); }
+.taste-action { min-width: 42px; font-size: 0.75rem; }
+.taste-enter { min-width: 52px; }
+.taste[data-status="correct"] {
+  background: #4a9e50;
+  color: #fff;
+  border-color: #3a8e40;
+}
+.taste[data-status="present"] {
+  background: #c88020;
+  color: #fff;
+  border-color: #b87010;
+}
+.taste[data-status="absent"] {
+  background: #606060;
+  color: #fff;
+  border-color: #505050;
+}
+@media(max-width: 400px) {
+  .taste { min-width: 24px; height: 36px; font-size: 0.75rem; padding: 0 4px; }
+  .taste-action { min-width: 34px; }
+  .taste-enter { min-width: 44px; }
+}
+

@@ -62,40 +62,119 @@ export function wandUhrSVG(cx, cy, r, rahmenFarbe, zifferFarbe, id) {
   <line x1="${p(cx)}" y1="${p(cy+r*0.6)}" x2="${p(cx)}" y2="${p(cy+r*0.78)}" stroke="${zifferFarbe}" stroke-width="${p(r*0.06)}" stroke-linecap="round"/>
   <line x1="${p(cx-r*0.6)}" y1="${p(cy)}" x2="${p(cx-r*0.78)}" y2="${p(cy)}" stroke="${zifferFarbe}" stroke-width="${p(r*0.06)}" stroke-linecap="round"/>
   <line x1="${p(cx+r*0.6)}" y1="${p(cy)}" x2="${p(cx+r*0.78)}" y2="${p(cy)}" stroke="${zifferFarbe}" stroke-width="${p(r*0.06)}" stroke-linecap="round"/>
-  <line id="uhr-min-${id}" x1="${p(cx)}" y1="${p(cy)}" x2="${p(cx)}" y2="${p(cy-r*0.6)}" stroke="${zifferFarbe}" stroke-width="${p(r*0.07)}" stroke-linecap="round"/>
-  <line id="uhr-sek-${id}" x1="${p(cx)}" y1="${p(cy)}" x2="${p(cx)}" y2="${p(cy-r*0.72)}" stroke="#E8621A" stroke-width="${p(r*0.04)}" stroke-linecap="round"/>
+  <line id="uhr-min-${id}" x1="${p(cx)}" y1="${p(cy)}" x2="${p(cx)}" y2="${p(cy-r*0.45)}" stroke="${zifferFarbe}" stroke-width="${p(r*0.07)}" stroke-linecap="round"/>
+  <line id="uhr-sek-${id}" x1="${p(cx)}" y1="${p(cy)}" x2="${p(cx)}" y2="${p(cy-r*0.55)}" stroke="#E8621A" stroke-width="${p(r*0.04)}" stroke-linecap="round"/>
   <circle cx="${p(cx)}" cy="${p(cy)}" r="${p(r*0.06)}" fill="${zifferFarbe}"/>`;
 }
 
 const DESIGN_SVG_INHALTE = {
 
-// FUCHSBAU — gemütliche Höhle mit Kamin, Möbeln, Wanduhr
+// FUCHSBAU — gemütliche Höhle: Kamin, Gemälde, Sofa, Fernseher, Bücherregal, Wanduhr
 'fuchsbau': `
-<rect width="100%" height="100%" fill="#b8935a"/>
-<ellipse cx="50%" cy="50%" rx="48%" ry="46%" fill="#c8a070"/>
-<ellipse cx="50%" cy="50%" rx="42%" ry="40%" fill="#d4b07a"/>
-<rect width="100%" height="6%" fill="#7a4f2e" opacity="0.7"/>
-<rect y="94%" width="100%" height="6%" fill="#6a3e20" opacity="0.9"/>
-<rect x="0" y="92%" width="100%" height="8%" fill="#8B5E3C"/>
-<path d="M0,92% Q8%,88% 15%,92% Q22%,96% 30%,92% Q38%,88% 46%,92% Q54%,96% 62%,92% Q70%,88% 78%,92% Q86%,96% 94%,92% Q97%,90% 100%,92%" fill="#a06840" stroke="none"/>
-<path d="M80,0 Q75,4% 85,7%" fill="none" stroke="#5a3520" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
-<path d="M200,0 Q195,5% 215,8%" fill="none" stroke="#5a3520" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
-<path d="M350,0 Q340,4% 360,7%" fill="none" stroke="#5a3520" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
-<path d="M500,0 Q510,5% 495,8%" fill="none" stroke="#5a3520" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
-<path d="M650,0 Q645,4% 660,7%" fill="none" stroke="#5a3520" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
-<rect x="75%" y="70%" width="18%" height="22%" fill="#8B5E3C" rx="4"/>
-<rect x="76%" y="71%" width="16%" height="8%" fill="#a07040" rx="2"/>
-<rect x="77%" y="71.5%" width="6%" height="7%" fill="#c8a060" rx="1"/>
-<rect x="84%" y="71.5%" width="7%" height="7%" fill="#c8a060" rx="1"/>
-<rect x="76%" y="80%" width="16%" height="1%" fill="#6a4020"/>
-<rect x="77%" y="81%" width="3%" height="11%" fill="#7a4828" rx="1"/>
-<rect x="88%" y="81%" width="3%" height="11%" fill="#7a4828" rx="1"/>
-<circle cx="37%" cy="55%" r="0.5%" fill="#ffe060" opacity="0.9"/>
-<circle cx="62%" cy="48%" r="0.4%" fill="#ffe060" opacity="0.8"/>
-<circle cx="22%" cy="60%" r="0.4%" fill="#ffe060" opacity="0.7"/>
-<circle cx="85%" cy="54%" r="0.45%" fill="#ffe060" opacity="0.85"/>
-<circle cx="55%" cy="62%" r="0.35%" fill="#ffe060" opacity="0.75"/>
-${wandUhrSVG(50, 28, 7, '#8B5E3C', '#F5E6D0', 'fuchsbau')}
+<rect width="100%" height="100%" fill="#3d1c06"/>
+<ellipse cx="50%" cy="52%" rx="50%" ry="49%" fill="#72421c"/>
+<ellipse cx="50%" cy="55%" rx="46%" ry="45%" fill="#8a5228"/>
+<rect width="100%" height="9%" fill="#3d1c06"/>
+<path d="M0,9% Q12%,7% 25%,10% Q38%,7% 50%,9% Q62%,6% 75%,10% Q88%,7% 100%,9%" fill="#2d1404"/>
+<path d="M15%,0 Q13%,5% 17%,9%" fill="none" stroke="#2d1404" stroke-width="4" stroke-linecap="round"/>
+<path d="M35%,0 Q32%,5% 36%,9%" fill="none" stroke="#2d1404" stroke-width="3" stroke-linecap="round"/>
+<path d="M60%,0 Q63%,5% 58%,9%" fill="none" stroke="#2d1404" stroke-width="4" stroke-linecap="round"/>
+<path d="M82%,0 Q85%,5% 80%,9%" fill="none" stroke="#2d1404" stroke-width="3" stroke-linecap="round"/>
+<rect x="0" y="82%" width="100%" height="18%" fill="#4a2608"/>
+<rect x="0" y="82%" width="100%" height="1.8%" fill="#6a3c18"/>
+<line x1="0" y1="85%" x2="100%" y2="85%" stroke="#3a1e06" stroke-width="0.5" opacity="0.4"/>
+<line x1="0" y1="88%" x2="100%" y2="88%" stroke="#3a1e06" stroke-width="0.5" opacity="0.4"/>
+<line x1="25%" y1="82%" x2="22%" y2="100%" stroke="#3a1e06" stroke-width="0.8" opacity="0.35"/>
+<line x1="50%" y1="82%" x2="48%" y2="100%" stroke="#3a1e06" stroke-width="0.8" opacity="0.35"/>
+<line x1="75%" y1="82%" x2="73%" y2="100%" stroke="#3a1e06" stroke-width="0.8" opacity="0.35"/>
+<rect x="1%" y="55%" width="16%" height="27%" fill="#8B3A2A" rx="2"/>
+<rect x="3%" y="63%" width="12%" height="18%" fill="#1a0a00" rx="3"/>
+<rect x="0" y="53.5%" width="18%" height="2.5%" fill="#a06038" rx="2"/>
+<rect x="1%" y="57.5%" width="16%" height="1%" fill="#7a2e1e" opacity="0.4"/>
+<rect x="1%" y="60%" width="16%" height="1%" fill="#7a2e1e" opacity="0.4"/>
+<rect x="1%" y="62.5%" width="16%" height="1%" fill="#7a2e1e" opacity="0.4"/>
+<ellipse cx="9%" cy="80%" rx="5%" ry="1.5%" fill="#ff4400" opacity="0.8"/>
+<path d="M5.5%,80% Q5%,73% 7.5%,70% Q7%,74% 9%,69% Q11%,73% 10.5%,80% Z" fill="#ff6600" opacity="0.9"/>
+<path d="M6.5%,80% Q6%,75% 8.5%,72% Q10%,75% 9.5%,80% Z" fill="#ffaa00" opacity="0.85"/>
+<path d="M7.5%,80% Q8.5%,75.5% 9%,73.5% Q9.5%,76% 9%,80% Z" fill="#ffe000" opacity="0.9"/>
+<ellipse cx="9%" cy="82%" rx="14%" ry="3%" fill="#ff6600" opacity="0.09"/>
+<rect x="19%" y="14%" width="24%" height="34%" fill="#3a2008" rx="3"/>
+<rect x="20%" y="15%" width="22%" height="32%" fill="#6a3820" rx="2"/>
+<rect x="21%" y="16%" width="20%" height="30%" fill="#dce8f0"/>
+<rect x="21%" y="16%" width="20%" height="16%" fill="#a8d8f0"/>
+<polygon points="21%,32% 24%,22% 27%,32%" fill="#8098b8"/>
+<polygon points="24%,32% 28%,20% 32%,32%" fill="#6888a8"/>
+<polygon points="29%,32% 33%,21% 37%,32%" fill="#7898b8"/>
+<polygon points="35%,32% 38%,23% 41%,32%" fill="#6888a8"/>
+<polygon points="24%,22% 25%,25.5% 23%,25.5%" fill="white"/>
+<polygon points="28%,20% 29.5%,24% 26.5%,24%" fill="white"/>
+<polygon points="33%,21% 34.5%,25% 31.5%,25%" fill="white"/>
+<polygon points="38%,23% 39.5%,26.5% 36.5%,26.5%" fill="white"/>
+<rect x="21%" y="32%" width="20%" height="14%" fill="#5a9e30"/>
+<ellipse cx="26%" cy="32%" rx="4%" ry="2%" fill="#4a8820"/>
+<ellipse cx="37%" cy="32%" rx="5%" ry="2.5%" fill="#4a8820"/>
+<rect x="26%" y="63%" width="46%" height="11%" fill="#a03828" rx="4"/>
+<rect x="26%" y="72%" width="46%" height="12%" fill="#882a1e" rx="4"/>
+<rect x="24%" y="65%" width="5%" height="14%" fill="#a03828" rx="3"/>
+<rect x="71%" y="65%" width="5%" height="14%" fill="#a03828" rx="3"/>
+<rect x="27%" y="73%" width="13.5%" height="9.5%" fill="#c04030" rx="3"/>
+<rect x="41.5%" y="73%" width="13.5%" height="9.5%" fill="#b03020" rx="3"/>
+<rect x="56%" y="73%" width="13.5%" height="9.5%" fill="#c04030" rx="3"/>
+<rect x="27%" y="64%" width="13.5%" height="9%" fill="#b03020" rx="2"/>
+<rect x="41.5%" y="64%" width="13.5%" height="9%" fill="#c04030" rx="2"/>
+<rect x="56%" y="64%" width="13.5%" height="9%" fill="#b03020" rx="2"/>
+<rect x="26.5%" y="82.5%" width="2%" height="3.5%" fill="#4a2408" rx="1"/>
+<rect x="71%" y="82.5%" width="2%" height="3.5%" fill="#4a2408" rx="1"/>
+<rect x="36%" y="83%" width="26%" height="3.5%" fill="#7a4820" rx="2"/>
+<rect x="37%" y="86%" width="1.5%" height="4%" fill="#5a3010" rx="1"/>
+<rect x="60%" y="86%" width="1.5%" height="4%" fill="#5a3010" rx="1"/>
+<ellipse cx="44%" cy="82.5%" rx="2%" ry="0.9%" fill="#c8a060"/>
+<rect x="48%" y="81%" width="5.5%" height="2%" fill="#2a5090" rx="0.5"/>
+<rect x="63%" y="74%" width="12%" height="8%" fill="#111"/>
+<rect x="66%" y="72%" width="6%" height="4%" fill="#111" rx="1"/>
+<rect x="57%" y="17%" width="26%" height="50%" fill="#111" rx="4"/>
+<rect x="58.5%" y="18.5%" width="23%" height="47%" fill="#160828" rx="2"/>
+<polygon points="58.5%,18.5% 62%,18.5% 60%,65.5% 58.5%,65.5%" fill="#900020" opacity="0.7"/>
+<polygon points="81.5%,18.5% 78%,18.5% 80%,65.5% 81.5%,65.5%" fill="#900020" opacity="0.7"/>
+<ellipse cx="70%" cy="50%" rx="5%" ry="9%" fill="#ffff80" opacity="0.12"/>
+<ellipse cx="70%" cy="42%" rx="3.5%" ry="3.2%" fill="#E8621A"/>
+<polygon points="67%,39.5% 67.5%,34% 70%,39%" fill="#E8621A"/>
+<polygon points="73%,39.5% 72.5%,34% 70%,39%" fill="#E8621A"/>
+<polygon points="67.3%,39.5% 67.8%,35.5% 69.8%,39%" fill="#F5C0A0"/>
+<polygon points="72.7%,39.5% 72.2%,35.5% 70.2%,39%" fill="#F5C0A0"/>
+<ellipse cx="70%" cy="44%" rx="2.2%" ry="2%" fill="#F5E6D0"/>
+<circle cx="68.5%" cy="41.5%" r="0.55%" fill="#1a0a00"/>
+<circle cx="71.5%" cy="41.5%" r="0.55%" fill="#1a0a00"/>
+<ellipse cx="70%" cy="43.5%" rx="0.5%" ry="0.4%" fill="#1a0a00"/>
+<ellipse cx="70%" cy="52%" rx="3.5%" ry="5%" fill="#E8621A"/>
+<line x1="71.5%" y1="50%" x2="74%" y2="47%" stroke="#E8621A" stroke-width="1.5" stroke-linecap="round"/>
+<ellipse cx="74.5%" cy="45.8%" rx="1%" ry="1.4%" fill="#777"/>
+<line x1="74.5%" y1="47.2%" x2="74.5%" y2="50%" stroke="#555" stroke-width="0.8" stroke-linecap="round"/>
+<circle cx="80%" cy="19%" r="0.5%" fill="#00cc00" opacity="0.8"/>
+<rect x="86%" y="28%" width="12%" height="54%" fill="#5a3010" rx="2"/>
+<rect x="86%" y="42%" width="12%" height="1.5%" fill="#7a4828"/>
+<rect x="86%" y="55%" width="12%" height="1.5%" fill="#7a4828"/>
+<rect x="86%" y="68%" width="12%" height="1.5%" fill="#7a4828"/>
+<rect x="87%" y="30%" width="2.2%" height="12%" fill="#c03020"/>
+<rect x="89.5%" y="31%" width="1.8%" height="11%" fill="#2050a0"/>
+<rect x="91.5%" y="30.5%" width="2%" height="11.5%" fill="#208040"/>
+<rect x="93.8%" y="31%" width="1.8%" height="11%" fill="#a07818"/>
+<rect x="95.8%" y="30%" width="1.8%" height="12%" fill="#7020a0"/>
+<rect x="87%" y="44%" width="2%" height="11%" fill="#e04820"/>
+<rect x="89.2%" y="45%" width="2.2%" height="10%" fill="#1840a0"/>
+<rect x="91.6%" y="44.5%" width="1.8%" height="10.5%" fill="#508020"/>
+<rect x="93.6%" y="45%" width="1.8%" height="10%" fill="#c08818"/>
+<rect x="95.6%" y="44%" width="2%" height="11%" fill="#8030c0"/>
+<rect x="87%" y="57%" width="2.2%" height="11%" fill="#d03028"/>
+<rect x="89.4%" y="57.5%" width="1.8%" height="10.5%" fill="#0860a0"/>
+<rect x="91.4%" y="57%" width="2%" height="11%" fill="#288028"/>
+<rect x="93.6%" y="58%" width="2%" height="10%" fill="#b07010"/>
+<rect x="95.8%" y="57%" width="1.8%" height="11%" fill="#901858"/>
+${wandUhrSVG(50, 14, 6, '#4a2610', '#F5E6D0', 'fuchsbau')}
+<circle cx="22%" cy="58%" r="0.5%" fill="#ffe060" opacity="0.65"/>
+<circle cx="47%" cy="48%" r="0.4%" fill="#ffe060" opacity="0.55"/>
+<circle cx="73%" cy="56%" r="0.45%" fill="#ffe060" opacity="0.65"/>
+<circle cx="35%" cy="60%" r="0.35%" fill="#ffe060" opacity="0.5"/>
 `,
 
 // NATUR AM TAG — Wiese, Kirchturm links, Fuchs auf der Wiese

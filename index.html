@@ -618,6 +618,24 @@
 <rect x="558" y="309" width="76" height="8" fill="#a07848" rx="2"/>
 <rect x="558" y="327" width="76" height="8" fill="#a07848" rx="2"/>
 
+<!-- === STRÄUCHER RECHTS (zwischen Pool und Zaun) === -->
+<ellipse cx="502" cy="310" rx="20" ry="26" fill="#3a7818"/>
+<ellipse cx="490" cy="320" rx="16" ry="21" fill="#4a8828"/>
+<ellipse cx="516" cy="316" rx="18" ry="23" fill="#3a7018"/>
+<ellipse cx="538" cy="310" rx="17" ry="22" fill="#4a8828"/>
+<ellipse cx="526" cy="322" rx="14" ry="18" fill="#3a7818"/>
+<ellipse cx="550" cy="317" rx="13" ry="19" fill="#5a9028"/>
+<!-- Blumen daran -->
+<rect x="499" y="282" width="2" height="8" fill="#4a8018"/>
+<circle cx="500" cy="281" r="4" fill="#FF6B6B"/>
+<circle cx="500" cy="281" r="1.8" fill="#FFD700"/>
+<rect x="524" y="284" width="2" height="8" fill="#4a8018"/>
+<circle cx="525" cy="283" r="3.5" fill="#FF9FD0"/>
+<circle cx="525" cy="283" r="1.8" fill="#FFD700"/>
+<rect x="544" y="290" width="2" height="7" fill="#4a8018"/>
+<circle cx="545" cy="289" r="3" fill="#9B59B6"/>
+<circle cx="545" cy="289" r="1.5" fill="#FFD700"/>
+
 <!-- === POOL GROSS IN DER MITTE === -->
 <!-- Pool-Rand (Stein-Einfassung) -->
 <ellipse cx="340" cy="368" rx="145" ry="52" fill="#d8d4cc" stroke="#b8b4ac" stroke-width="2.5"/>
@@ -630,7 +648,7 @@
 <path d="M230,372 Q260,366 292,372 Q324,378 356,372 Q388,366 420,372 Q448,378 460,374" fill="none" stroke="white" stroke-width="1" opacity="0.22"/>
 
 <!-- SPIELEN-BUTTON IM POOL -->
-<text id="pool-btn-text" style="pointer-events:all;cursor:pointer;text-shadow:0 1px 4px rgba(0,0,0,0.5);" x="320" y="370" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="white">🦊 Spielen</text>
+<text id="pool-btn-text" style="pointer-events:all;cursor:pointer;text-shadow:0 1px 4px rgba(0,0,0,0.5);" x="320" y="370" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="700" fill="white">🦊 Spielen</text>
 <text id="pool-btn-subtext" style="display:none;" x="320" y="370" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white"></text>
 <!-- Klickbarer Bereich im Pool (links, ohne Fuchs) -->
 <ellipse id="pool-klick" cx="320" cy="368" rx="95" ry="35" fill="transparent" style="cursor:pointer;pointer-events:all;"/>
@@ -1390,13 +1408,14 @@
     <div class="eingabe-wrapper">
       <input type="text" id="wort-input" maxlength="5"
         autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+        inputmode="none"
         placeholder=""
         aria-label="Dein Tipp"
         aria-describedby="fehler-msg">
     </div>
     <div id="fehler-msg" role="alert" aria-live="assertive"></div>
   </div>
-  <div id="status-bereich" aria-label="Buchstabenstatus">
+  <div id="status-bereich" class="sr-only" aria-label="Buchstabenstatus">
     <div class="status-gruppe falsch">
       <div class="buchstaben-zeile falsche-stelle" id="bz-falsch">keine (Falsche Stelle)</div>
     </div>
@@ -1408,6 +1427,47 @@
     </div>
     <div class="status-gruppe unused">
       <div class="buchstaben-zeile unbenutzt" id="bz-unused">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z (Noch nicht verwendet)</div>
+    </div>
+  </div>
+  <!-- GRAFISCHE QWERTZ-TASTATUR (nur visuell, für Maus/Touch) -->
+  <div id="grafik-tastatur" aria-hidden="true">
+    <div class="tastatur-reihe">
+      <button class="taste" data-key="Q">Q</button>
+      <button class="taste" data-key="W">W</button>
+      <button class="taste" data-key="E">E</button>
+      <button class="taste" data-key="R">R</button>
+      <button class="taste" data-key="T">T</button>
+      <button class="taste" data-key="Z">Z</button>
+      <button class="taste" data-key="U">U</button>
+      <button class="taste" data-key="I">I</button>
+      <button class="taste" data-key="O">O</button>
+      <button class="taste" data-key="P">P</button>
+      <button class="taste" data-key="Ü">Ü</button>
+    </div>
+    <div class="tastatur-reihe">
+      <button class="taste" data-key="A">A</button>
+      <button class="taste" data-key="S">S</button>
+      <button class="taste" data-key="D">D</button>
+      <button class="taste" data-key="F">F</button>
+      <button class="taste" data-key="G">G</button>
+      <button class="taste" data-key="H">H</button>
+      <button class="taste" data-key="J">J</button>
+      <button class="taste" data-key="K">K</button>
+      <button class="taste" data-key="L">L</button>
+      <button class="taste" data-key="Ö">Ö</button>
+      <button class="taste" data-key="Ä">Ä</button>
+    </div>
+    <div class="tastatur-reihe">
+      <button class="taste taste-action" data-key="Backspace">⌫</button>
+      <button class="taste" data-key="Y">Y</button>
+      <button class="taste" data-key="X">X</button>
+      <button class="taste" data-key="C">C</button>
+      <button class="taste" data-key="V">V</button>
+      <button class="taste" data-key="B">B</button>
+      <button class="taste" data-key="N">N</button>
+      <button class="taste" data-key="M">M</button>
+      <button class="taste" data-key="ẞ">ẞ</button>
+      <button class="taste taste-action taste-enter" data-key="Enter">↵</button>
     </div>
   </div>
   <button class="btn-secondary" id="btn-zurueck-zum-menue" style="margin-top:12px;">Zurueck zum Menue</button>

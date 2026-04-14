@@ -92,11 +92,11 @@ export function initialisiereHausFenster() {
       if (btnText && btnText !== '🦊 Wird geladen...') {
         poolText.textContent = btnText;
         // Schriftgröße bei längeren Texten verkleinern
-        const groesse = btnText.length > 18 ? '9' : btnText.length > 13 ? '10' : '11';
+        const groesse = btnText.length > 18 ? '11' : btnText.length > 13 ? '13' : '16';
         poolText.setAttribute('font-size', groesse);
       } else {
         poolText.textContent = appState.currentUser && appState.currentSpitzname ? '🦊 Jetzt spielen' : '🦊 Jetzt anmelden';
-        poolText.setAttribute('font-size', '11');
+        poolText.setAttribute('font-size', '14');
       }
     }
     if (poolSub) {

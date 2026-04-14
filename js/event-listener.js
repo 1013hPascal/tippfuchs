@@ -96,6 +96,24 @@ document.getElementById('neuer-spitzname-input').addEventListener('keydown',func
 document.getElementById('wort-input').addEventListener('input',function(){ this.value=this.value.toUpperCase().replace(/[^A-ZÄÖÜẞ]/g,'').slice(0,5); });
 document.getElementById('wort-input').addEventListener('keydown',function(e){ if (e.key==='Enter') { e.preventDefault(); verarbeiteWort(); } if (e.key==='Escape') { this.value=''; this.blur(); sageLaut('Eingabe abgebrochen.'); } });
 
+// Grafische QWERTZ-Tastatur
+document.getElementById('grafik-tastatur')?.addEventListener('click', e => {
+  const taste = e.target.closest('.taste[data-key]');
+  if (!taste) return;
+  const key = taste.dataset.key;
+  const input = document.getElementById('wort-input');
+  if (key === 'Backspace') {
+    input.value = input.value.slice(0, -1);
+  } else if (key === 'Enter') {
+    verarbeiteWort();
+  } else {
+    if (input.value.length < 5) {
+      input.value += key;
+    }
+  }
+  input.focus();
+});
+
 
 
 

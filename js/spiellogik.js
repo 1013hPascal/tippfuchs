@@ -96,6 +96,15 @@ export function aktualisiereBuchstabenStatus() {
   document.getElementById('bz-nein').textContent=(nein.length?nein.join(' '):'keine')+' (Nicht vorhanden)';
   document.getElementById('bz-used').textContent=([...uS].sort().join(' ')||'keine')+' (Bereits verwendet)';
   document.getElementById('bz-unused').textContent=(ALLE_BUCHSTABEN.filter(b=>!uS.has(b)).join(' ')||'keine')+' (Noch nicht verwendet)';
+  // Grafische Tastatur einfärben
+  document.querySelectorAll('#grafik-tastatur .taste[data-key]').forEach(taste => {
+    const k = taste.dataset.key;
+    if (k.length !== 1) return;
+    if (cS.has(k)) taste.dataset.status = 'correct';
+    else if (pS.has(k)) taste.dataset.status = 'present';
+    else if (aS.has(k) && !cS.has(k) && !pS.has(k)) taste.dataset.status = 'absent';
+    else taste.removeAttribute('data-status');
+  });
 }
 
 export async function verarbeiteWort() {
