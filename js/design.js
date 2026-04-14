@@ -347,14 +347,14 @@ export function setzeDesign(design, save=true) {
     fuchsOverlay.style.display = 'none';
     fuchsOverlay.innerHTML = '';
     // Beim Standard: native Tastatur + VoiceOver nutzbar
-    if (wortInput) wortInput.setAttribute('inputmode', 'text');
+    if (wortInput) { wortInput.removeAttribute('inputmode'); wortInput.setAttribute('autocapitalize', 'characters'); }
     if (grafikTastatur) grafikTastatur.style.display = 'none';
     // Beim Standard: Fuchs bleibt im Header, wird von starteSpiel gesteuert
   } else {
     hintergrund.style.display = 'block';
     svg.innerHTML = DESIGN_SVG_INHALTE[design] || '';
     // Bei grafischen Designs: grafische Tastatur, native Tastatur unterdrücken
-    if (wortInput) wortInput.setAttribute('inputmode', 'none');
+    if (wortInput) { wortInput.setAttribute('inputmode', 'none'); wortInput.setAttribute('autocapitalize', 'none'); }
     if (grafikTastatur) grafikTastatur.style.display = '';
 
     // Fuchs aus Header ausblenden — er erscheint jetzt im Overlay
