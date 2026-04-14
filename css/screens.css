@@ -307,7 +307,7 @@ body.keine-animationen .fp-punkt {
 
 /* --- NATUR NACHT (immer dunkel) --- */
 [data-design="natur-nacht"] #game-screen {
-  background: rgba(14,20,48,.95);
+  background: #0e1430;
   border-color: #3a4070;
   border-width: 2px;
   box-shadow: 0 0 20px rgba(100,130,220,.1);
@@ -356,7 +356,7 @@ body.keine-animationen .fp-punkt {
 }
 /* Status-Boxen Natur Nacht */
 [data-design="natur-nacht"] .status-gruppe {
-  background: rgba(14,20,48,.9);
+  background: #0e1430;
   border-color: #2a3050;
 }
 [data-design="natur-nacht"] .status-gruppe.falsch { border-left-color: #b08820; }
@@ -457,34 +457,31 @@ body.keine-animationen .fp-punkt {
   display: none;
 }
 
-/* Thematische Designs: Abschnitte bekommen Glasmorphism-Karten */
+/* Thematische Designs: Abschnitte bekommen Karten — vollständig opak für Lesbarkeit */
 [data-design="fuchsbau"] .start-section,
 [data-design="natur-tag"] .start-section,
 [data-design="natur-nacht"] .start-section {
-  background: rgba(255,255,255,0.82);
-  border-color: rgba(255,255,255,0.4);
-  backdrop-filter: blur(6px);
   border-radius: 10px;
   margin-bottom: 8px;
 }
 [data-design="fuchsbau"] .start-section {
-  background: rgba(253,245,230,0.88);
-  border-color: rgba(196,168,130,0.5);
+  background: #fdf5e6;
+  border-color: #c4a882;
 }
 [data-design="natur-tag"] .start-section {
-  background: rgba(240,250,240,0.88);
-  border-color: rgba(139,196,139,0.5);
+  background: #f0faf0;
+  border-color: #8bc48b;
 }
 [data-design="natur-nacht"] .start-section {
-  background: rgba(14,20,48,0.85);
-  border-color: rgba(58,64,112,0.6);
+  background: #0e1430;
+  border-color: #3a4070;
 }
 [data-design="natur-nacht"] .start-section-header h2,
 [data-design="natur-nacht"] .start-section-titel {
   color: #c8d8f8;
 }
 [data-design="natur-nacht"] .willkommen-box {
-  background: rgba(14,20,48,0.85);
+  background: #0e1430;
   border-left-color: #7c9fd4;
   color: #a8b8d8;
 }
@@ -530,7 +527,7 @@ body.keine-animationen .fp-punkt {
 
 /* Natur-Nacht Menüfeld */
 [data-design="natur-nacht"] #haus-menue-feld {
-  background: rgba(8,12,32,0.97);
+  background: #080c20;
   border-color: #2a3050;
 }
 [data-design="natur-nacht"] #haus-menue-feld h3 {
@@ -543,7 +540,7 @@ body.keine-animationen .fp-punkt {
   color: #a8b8d8;
 }
 [data-design="natur-nacht"] #anmelden-block .btn-secondary {
-  background: rgba(30,40,80,0.8);
+  background: #1e2850;
   color: #c8d8f8;
   border-color: #3a4070;
 }
