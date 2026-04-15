@@ -469,7 +469,6 @@ details[open] summary::after {
 
 /* GRAFISCHE QWERTZ-TASTATUR */
 #grafik-tastatur {
-  display: flex;
   flex-direction: column;
   gap: 5px;
   padding: 8px 0 4px;
