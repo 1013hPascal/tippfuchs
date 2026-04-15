@@ -19,8 +19,8 @@ messaging.onBackgroundMessage((payload) => {
   const body = payload.notification?.body || 'Du hast heute noch nicht gespielt!';
   self.registration.showNotification(title, {
     body,
-    icon: '/tippfuchs/icons/icon-192.png',
-    badge: '/tippfuchs/icons/icon-192.png',
+    icon: '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
     lang: 'de',
     requireInteraction: false
   });
