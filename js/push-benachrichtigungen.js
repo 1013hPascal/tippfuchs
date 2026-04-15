@@ -77,7 +77,7 @@ export async function handlePushCheckboxChange() {
   // FCM-Token holen
   try {
     setzePushStatus('Wird eingerichtet...');
-    const swReg = await navigator.serviceWorker.register('/tippfuchs/firebase-messaging-sw.js');
+    const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
     const token = await getToken(getMsg(), { vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg });
     if (!token) {
       setzePushStatus('Fehler beim Einrichten. Bitte Seite neu laden und erneut versuchen.');
