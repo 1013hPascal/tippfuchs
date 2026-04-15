@@ -12,60 +12,74 @@ function getMsg() {
   return _messaging;
 }
 
+const ALLE_CHECKBOXEN = [
+  'push-zeit-1', 'push-zeit-2', 'push-zeit-3',
+  'push-gruppe-alle', 'push-gruppe-anfrage', 'push-gruppe-angenommen',
+  'push-gruppe-abgelehnt', 'push-gruppe-neu', 'push-gruppe-verlassen'
+];
+
 export async function ladePushPraeferenzen(uid) {
   try {
     const snap = await get(child(ref(db), `spieler/${uid}/push`));
     const prefs = snap.exists() ? snap.val() : {};
-    const cb7  = document.getElementById('push-7');
-    const cb12 = document.getElementById('push-12');
-    const cb18 = document.getElementById('push-18');
-    if (cb7)  cb7.checked  = !!prefs.erinnerung7;
-    if (cb12) cb12.checked = !!prefs.erinnerung12;
-    if (cb18) cb18.checked = !!prefs.erinnerung18;
+
+    // Zeiten laden
+    const zeiten = prefs.zeiten || [];
+    [1, 2, 3].forEach(i => {
+      const z = zeiten[i - 1] || {};
+      const cb = document.getElementById(`push-zeit-${i}`);
+      const uhr = document.getElementById(`push-zeit-${i}-uhr`);
+      if (cb) cb.checked = !!z.aktiv;
+      if (uhr && z.uhrzeit) uhr.value = z.uhrzeit;
+    });
+
+    // Gruppen-Checkboxen laden
+    const g = prefs.gruppe || {};
+    const felder = ['alle', 'anfrage', 'angenommen', 'abgelehnt', 'neu', 'verlassen'];
+    felder.forEach(f => {
+      const cb = document.getElementById(`push-gruppe-${f}`);
+      if (cb) cb.checked = !!g[f];
+    });
+
     if (prefs.token) setzePushStatus('Benachrichtigungen aktiv.');
   } catch(e) {}
 }
 
-export async function handlePushCheckboxChange() {
+async function holeFCMToken() {
+  const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+  const token = await getToken(getMsg(), { vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg });
+  return token;
+}
+
+export async function speicherePushEinstellungen() {
   if (!appState.currentUser) return;
 
   if (!('Notification' in window) || !('serviceWorker' in navigator)) {
-    setzePushStatus('Dein Browser unterstützt leider keine Push-Benachrichtigungen. Auf iPhone: App zum Home-Bildschirm hinzufügen und von dort öffnen.');
+    setzePushStatus('Dein Browser unterstützt leider keine Push-Benachrichtigungen.');
     sageLaut('Push-Benachrichtigungen nicht unterstützt.');
     return;
   }
 
-  // iOS-Hinweis: Erlaubnis SOFORT als erstes anfragen, bevor jede andere async-Operation
-  // (iOS verwirft den Nutzer-Gesten-Kontext nach dem ersten await)
   if (Notification.permission === 'denied') {
-    setzePushStatus('Benachrichtigungen sind blockiert. Auf iPhone: Einstellungen → Safari → [Tippfuchs-Seite] → Benachrichtigungen → Erlauben. Oder App löschen und neu zum Home-Bildschirm hinzufügen.');
-    sageLaut('Benachrichtigungen blockiert. Bitte in den Einstellungen erlauben.');
-    document.getElementById('push-7').checked  = false;
-    document.getElementById('push-12').checked = false;
-    document.getElementById('push-18').checked = false;
+    setzePushStatus('Benachrichtigungen sind blockiert. Bitte in den Browsereinstellungen erlauben.');
+    sageLaut('Benachrichtigungen blockiert.');
     return;
   }
 
   if (Notification.permission === 'default') {
-    // Sofort anfragen — noch vor jedem await, damit iOS den Dialog zeigt
     setzePushStatus('Bitte Benachrichtigungen im Dialog erlauben...');
     const erlaubnis = await Notification.requestPermission();
     if (erlaubnis !== 'granted') {
-      setzePushStatus('Nicht erlaubt. Auf iPhone: Einstellungen → Safari → [Tippfuchs-Seite] → Benachrichtigungen → Erlauben.');
+      setzePushStatus('Nicht erlaubt. Bitte in den Browsereinstellungen aktivieren.');
       sageLaut('Benachrichtigungen nicht erlaubt.');
-      document.getElementById('push-7').checked  = false;
-      document.getElementById('push-12').checked = false;
-      document.getElementById('push-18').checked = false;
       return;
     }
   }
 
-  // Ab hier: Notification.permission === 'granted'
-  const e7  = document.getElementById('push-7')?.checked  || false;
-  const e12 = document.getElementById('push-12')?.checked || false;
-  const e18 = document.getElementById('push-18')?.checked || false;
+  // Prüfen ob überhaupt etwas aktiviert ist
+  const irgendwasAktiv = ALLE_CHECKBOXEN.some(id => document.getElementById(id)?.checked);
 
-  if (!e7 && !e12 && !e18) {
+  if (!irgendwasAktiv) {
     try {
       await set(ref(db, `spieler/${appState.currentUser.uid}/push`), null);
       setzePushStatus('Benachrichtigungen deaktiviert.');
@@ -74,32 +88,64 @@ export async function handlePushCheckboxChange() {
     return;
   }
 
-  // FCM-Token holen
   try {
-    setzePushStatus('Wird eingerichtet...');
-    const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    const token = await getToken(getMsg(), { vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg });
+    setzePushStatus('Wird gespeichert...');
+    const token = await holeFCMToken();
     if (!token) {
-      setzePushStatus('Fehler beim Einrichten. Bitte Seite neu laden und erneut versuchen.');
+      setzePushStatus('Fehler: Kein Token erhalten. Bitte Seite neu laden.');
       return;
     }
-    await set(ref(db, `spieler/${appState.currentUser.uid}/push`), {
-      token,
-      erinnerung7:  e7,
-      erinnerung12: e12,
-      erinnerung18: e18
+
+    // Zeiten sammeln
+    const zeiten = [1, 2, 3].map(i => ({
+      aktiv: !!document.getElementById(`push-zeit-${i}`)?.checked,
+      uhrzeit: document.getElementById(`push-zeit-${i}-uhr`)?.value || '07:00'
+    }));
+
+    // Gruppeneinstellungen sammeln
+    const gruppe = {};
+    ['alle', 'anfrage', 'angenommen', 'abgelehnt', 'neu', 'verlassen'].forEach(f => {
+      gruppe[f] = !!document.getElementById(`push-gruppe-${f}`)?.checked;
     });
+
+    await set(ref(db, `spieler/${appState.currentUser.uid}/push`), {
+      token, zeiten, gruppe
+    });
+
     setzePushStatus('Gespeichert. Benachrichtigungen sind aktiv.');
     sageLaut('Benachrichtigungseinstellungen gespeichert.');
   } catch(e) {
     console.error('Push-Fehler:', e);
-    setzePushStatus('Fehler beim Einrichten: ' + (e.message || e));
-    sageLaut('Fehler beim Einrichten der Benachrichtigungen.');
+    setzePushStatus('Fehler beim Speichern: ' + (e.message || e));
+    sageLaut('Fehler beim Speichern der Benachrichtigungen.');
   }
 }
 
 function setzePushStatus(text) {
   const el = document.getElementById('push-status');
   if (el) el.textContent = text;
+}
+
+export function registrierePushButtons() {
+  // Alle aktivieren
+  document.getElementById('btn-push-alle-an')?.addEventListener('click', () => {
+    ALLE_CHECKBOXEN.forEach(id => {
+      const cb = document.getElementById(id);
+      if (cb) cb.checked = true;
+    });
+    sageLaut('Alle Benachrichtigungen aktiviert.');
+  });
+
+  // Alle deaktivieren
+  document.getElementById('btn-push-alle-aus')?.addEventListener('click', () => {
+    ALLE_CHECKBOXEN.forEach(id => {
+      const cb = document.getElementById(id);
+      if (cb) cb.checked = false;
+    });
+    sageLaut('Alle Benachrichtigungen deaktiviert.');
+  });
+
+  // Speichern
+  document.getElementById('btn-push-speichern')?.addEventListener('click', speicherePushEinstellungen);
 }
 // PUSH-BENACHRICHTIGUNGEN ENDE

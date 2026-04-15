@@ -1071,22 +1071,73 @@
     <div id="account-angemeldet" style="display:none;flex-direction:column;gap:8px;">
       <p id="account-info-text" style="font-size:.9rem;color:var(--text-muted);"></p>
       <!-- Push-Benachrichtigungen Toggle -->
-      <button id="btn-push-toggle" aria-expanded="false" aria-controls="push-inhalt" class="btn-secondary" style="text-align:left;">Benachrichtigungen einstellen 🔔</button>
-      <div id="push-inhalt" style="display:none;flex-direction:column;gap:10px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
-        <p style="font-size:.85rem;color:var(--text-muted);margin:0;">Erinnere mich, wenn ich noch nicht gespielt habe:</p>
-        <label style="display:flex;align-items:center;gap:10px;font-size:.95rem;cursor:pointer;">
-          <input type="checkbox" id="push-7" style="width:20px;height:20px;cursor:pointer;">
-          Morgens um 7:00 Uhr
-        </label>
-        <label style="display:flex;align-items:center;gap:10px;font-size:.95rem;cursor:pointer;">
-          <input type="checkbox" id="push-12" style="width:20px;height:20px;cursor:pointer;">
-          Mittags um 12:00 Uhr
-        </label>
-        <label style="display:flex;align-items:center;gap:10px;font-size:.95rem;cursor:pointer;">
-          <input type="checkbox" id="push-18" style="width:20px;height:20px;cursor:pointer;">
-          Abends um 18:00 Uhr
-        </label>
-        <p id="push-status" style="font-size:.8rem;color:var(--text-muted);margin:0;" aria-live="polite"></p>
+      <button id="btn-push-toggle" aria-expanded="false" aria-controls="push-inhalt" class="btn-secondary" style="text-align:left;">Benachrichtigungen einstellen</button>
+      <div id="push-inhalt" style="display:none;flex-direction:column;gap:14px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
+
+        <!-- Alle aktivieren / Alle deaktivieren -->
+        <div style="display:flex;gap:8px;">
+          <button id="btn-push-alle-an" class="btn-secondary" style="flex:1;">Alle aktivieren</button>
+          <button id="btn-push-alle-aus" class="btn-secondary" style="flex:1;">Alle deaktivieren</button>
+        </div>
+
+        <!-- 1. Tägliche Erinnerung -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <p style="font-size:.9rem;font-weight:700;color:var(--text);margin:0;">1. Tägliche Erinnerung</p>
+          <p style="font-size:.83rem;color:var(--text-muted);margin:0;">Erinnere mich heute zu spielen und das Ergebnis von gestern anzusehen:</p>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <input type="checkbox" id="push-zeit-1" style="width:20px;height:20px;cursor:pointer;" aria-label="Erinnerung 1 aktiv">
+            <label for="push-zeit-1-uhr" class="sr-only">Uhrzeit Erinnerung 1</label>
+            <input type="time" id="push-zeit-1-uhr" value="07:00" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:.95rem;">
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <input type="checkbox" id="push-zeit-2" style="width:20px;height:20px;cursor:pointer;" aria-label="Erinnerung 2 aktiv">
+            <label for="push-zeit-2-uhr" class="sr-only">Uhrzeit Erinnerung 2</label>
+            <input type="time" id="push-zeit-2-uhr" value="12:00" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:.95rem;">
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <input type="checkbox" id="push-zeit-3" style="width:20px;height:20px;cursor:pointer;" aria-label="Erinnerung 3 aktiv">
+            <label for="push-zeit-3-uhr" class="sr-only">Uhrzeit Erinnerung 3</label>
+            <input type="time" id="push-zeit-3-uhr" value="18:00" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:.95rem;">
+          </div>
+        </div>
+
+        <!-- 2. Gruppe: alle haben gespielt -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <p style="font-size:.9rem;font-weight:700;color:var(--text);margin:0;">2. Gruppe: alle haben gespielt</p>
+          <label style="display:flex;align-items:center;gap:10px;font-size:.93rem;cursor:pointer;">
+            <input type="checkbox" id="push-gruppe-alle" style="width:20px;height:20px;cursor:pointer;">
+            Alle Gruppenmitglieder haben gespielt, nur ich noch nicht
+          </label>
+        </div>
+
+        <!-- 3. Gruppenänderungen -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <p style="font-size:.9rem;font-weight:700;color:var(--text);margin:0;">3. Gruppenänderungen</p>
+          <label style="display:flex;align-items:center;gap:10px;font-size:.93rem;cursor:pointer;">
+            <input type="checkbox" id="push-gruppe-anfrage" style="width:20px;height:20px;cursor:pointer;">
+            Beitrittsanfrage erhalten
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;font-size:.93rem;cursor:pointer;">
+            <input type="checkbox" id="push-gruppe-angenommen" style="width:20px;height:20px;cursor:pointer;">
+            Anfrage angenommen
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;font-size:.93rem;cursor:pointer;">
+            <input type="checkbox" id="push-gruppe-abgelehnt" style="width:20px;height:20px;cursor:pointer;">
+            Anfrage abgelehnt
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;font-size:.93rem;cursor:pointer;">
+            <input type="checkbox" id="push-gruppe-neu" style="width:20px;height:20px;cursor:pointer;">
+            Neues Mitglied in der Gruppe
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;font-size:.93rem;cursor:pointer;">
+            <input type="checkbox" id="push-gruppe-verlassen" style="width:20px;height:20px;cursor:pointer;">
+            Mitglied hat Gruppe verlassen
+          </label>
+        </div>
+
+        <!-- Status und Speichern -->
+        <p id="push-status" style="font-size:.85rem;color:var(--text-muted);margin:0;" aria-live="polite"></p>
+        <button id="btn-push-speichern" class="btn-primary">Änderungen speichern</button>
       </div>
       <button class="btn-secondary" id="btn-spitzname-aendern-start">Spitzname ändern ✏️</button>
       <button class="btn-secondary" id="btn-abmelden">Abmelden</button>

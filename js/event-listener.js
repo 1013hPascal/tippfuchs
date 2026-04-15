@@ -12,7 +12,7 @@ import { teile, teileRangliste } from './teilen.js';
 import { oeffneModal, schliesseModal, schliesseAlleModals } from './modal.js';
 import { setzeDark } from './design.js';
 import { sageLaut } from './live-region.js';
-import { handlePushCheckboxChange } from './push-benachrichtigungen.js';
+import { registrierePushButtons } from './push-benachrichtigungen.js';
 
 // EVENT-LISTENER ANFANG
 // Haupt-Spielen-Button oben
@@ -197,9 +197,7 @@ function registriereToggle(btnId, inhaltId, label) {
 }
 
 registriereToggle('btn-push-toggle',      'push-inhalt',             'Benachrichtigungen einstellen');
-['push-7','push-12','push-18'].forEach(id => {
-  document.getElementById(id)?.addEventListener('change', handlePushCheckboxChange);
-});
+registrierePushButtons();
 registriereToggle('btn-erfolge-toggle',   'erfolge-inhalt',          'Persönliche Erfolge');
 registriereToggle('btn-gruppen-toggle',   'start-gruppen-inhalt',    'Meine Tippfuchsgruppen');
 registriereToggle('btn-stats-toggle',     'stats-inhalt',            'Statistik aller Tippfüchse');
