@@ -20,7 +20,7 @@
 .loesung-in-verlauf .lz-zeichen.leer{color:var(--border);border-color:var(--border);}
 #eingabe-bereich{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .eingabe-wrapper{display:flex;gap:8px;align-items:center;width:100%;max-width:340px;}
-#wort-input{flex:1;padding:11px 14px;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:1.2rem;font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:6px;text-align:center;outline:none;caret-color:var(--accent);transition:border-color .15s;}
+#wort-input{flex:1;padding:11px 14px;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:1.2rem;font-family:var(--font-display);font-weight:700;letter-spacing:6px;text-align:center;outline:none;caret-color:var(--accent);transition:border-color .15s;}
 #wort-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(44,95,138,.2);}
 #wort-input::placeholder{color:var(--border);letter-spacing:6px;font-size:1rem;}
 #fehler-msg{font-size:.85rem;color:#b91c1c;min-height:18px;text-align:center;font-weight:600;}
