@@ -13,7 +13,7 @@ function getMsg() {
 }
 
 const ALLE_CHECKBOXEN = [
-  'push-zeit-1', 'push-zeit-2', 'push-zeit-3',
+  'push-erinnerung',
   'push-gruppe-alle', 'push-gruppe-anfrage', 'push-gruppe-angenommen',
   'push-gruppe-abgelehnt', 'push-gruppe-neu', 'push-gruppe-verlassen'
 ];
@@ -23,20 +23,16 @@ export async function ladePushPraeferenzen(uid) {
     const snap = await get(child(ref(db), `spieler/${uid}/push`));
     const prefs = snap.exists() ? snap.val() : {};
 
-    // Zeiten laden
-    const zeiten = prefs.zeiten || [];
-    [1, 2, 3].forEach(i => {
-      const z = zeiten[i - 1] || {};
-      const cb = document.getElementById(`push-zeit-${i}`);
-      const uhr = document.getElementById(`push-zeit-${i}-uhr`);
-      if (cb) cb.checked = !!z.aktiv;
-      if (uhr && z.uhrzeit) uhr.value = z.uhrzeit;
-    });
+    // Tägliche Erinnerung laden
+    const erin = prefs.erinnerung || {};
+    const cbErin = document.getElementById('push-erinnerung');
+    const selStunde = document.getElementById('push-erinnerung-stunde');
+    if (cbErin) cbErin.checked = !!erin.aktiv;
+    if (selStunde && erin.stunde !== undefined) selStunde.value = String(erin.stunde);
 
-    // Gruppen-Checkboxen laden
+    // Gruppeneinstellungen laden
     const g = prefs.gruppe || {};
-    const felder = ['alle', 'anfrage', 'angenommen', 'abgelehnt', 'neu', 'verlassen'];
-    felder.forEach(f => {
+    ['alle', 'anfrage', 'angenommen', 'abgelehnt', 'neu', 'verlassen'].forEach(f => {
       const cb = document.getElementById(`push-gruppe-${f}`);
       if (cb) cb.checked = !!g[f];
     });
@@ -56,7 +52,7 @@ export async function speicherePushEinstellungen() {
 
   if (!('Notification' in window) || !('serviceWorker' in navigator)) {
     setzePushStatus('Dein Browser unterstützt leider keine Push-Benachrichtigungen.');
-    sageLaut('Push-Benachrichtigungen nicht unterstützt.');
+    sageLaut('Push-Benachrichtigungen nicht unterstuetzt.');
     return;
   }
 
@@ -76,7 +72,6 @@ export async function speicherePushEinstellungen() {
     }
   }
 
-  // Prüfen ob überhaupt etwas aktiviert ist
   const irgendwasAktiv = ALLE_CHECKBOXEN.some(id => document.getElementById(id)?.checked);
 
   if (!irgendwasAktiv) {
@@ -96,20 +91,18 @@ export async function speicherePushEinstellungen() {
       return;
     }
 
-    // Zeiten sammeln
-    const zeiten = [1, 2, 3].map(i => ({
-      aktiv: !!document.getElementById(`push-zeit-${i}`)?.checked,
-      uhrzeit: document.getElementById(`push-zeit-${i}-uhr`)?.value || '07:00'
-    }));
+    const erinnerung = {
+      aktiv: !!document.getElementById('push-erinnerung')?.checked,
+      stunde: parseInt(document.getElementById('push-erinnerung-stunde')?.value || '12')
+    };
 
-    // Gruppeneinstellungen sammeln
     const gruppe = {};
     ['alle', 'anfrage', 'angenommen', 'abgelehnt', 'neu', 'verlassen'].forEach(f => {
       gruppe[f] = !!document.getElementById(`push-gruppe-${f}`)?.checked;
     });
 
     await set(ref(db, `spieler/${appState.currentUser.uid}/push`), {
-      token, zeiten, gruppe
+      token, erinnerung, gruppe
     });
 
     setzePushStatus('Gespeichert. Benachrichtigungen sind aktiv.');
@@ -127,7 +120,6 @@ function setzePushStatus(text) {
 }
 
 export function registrierePushButtons() {
-  // Alle aktivieren
   document.getElementById('btn-push-alle-an')?.addEventListener('click', () => {
     ALLE_CHECKBOXEN.forEach(id => {
       const cb = document.getElementById(id);
@@ -136,7 +128,6 @@ export function registrierePushButtons() {
     sageLaut('Alle Benachrichtigungen aktiviert.');
   });
 
-  // Alle deaktivieren
   document.getElementById('btn-push-alle-aus')?.addEventListener('click', () => {
     ALLE_CHECKBOXEN.forEach(id => {
       const cb = document.getElementById(id);
@@ -145,7 +136,6 @@ export function registrierePushButtons() {
     sageLaut('Alle Benachrichtigungen deaktiviert.');
   });
 
-  // Speichern
   document.getElementById('btn-push-speichern')?.addEventListener('click', speicherePushEinstellungen);
 }
 // PUSH-BENACHRICHTIGUNGEN ENDE
