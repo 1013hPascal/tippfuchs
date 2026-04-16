@@ -426,6 +426,30 @@ details[open] summary::after {
 }
 
 /* =============================================
+   SPIELEN-BEREICH ganz oben auf Startseite
+   ============================================= */
+#start-spiel-bereich {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+#start-spiel-titel {
+  color: var(--text);
+}
+
+/* =============================================
+   STATISTIK-SCREEN Überschriften
+   ============================================= */
+#statistik-screen h2 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+/* =============================================
    WILLKOMMENS-BOX auf Startseite
    ============================================= */
 .willkommen-box {

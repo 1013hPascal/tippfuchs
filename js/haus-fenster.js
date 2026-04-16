@@ -11,14 +11,15 @@ export function initialisiereHausFenster() {
 
   // Fenster-Positionen für Tatze (x,y im SVG-Koordinatensystem)
   const fensterPositionen = {
-    'erfolge':    {x: 124, y: 193},
-    'statistik':  {x: 206, y: 193},
-    'gruppen':    {x: 288, y: 193},
-    'anmelden':   {x: 360, y: 193},
-    'design':     {x: 432, y: 193},
-    'anleitung':  {x: 508, y: 193},
-    'philosophie':{x: 534, y: 345},
-    'quellen':    {x: 307, y: 325},
+    'design':      {x: 250, y: 146},
+    'anleitung':   {x: 390, y: 146},
+    'erfolge':     {x: 196, y: 199},
+    'gruppen':     {x: 320, y: 199},
+    'statistik':   {x: 444, y: 199},
+    'anmelden':    {x: 178, y: 249},
+    'spielprinzip':{x: 307, y: 252},
+    'philosophie': {x: 160, y: 332},
+    'quellen':     {x: 488, y: 333},
   };
 
   function oeffneFenster(name) {
@@ -27,8 +28,10 @@ export function initialisiereHausFenster() {
       const p = document.getElementById(`haus-panel-${n}`);
       if (p) p.style.display = 'none';
     });
+    // spielprinzip zeigt das anleitung-Panel
+    const panelName = name === 'spielprinzip' ? 'anleitung' : name;
     // Gewähltes Panel zeigen
-    const panel = document.getElementById(`haus-panel-${name}`);
+    const panel = document.getElementById(`haus-panel-${panelName}`);
     if (panel) panel.style.display = 'block';
     // Menüfeld zeigen
     if (menueFeld) menueFeld.style.display = 'block';

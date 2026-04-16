@@ -25,8 +25,23 @@ header{width:100%;max-width:560px;padding:12px 20px;display:flex;align-items:cen
   .logo{font-size:1.1rem;}
   #app{padding:0 8px 20px;}
 }
-#start-screen{padding:24px 0;display:flex;flex-direction:column;gap:16px;}
-.start-section{display:flex;flex-direction:column;gap:10px;}
+
+/* Desktop: App erscheint als zentriertes Handy-Fenster */
+@media(min-width:560px){
+  body{background:#cdc9c3;padding:0;}
+  [data-theme="dark"] body{background:#080706;}
+  header{
+    box-shadow:-1px 0 0 var(--border),1px 0 0 var(--border),0 -1px 0 var(--border);
+    background:var(--surface);
+  }
+  #app{
+    background:var(--bg);
+    box-shadow:-1px 0 0 var(--border),1px 0 0 var(--border),0 1px 0 var(--border),0 12px 40px rgba(0,0,0,0.15);
+    min-height:calc(100vh - 61px);
+  }
+}
+#start-screen{padding:24px 0;display:flex;flex-direction:column;gap:12px;}
+.start-section{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;}
 .start-section-titel{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);padding-bottom:6px;border-bottom:2px solid var(--border);}
 .btn-primary{background:var(--accent);color:#fff;border:none;border-radius:var(--radius);padding:14px;font-size:1rem;font-weight:700;cursor:pointer;width:100%;transition:background .15s;text-align:center;}
 .btn-primary:hover{background:var(--accent-dark);}
