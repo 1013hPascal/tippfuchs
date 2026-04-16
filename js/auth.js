@@ -1,11 +1,11 @@
 import { appState } from './state.js';
-import { auth, provider, signInWithPopup, onAuthStateChanged,
-         createUserWithEmailAndPassword, signInWithEmailAndPassword,
+import { auth, provider, signInWithPopup, signInWithRedirect, getRedirectResult,
+         onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword,
          sendPasswordResetEmail, signOut, deleteUser } from './firebase-config.js';
 import { TAGES_IDX, HEUTE_KEY } from './tageswort.js';
-import { getDatum } from './hilfsfunktionen.js';
-import { ladeSpitzname, spitznameVorhanden, speichereSpitzname, aendereSpitzname } from './firebase-basis.js';
-import { db, ref, set } from './firebase-config.js';
+import { getDatumVonIdx } from './hilfsfunktionen.js';
+import { ladeSpitzname, spitznameVorhanden, speichereSpitzname, aendereSpitzname, ladeRanglisteFirebase } from './firebase-basis.js';
+import { db, ref, set, get, child } from './firebase-config.js';
 import { syncGruppenBeiLogin, sendeAnfrage } from './gruppen.js';
 import { zeigeGruppenScreen } from './gruppen-ui.js';
 import { zeigeScreen } from './screens.js';
@@ -16,6 +16,18 @@ import { zeigeAdminBereich } from './admin.js';
 import { ladePushPraeferenzen } from './push-benachrichtigungen.js';
 
 // AUTH ANFANG
+
+// PWA-Erkennung (iOS standalone oder Chromium display-mode: standalone)
+function istPWA() {
+  return window.navigator.standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches;
+}
+
+// Nach Redirect von Google zurückkehren: Ergebnis verarbeiten
+getRedirectResult(auth).catch(e => {
+  console.warn('getRedirectResult Fehler:', e);
+});
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     appState.currentUser = user;
@@ -84,23 +96,25 @@ export function aktualisiereStartseite() {
     if (accountAngemeldet) accountAngemeldet.style.display = 'none';
   }
 
-  // Tagessieger Meldung prüfen
+  // Tagessieger Meldung — live aus Firebase prüfen (nicht localStorage)
   const siegBox = document.getElementById('tagessieger-meldung');
-  try {
-    const gespeichert = localStorage.getItem('tippfuchs_tagessieger');
-    if (gespeichert && appState.currentUser) {
-      const daten = JSON.parse(gespeichert);
-      if (daten.tagIdx === TAGES_IDX - 1) {
-        siegBox.style.display = 'block';
-        siegBox.textContent = `🏆 Du warst gestern Tagessieger! Das Wort war ${daten.wort} am ${daten.datum}. Herzlichen Glückwunsch!`;
-        sageLaut(`Du warst gestern Tagessieger! Das Wort war ${daten.wort}.`);
-      } else {
-        siegBox.style.display = 'none';
-      }
-    } else {
-      siegBox.style.display = 'none';
-    }
-  } catch(e) { siegBox.style.display = 'none'; }
+  siegBox.style.display = 'none';
+  if (appState.currentUser && appState.currentSpitzname) {
+    (async () => {
+      try {
+        const gesternIdx = TAGES_IDX - 1;
+        const liste = await ladeRanglisteFirebase(gesternIdx);
+        if (liste.length > 0 && liste[0].name.toLowerCase() === appState.currentSpitzname.toLowerCase()) {
+          const wortSnap = await get(child(ref(db), `tageswoerter/${gesternIdx}`));
+          const wort = wortSnap.exists() ? wortSnap.val() : '?????';
+          const datum = getDatumVonIdx(gesternIdx);
+          siegBox.style.display = 'block';
+          siegBox.textContent = `🏆 Du warst gestern Tagessieger! Das Wort war ${wort} am ${datum}. Herzlichen Glückwunsch!`;
+          sageLaut(`Du warst gestern Tagessieger! Das Wort war ${wort}.`);
+        }
+      } catch(e) {}
+    })();
+  }
 
   aktualisiereStartStats();
   if (typeof window.aktualisiereHausPoolText === 'function') window.aktualisiereHausPoolText();
@@ -143,6 +157,13 @@ export async function loescheAccount() {
 }
 export async function googleLogin() {
   try {
+    if (istPWA()) {
+      // Im PWA-Modus (iOS-Homescreen / Standalone) ist signInWithPopup blockiert.
+      // signInWithRedirect leitet zur Google-Seite weiter; nach der Rückkehr
+      // verarbeitet getRedirectResult() das Ergebnis und onAuthStateChanged feuert.
+      await signInWithRedirect(auth, provider);
+      return null; // Seite wird weitergeleitet — kein direktes Ergebnis
+    }
     const result = await signInWithPopup(auth, provider);
     return result.user;
   } catch(e) { return null; }

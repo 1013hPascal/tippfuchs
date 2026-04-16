@@ -903,6 +903,8 @@
 
   <!-- Großer Spielen-Button — Text wird per JS gesetzt -->
   <button class="btn-primary" id="btn-spiel-starten" style="font-size:1.15rem;padding:18px;border-radius:10px;">🦊 Wird geladen...</button>
+  <!-- Spielanleitung direkt erreichbar -->
+  <button class="btn-secondary" id="btn-spielanleitung" style="margin-top:8px;">📖 Spielanleitung</button>
 </div>
 
 <!-- STREAK-UND-REKORD-ANZEIGE ANFANG -->
@@ -1066,6 +1068,7 @@
     <div id="account-nicht-angemeldet" style="display:flex;flex-direction:column;gap:8px;">
       <button class="btn-primary" id="btn-mit-email">Mit E-Mail anmelden</button>
       <button class="btn-primary" id="btn-mit-konto">Mit Google Konto spielen</button>
+      <button class="btn-secondary" id="btn-ohne-konto" aria-label="Ohne Account spielen, keine Zusatzfunktionen möglich">Ohne Account spielen<br><small style="font-weight:400;font-size:.8rem;opacity:.8;">(Keine Zusatzfunktionen möglich)</small></button>
     </div>
     <!-- Angemeldet -->
     <div id="account-angemeldet" style="display:none;flex-direction:column;gap:8px;">
@@ -1077,9 +1080,9 @@
         <!-- Begrüßungstext -->
         <p style="font-size:.88rem;color:var(--text-muted);margin:0;line-height:1.6;">
           Kein Spam — aber manchmal ist man schusselig oder einfach beschäftigt. ☁️<br>
-          Nicht nachdenken müssen, einfach auf dem Laufenden bleiben. ✔️<br>
+          Einfach auf dem Laufenden bleiben, ohne selbst daran denken zu müssen. ✔️<br>
           Alles einstellbar, kein Zwang. 🎛️<br>
-          Doch zu nervig? Alles lässt sich jederzeit schnell wieder ändern. 🔕
+          Doch zu nervig? Lässt sich jederzeit schnell wieder ändern. 🔕
         </p>
 
         <!-- Alle aktivieren / Alle deaktivieren -->
@@ -1437,6 +1440,49 @@
   <button class="btn-primary" id="btn-spitzname-bestaetigen">Spielername bestaetigen</button>
 </section>
 <!-- SPITZNAME-SCREEN ENDE -->
+
+<!-- PUSH-ONBOARDING-SCREEN ANFANG -->
+<section id="push-onboarding-screen" aria-label="Erinnerungen einrichten">
+  <h2 style="font-family:var(--font-display);font-size:1.4rem;">Fast fertig! 🎉</h2>
+  <p style="font-size:.9rem;color:var(--text-muted);">Möchtest du täglich eine Erinnerung erhalten, wenn du noch nicht gespielt hast?</p>
+  <p style="font-size:.88rem;color:var(--text-muted);line-height:1.6;margin-bottom:6px;">
+    Kein Spam — aber manchmal ist man schusselig oder einfach beschäftigt. ☁️<br>
+    Einfach auf dem Laufenden bleiben, ohne selbst daran denken zu müssen. ✔️<br>
+    Alles jederzeit in den Einstellungen änderbar. 🎛️
+  </p>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:6px;">
+    <label style="display:flex;align-items:center;gap:10px;font-size:.95rem;cursor:pointer;">
+      <input type="checkbox" id="onb-erinnerung-aktiv" style="width:22px;height:22px;cursor:pointer;" aria-describedby="onb-uhrzeit-bereich">
+      Tägliche Erinnerung aktivieren
+    </label>
+    <div id="onb-uhrzeit-bereich" style="display:flex;align-items:center;gap:10px;">
+      <label for="onb-erinnerung-stunde" style="font-size:.93rem;color:var(--text);">Uhrzeit:</label>
+      <select id="onb-erinnerung-stunde" class="datum-select" style="width:auto;">
+        <option value="6">06:00 Uhr</option>
+        <option value="7">07:00 Uhr</option>
+        <option value="8">08:00 Uhr</option>
+        <option value="9">09:00 Uhr</option>
+        <option value="10">10:00 Uhr</option>
+        <option value="11">11:00 Uhr</option>
+        <option value="12" selected>12:00 Uhr</option>
+        <option value="13">13:00 Uhr</option>
+        <option value="14">14:00 Uhr</option>
+        <option value="15">15:00 Uhr</option>
+        <option value="16">16:00 Uhr</option>
+        <option value="17">17:00 Uhr</option>
+        <option value="18">18:00 Uhr</option>
+        <option value="19">19:00 Uhr</option>
+        <option value="20">20:00 Uhr</option>
+        <option value="21">21:00 Uhr</option>
+      </select>
+    </div>
+  </div>
+  <p id="onb-push-status" style="font-size:.85rem;color:var(--text-muted);min-height:1.2em;" aria-live="polite"></p>
+  <button class="btn-primary" id="btn-onb-push-speichern">Änderungen speichern</button>
+  <button class="btn-secondary" id="btn-onb-push-nein" style="margin-top:4px;">Nein, ich möchte keine Erinnerung</button>
+</section>
+<!-- PUSH-ONBOARDING-SCREEN ENDE -->
+
 
 <!-- SPIELFELD ANFANG -->
 <section id="game-screen">

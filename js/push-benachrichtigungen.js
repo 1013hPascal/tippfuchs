@@ -119,6 +119,52 @@ function setzePushStatus(text) {
   if (el) el.textContent = text;
 }
 
+export async function speichereOnboardingErinnerung() {
+  const status = document.getElementById('onb-push-status');
+  const aktiv = !!document.getElementById('onb-erinnerung-aktiv')?.checked;
+
+  if (!aktiv) return; // Kein Speichern nötig, wenn nicht aktiviert
+
+  if (!appState.currentUser) return;
+
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+    if (status) status.textContent = 'Dein Browser unterstützt leider keine Push-Benachrichtigungen.';
+    return;
+  }
+
+  if (Notification.permission === 'denied') {
+    if (status) status.textContent = 'Benachrichtigungen sind blockiert. In den Browsereinstellungen aktivieren.';
+    return;
+  }
+
+  if (Notification.permission === 'default') {
+    if (status) status.textContent = 'Bitte erlaube Benachrichtigungen im Dialog...';
+    const erlaubnis = await Notification.requestPermission();
+    if (erlaubnis !== 'granted') {
+      if (status) status.textContent = 'Nicht erlaubt — du kannst das später in den Einstellungen aktivieren.';
+      return;
+    }
+  }
+
+  try {
+    if (status) status.textContent = 'Wird gespeichert...';
+    const token = await holeFCMToken();
+    if (!token) {
+      if (status) status.textContent = 'Fehler: Kein Token erhalten.';
+      return;
+    }
+    const stunde = parseInt(document.getElementById('onb-erinnerung-stunde')?.value || '12');
+    await set(ref(db, `spieler/${appState.currentUser.uid}/push`), {
+      token,
+      erinnerung: { aktiv: true, stunde },
+      gruppe: { alle: false, anfrage: false, angenommen: false, abgelehnt: false, neu: false, verlassen: false }
+    });
+    if (status) status.textContent = 'Gespeichert!';
+  } catch(e) {
+    if (status) status.textContent = 'Fehler beim Speichern. Du kannst das später in den Einstellungen aktivieren.';
+  }
+}
+
 export function registrierePushButtons() {
   document.getElementById('btn-push-alle-an')?.addEventListener('click', () => {
     ALLE_CHECKBOXEN.forEach(id => {

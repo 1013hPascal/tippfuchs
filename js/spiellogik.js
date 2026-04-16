@@ -220,16 +220,6 @@ export async function zeigeErgebnis(gewonnen) {
       const medal = platz===1?'🥇 ':platz===2?'🥈 ':platz===3?'🥉 ':'';
       document.getElementById('erg-platz').textContent=`${medal}${platz}. Platz`;
       platzZeile.style.display='flex';
-      // Tagessieger speichern
-      if (platz===1) {
-        try {
-          localStorage.setItem('tippfuchs_tagessieger', JSON.stringify({
-            tagIdx: TAGES_IDX,
-            datum: getDatum(0),
-            wort: appState.TAGESWORT
-          }));
-        } catch(e) {}
-      }
     }
   }
   if (gewonnen) {

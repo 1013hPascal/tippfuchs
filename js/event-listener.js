@@ -12,7 +12,7 @@ import { teile, teileRangliste } from './teilen.js';
 import { oeffneModal, schliesseModal, schliesseAlleModals } from './modal.js';
 import { setzeDark } from './design.js';
 import { sageLaut } from './live-region.js';
-import { registrierePushButtons } from './push-benachrichtigungen.js';
+import { registrierePushButtons, speichereOnboardingErinnerung } from './push-benachrichtigungen.js';
 
 // EVENT-LISTENER ANFANG
 // Haupt-Spielen-Button oben
@@ -34,6 +34,10 @@ document.getElementById('btn-spiel-starten').addEventListener('click', () => {
       if (erstesElement) { erstesElement.scrollIntoView({behavior: 'smooth', block: 'center'}); erstesElement.focus(); }
     }, 50);
   }
+});
+
+document.getElementById('btn-ohne-konto').addEventListener('click', () => {
+  starteSpiel();
 });
 
 document.getElementById('btn-mit-konto').addEventListener('click', async()=>{
@@ -72,7 +76,7 @@ document.getElementById('btn-spitzname-bestaetigen').addEventListener('click',as
     oeffneModal('modal-gruppe-beitreten');
     setTimeout(()=>document.getElementById('gruppe-id-input').focus(),150);
     sageLaut('Du wurdest zu einer Gruppe eingeladen. Klicke auf Anfrage senden um beizutreten.');
-  } else { starteSpiel(); }
+  } else { zeigeScreen('push-onboarding-screen'); setTimeout(()=>document.getElementById('btn-onb-push-speichern').focus(),100); }
 });
 document.getElementById('spitzname-input').addEventListener('keydown',function(e){ if (e.key==='Enter') { e.preventDefault(); document.getElementById('btn-spitzname-bestaetigen').click(); } });
 document.getElementById('btn-google-spitzname').addEventListener('click',async()=>{
@@ -173,6 +177,17 @@ document.querySelectorAll('.modal-overlay').forEach(o=>{ o.addEventListener('cli
 document.getElementById('bot-suche').addEventListener('input',function(){ clearTimeout(suchTimeout); suchTimeout=setTimeout(()=>ladeBotListe(this.value.trim()),400); });
 document.getElementById('btn-zurueck-zum-menue').addEventListener('click', zeigeStart);
 document.getElementById('btn-zurueck-erg').addEventListener('click', zeigeStart);
+document.getElementById('btn-spielanleitung').addEventListener('click', () => {
+  const btn = document.getElementById('btn-anleitung-toggle');
+  const inhalt = document.getElementById('anleitung-toggle-inhalt');
+  if (btn && inhalt && btn.getAttribute('aria-expanded') !== 'true') {
+    btn.click();
+  }
+  setTimeout(() => {
+    const section = document.getElementById('anleitung-toggle-inhalt');
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+});
 
 // Ausklappbare Bereiche — gemeinsame Hilfsfunktion
 function registriereToggle(btnId, inhaltId, label) {
@@ -198,6 +213,18 @@ function registriereToggle(btnId, inhaltId, label) {
 
 registriereToggle('btn-push-toggle',      'push-inhalt',             'Benachrichtigungen einstellen');
 registrierePushButtons();
+
+// Push-Onboarding-Screen Buttons
+document.getElementById('btn-onb-push-speichern').addEventListener('click', async () => {
+  await speichereOnboardingErinnerung();
+  zeigeScreen('start-screen');
+  sageLaut('Einstellungen gespeichert. Willkommen bei Tippfuchs!');
+});
+document.getElementById('btn-onb-push-nein').addEventListener('click', () => {
+  zeigeScreen('start-screen');
+  sageLaut('Willkommen bei Tippfuchs!');
+});
+
 registriereToggle('btn-erfolge-toggle',   'erfolge-inhalt',          'Persönliche Erfolge');
 registriereToggle('btn-gruppen-toggle',   'start-gruppen-inhalt',    'Meine Tippfuchsgruppen');
 registriereToggle('btn-stats-toggle',     'stats-inhalt',            'Statistik aller Tippfüchse');

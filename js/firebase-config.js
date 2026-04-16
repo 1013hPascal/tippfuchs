@@ -1,7 +1,7 @@
 // FIREBASE-IMPORTS ANFANG
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getDatabase, ref, set, get, child, remove } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 // FIREBASE-IMPORTS ENDE
 
 // FIREBASE-CONFIG ANFANG
@@ -22,5 +22,6 @@ export const provider = new GoogleAuthProvider();
 
 // Re-Exports der Firebase-Hilfsfunktionen für andere Module
 export { ref, set, get, child, remove };
-export { signInWithPopup, onAuthStateChanged, createUserWithEmailAndPassword,
-         signInWithEmailAndPassword, sendPasswordResetEmail, signOut, deleteUser };
+export { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged,
+         createUserWithEmailAndPassword, signInWithEmailAndPassword,
+         sendPasswordResetEmail, signOut, deleteUser };

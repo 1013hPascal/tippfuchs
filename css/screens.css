@@ -457,6 +457,18 @@ body.keine-animationen .fp-punkt {
   display: none;
 }
 
+/* Standard/schlicht: Buchstabenstatus auch visuell anzeigen (sr-only aufheben) */
+[data-design="standard"] #status-bereich {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+  margin-top: 8px;
+}
+
 /* Thematische Designs: Abschnitte bekommen Karten — vollständig opak für Lesbarkeit */
 [data-design="fuchsbau"] .start-section,
 [data-design="natur-tag"] .start-section,
