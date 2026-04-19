@@ -36,4 +36,13 @@ export function getJahrGott(jahr) {
   };
   return (pflanzen[jahr]||jahr+' 🌳');
 }
+export function wortbedeutungLinksHTML(wort) {
+  if (!wort || wort === '-') return '';
+  const w = wort.toLowerCase();
+  const wKap = w.charAt(0).toUpperCase() + w.slice(1);
+  const dwds = `https://www.dwds.de/wb/${w}`;
+  const wikt = `https://de.wiktionary.org/wiki/${wKap}`;
+  return `<a href="${dwds}" target="_blank" rel="noopener noreferrer" class="erklaer-link">Auf DWDS nachschlagen</a>`
+       + `<a href="${wikt}" target="_blank" rel="noopener noreferrer" class="erklaer-link">Auf Wiktionary nachschlagen</a>`;
+}
 // HILFSFUNKTIONEN ENDE

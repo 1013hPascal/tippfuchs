@@ -1,7 +1,7 @@
 import { appState } from './state.js';
 import { db, ref, get, child } from './firebase-config.js';
 import { TAGES_IDX } from './tageswort.js';
-import { getDatumVonIdx } from './hilfsfunktionen.js';
+import { getDatumVonIdx, wortbedeutungLinksHTML } from './hilfsfunktionen.js';
 import { ladeGruppen, ladeGruppe, nimmAnfrageAn, lehnAnfrageAb, ladeGruppenBestOfTime, ladeEigeneAnfragen } from './gruppen.js';
 import { ladeRanglisteFirebase } from './firebase-basis.js';
 import { formatZeit } from './timer.js';
@@ -205,7 +205,8 @@ export async function ladeGruppeTagesErgebnis() {
   // Vergangene Tage: Lösungswort + Rangliste
   let loesung='-';
   try { const wSnap=await get(child(ref(db),`tageswoerter/${idx}`)); if(wSnap.exists()) loesung=wSnap.val(); } catch(e) {}
-  div.innerHTML=`<div class="tages-info-zeile"><span>Loesungswort: <strong>${loesung}</strong></span></div>`;
+  div.innerHTML=`<div class="tages-info-zeile"><span>Loesungswort: <strong>${loesung}</strong></span></div>`
+              + (loesung !== '-' ? `<div class="erklaer-links">${wortbedeutungLinksHTML(loesung)}</div>` : '');
   const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
   const mMitPlatz=mitglieder.map(m=>{ const e=tL.find(e=>e.name.toLowerCase()===m.name.toLowerCase()); return e?{...e,gespielt:true}:{name:m.name,gespielt:false}; })
     .sort((a,b)=>{ if (!a.gespielt&&!b.gespielt) return 0; if (!a.gespielt) return 1; if (!b.gespielt) return -1; if (a.versuche!==b.versuche) return a.versuche-b.versuche; return a.sekunden-b.sekunden; });

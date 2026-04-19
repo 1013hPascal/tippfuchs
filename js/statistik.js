@@ -1,7 +1,7 @@
 import { appState } from './state.js';
 import { db, ref, get, child } from './firebase-config.js';
 import { TAGES_IDX } from './tageswort.js';
-import { getDatumVonIdx, getMonatName, getJahrGott } from './hilfsfunktionen.js';
+import { getDatumVonIdx, getMonatName, getJahrGott, wortbedeutungLinksHTML } from './hilfsfunktionen.js';
 import { ladeRanglisteFirebase, ladeBestOfTime } from './firebase-basis.js';
 import { formatZeit } from './timer.js';
 
@@ -162,7 +162,8 @@ export async function ladeTagesErgebnis() {
   let loesung = '-';
   try { const wSnap = await get(child(ref(db), `tageswoerter/${idx}`)); if (wSnap.exists()) loesung = wSnap.val(); } catch(e) {}
 
-  let html = `<div class="tages-info-zeile"><span>Anzahl Spieler: <strong>${liste.length}</strong></span><span>Lösungswort: <strong>${loesung}</strong></span></div>`;
+  let html = `<div class="tages-info-zeile"><span>Anzahl Spieler: <strong>${liste.length}</strong></span><span>Lösungswort: <strong>${loesung}</strong></span></div>`
+           + (loesung !== '-' ? `<div class="erklaer-links">${wortbedeutungLinksHTML(loesung)}</div>` : '');
   if (liste.length === 0) { div.innerHTML = html + '<div class="tages-ergebnis-zeile">Keine Daten.</div>'; return; }
   if (appState.currentSpitzname) {
     const platz = liste.findIndex(e => e.name.toLowerCase() === appState.currentSpitzname.toLowerCase()) + 1;

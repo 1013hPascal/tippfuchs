@@ -242,6 +242,7 @@ function registriereToggle(btnId, inhaltId, label) {
   });
 }
 
+registriereToggle('btn-erg-wortbedeutung', 'erg-wortbedeutung-inhalt', 'Wortbedeutung');
 registriereToggle('btn-push-toggle',      'push-inhalt',             'Benachrichtigungen einstellen');
 registrierePushButtons();
 

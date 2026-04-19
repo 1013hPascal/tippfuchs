@@ -4,7 +4,7 @@ import { LOESUNGSWOERTER } from './loesungswoerter.js';
 import { EINGABEWOERTER } from './eingabewoerter.js';
 import { ALLE_BUCHSTABEN } from './hilfsfunktionen.js';
 import { TAGES_IDX, ladeTageswort } from './tageswort.js';
-import { getDatum } from './hilfsfunktionen.js';
+import { getDatum, wortbedeutungLinksHTML } from './hilfsfunktionen.js';
 import { ladeRanglisteFirebase, speichereInRanglisteFirebase } from './firebase-basis.js';
 import { starteTimer, stoppeTimer, formatZeit, getGesamtZeit } from './timer.js';
 import { aktualisiereStats, aktualisiereRekord, aktualisiereStartStats, speichereZustand, ladeZustand } from './lokaler-zustand.js';
@@ -209,6 +209,10 @@ export async function zeigeErgebnis(gewonnen) {
     banner.style.display = 'none';
   }
   document.getElementById('erg-wort').textContent = appState.TAGESWORT;
+  const ergWbInhalt = document.getElementById('erg-wortbedeutung-inhalt');
+  if (ergWbInhalt) ergWbInhalt.innerHTML = wortbedeutungLinksHTML(appState.TAGESWORT);
+  const ergWbBtn = document.getElementById('btn-erg-wortbedeutung');
+  if (ergWbBtn) { ergWbBtn.setAttribute('aria-expanded','false'); ergWbInhalt.style.display='none'; }
   document.getElementById('erg-versuche').textContent = gewonnen?`${state.versuche.length} / 6`:'Nicht geloest';
   document.getElementById('erg-zeit').textContent = getGesamtZeit();
   const platzZeile = document.getElementById('erg-platz-zeile');
