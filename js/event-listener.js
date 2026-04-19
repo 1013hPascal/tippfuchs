@@ -1,9 +1,9 @@
-import { appState } from './state.js';
+import { appState, state } from './state.js';
 import { TAGES_IDX } from './tageswort.js';
 import { ladeSpitzname, spitznameVorhanden, speichereSpitzname, aendereSpitzname } from './firebase-basis.js';
 import { zeigeScreen } from './screens.js';
 import { zeigeStart, aktualisiereStartseite, googleLogin, abmelden, loescheAccount } from './auth.js';
-import { starteSpiel, verarbeiteWort, zeigeErgebnis } from './spiellogik.js';
+import { starteSpiel, verarbeiteWort, zeigeErgebnis, bewerteVersuch } from './spiellogik.js';
 import { zeigeTagesrangliste } from './rangliste.js';
 import { ladeBotListe, ladeTagsSelect, ladeMonatSelect, ladeJahrSelect } from './statistik.js';
 import { zeigeGruppenScreen, zeigeGruppeVerlassenModal, ladeMeineGruppenListe, zeigeGruppeDetail, stoppeGruppenRefresh } from './gruppen-ui.js';
@@ -97,8 +97,34 @@ document.getElementById('btn-neuer-spitzname-bestaetigen').addEventListener('cli
   sageLaut('Spielername erfolgreich geaendert.'); schliesseModal('modal-spitzname');
 });
 document.getElementById('neuer-spitzname-input').addEventListener('keydown',function(e){ if (e.key==='Enter') { e.preventDefault(); document.getElementById('btn-neuer-spitzname-bestaetigen').click(); } });
-document.getElementById('wort-input').addEventListener('input',function(){ this.value=this.value.toUpperCase().replace(/[^A-ZÄÖÜẞ]/g,'').slice(0,5); });
-document.getElementById('wort-input').addEventListener('keydown',function(e){ if (e.key==='Enter') { e.preventDefault(); verarbeiteWort(); } if (e.key==='Escape') { this.value=''; this.blur(); sageLaut('Eingabe abgebrochen.'); } });
+let _vorherigeInputLaenge = 0;
+document.getElementById('wort-input').addEventListener('input', function() {
+  const vorher = _vorherigeInputLaenge;
+  this.value = this.value.toUpperCase().replace(/[^A-ZÄÖÜẞ]/g,'').slice(0,5);
+  _vorherigeInputLaenge = this.value.length;
+  if (this.value.length > vorher && this.value.length > 0) {
+    _pruefeEingabeHinweis(this.value[this.value.length - 1], this.value.length - 1);
+  }
+});
+
+function _pruefeEingabeHinweis(buchstabe, position) {
+  if (!state.versuche || state.versuche.length === 0 || !appState.TAGESWORT) return;
+  const absentSet = new Set();
+  const correctSet = new Set();
+  const correctAnPos = Array(5).fill(null);
+  state.versuche.forEach(versuch => {
+    bewerteVersuch(versuch, appState.TAGESWORT).forEach((e, i) => {
+      if (e === 'correct') { correctSet.add(versuch[i]); correctAnPos[i] = versuch[i]; }
+      else if (e === 'absent') absentSet.add(versuch[i]);
+    });
+  });
+  if (absentSet.has(buchstabe) && !correctSet.has(buchstabe)) {
+    sageLaut(`Buchstabe ${buchstabe} darf nicht im Wort vorkommen.`);
+  } else if (correctAnPos[position] && correctAnPos[position] !== buchstabe) {
+    sageLaut(`An der Stelle hast du ${correctAnPos[position]} schon richtig.`);
+  }
+}
+document.getElementById('wort-input').addEventListener('keydown',function(e){ if (e.key==='Enter') { e.preventDefault(); _vorherigeInputLaenge=0; verarbeiteWort(); } if (e.key==='Escape') { this.value=''; _vorherigeInputLaenge=0; this.blur(); sageLaut('Eingabe abgebrochen.'); } });
 
 // Grafische QWERTZ-Tastatur
 document.getElementById('grafik-tastatur')?.addEventListener('click', e => {
@@ -108,11 +134,16 @@ document.getElementById('grafik-tastatur')?.addEventListener('click', e => {
   const input = document.getElementById('wort-input');
   if (key === 'Backspace') {
     input.value = input.value.slice(0, -1);
+    _vorherigeInputLaenge = input.value.length;
   } else if (key === 'Enter') {
+    _vorherigeInputLaenge = 0;
     verarbeiteWort();
   } else {
     if (input.value.length < 5) {
+      const pos = input.value.length;
       input.value += key;
+      _vorherigeInputLaenge = input.value.length;
+      _pruefeEingabeHinweis(key, pos);
     }
   }
   input.focus();
