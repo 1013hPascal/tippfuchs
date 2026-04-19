@@ -15,6 +15,22 @@ export async function zeigeAdminBereich() {
   }
   bereich.style.display = 'block';
   if (pushBereich) pushBereich.style.display = 'flex';
+
+  const updateEl = document.getElementById('admin-letztes-update');
+  if (updateEl) {
+    updateEl.textContent = 'Letzte Aktualisierung: wird geladen…';
+    fetch('https://api.github.com/repos/1013hPascal/tippfuchs/commits?per_page=1')
+      .then(r => r.json())
+      .then(data => {
+        const datum = new Date(data[0].commit.committer.date);
+        updateEl.textContent = 'Letzte Aktualisierung: '
+          + datum.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' })
+          + ' ' + datum.toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' })
+          + ' Uhr';
+      })
+      .catch(() => { updateEl.textContent = 'Letzte Aktualisierung: nicht abrufbar'; });
+  }
+
   document.getElementById('admin-lade-status').textContent = 'Lade Daten...';
   document.getElementById('admin-box').style.display = 'none';
 
