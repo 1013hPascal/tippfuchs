@@ -609,3 +609,35 @@ details[open] summary::after {
   .taste { height: 36px; font-size: 0.75rem; }
 }
 
+/* FARBLEGENDE */
+#farblegende {
+  display: none;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding: 8px 0 4px;
+  font-size: .8rem;
+  color: var(--text-muted);
+}
+[data-design="standard"] #farblegende,
+[data-design="fuchsbau"] #farblegende,
+[data-design="natur-tag"] #farblegende,
+[data-design="natur-nacht"] #farblegende {
+  display: flex;
+}
+.farb-eintrag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.farb-box {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.farb-correct  { background: #4a9e50; }
+.farb-present  { background: #c88020; }
+.farb-absent   { background: #606060; }
+.farb-unused   { background: var(--key-bg); border: 1px solid var(--border); }
+
