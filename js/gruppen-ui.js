@@ -209,8 +209,18 @@ export async function ladeGruppeTagesErgebnis() {
               + (loesung !== '-' ? `<div class="erklaer-links">${wortbedeutungLinksHTML(loesung)}</div>` : '');
   const topDiv=document.createElement('div'); topDiv.style.cssText='display:flex;flex-direction:column;gap:4px;'; div.appendChild(topDiv);
   const mMitPlatz=mitglieder.map(m=>{ const e=tL.find(e=>e.name.toLowerCase()===m.name.toLowerCase()); return e?{...e,gespielt:true}:{name:m.name,gespielt:false}; })
-    .sort((a,b)=>{ if (!a.gespielt&&!b.gespielt) return 0; if (!a.gespielt) return 1; if (!b.gespielt) return -1; if (a.versuche!==b.versuche) return a.versuche-b.versuche; return a.sekunden-b.sekunden; });
-  mMitPlatz.forEach((e,i)=>{ const div2=document.createElement('div'); div2.className='tages-ergebnis-zeile'; if (e.gespielt) { const medal=i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':''; div2.innerHTML=`<span>${medal}${i+1}. ${e.name}</span><span>${e.versuche} Versuch${e.versuche!==1?'e':''} - ${formatZeit(e.sekunden)}</span>`; } else { div2.style.color='var(--text-muted)'; div2.innerHTML=`<span>${e.name}</span><span>Nicht gespielt</span>`; } topDiv.appendChild(div2); });
+    .sort((a,b)=>{
+      const aGew = a.gespielt && a.versuche < 99;
+      const bGew = b.gespielt && b.versuche < 99;
+      const aVerl = a.gespielt && a.versuche >= 99;
+      const bVerl = b.gespielt && b.versuche >= 99;
+      if (aGew && !bGew) return -1; if (!aGew && bGew) return 1;
+      if (aGew && bGew) return a.versuche !== b.versuche ? a.versuche-b.versuche : a.sekunden-b.sekunden;
+      if (aVerl && !bVerl) return -1; if (!aVerl && bVerl) return 1;
+      return 0;
+    });
+  let gewonnenPlatz = 0;
+  mMitPlatz.forEach((e)=>{ const div2=document.createElement('div'); div2.className='tages-ergebnis-zeile'; if (e.gespielt && e.versuche >= 99) { div2.style.color='var(--text-muted)'; div2.innerHTML=`<span>${e.name}</span><span>Gespielt, Wort nicht gefunden</span>`; } else if (e.gespielt) { gewonnenPlatz++; const medal=gewonnenPlatz===1?'🥇 ':gewonnenPlatz===2?'🥈 ':gewonnenPlatz===3?'🥉 ':''; div2.innerHTML=`<span>${medal}${gewonnenPlatz}. ${e.name}</span><span>${e.versuche} Versuch${e.versuche!==1?'e':''} - ${formatZeit(e.sekunden)}</span>`; } else { div2.style.color='var(--text-muted)'; div2.innerHTML=`<span>${e.name}</span><span>Nicht gespielt</span>`; } topDiv.appendChild(div2); });
 }
 // GRUPPEN-UI ENDE
 

@@ -106,8 +106,11 @@ function _tageZeige(offset) {
     const medal = gi === 0 ? '🥇 ' : gi === 1 ? '🥈 ' : gi === 2 ? '🥉 ' : '';
     const li = document.createElement('li');
     li.className = `best-of-eintrag platz-${gi + 1}`;
-    const platz2 = medal ? medal.trim() : `${gi + 1}.`;
-    li.textContent = `${platz2} ${e.name}: ${e.versuche} Versuch${e.versuche !== 1 ? 'e' : ''} · ${formatZeit(e.sekunden)}`;
+    const nichtGelöst = e.versuche >= 99;
+    const platz2 = (!nichtGelöst && medal) ? medal.trim() : (!nichtGelöst ? `${gi + 1}.` : '');
+    li.textContent = nichtGelöst
+      ? `${e.name}: Gespielt, Wort nicht gefunden`
+      : `${platz2} ${e.name}: ${e.versuche} Versuch${e.versuche !== 1 ? 'e' : ''} · ${formatZeit(e.sekunden)}`;
     ul.appendChild(li);
   });
 
