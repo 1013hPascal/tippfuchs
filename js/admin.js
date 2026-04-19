@@ -6,12 +6,15 @@ const ADMIN_EMAIL = 'blindermoveindeutschland@gmail.com';
 
 export async function zeigeAdminBereich() {
   const bereich = document.getElementById('admin-bereich');
+  const pushBereich = document.getElementById('push-bereich');
   if (!bereich) return;
   if (!appState.currentUser || appState.currentUser.email !== ADMIN_EMAIL) {
     bereich.style.display = 'none';
+    if (pushBereich) pushBereich.style.display = 'none';
     return;
   }
   bereich.style.display = 'block';
+  if (pushBereich) pushBereich.style.display = 'flex';
   document.getElementById('admin-lade-status').textContent = 'Lade Daten...';
   document.getElementById('admin-box').style.display = 'none';
 

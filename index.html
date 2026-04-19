@@ -917,7 +917,8 @@
     <!-- Angemeldet -->
     <div id="account-angemeldet" style="display:none;flex-direction:column;gap:8px;">
       <p id="account-info-text" style="font-size:.9rem;color:var(--text-muted);"></p>
-      <!-- Push-Benachrichtigungen Toggle -->
+      <!-- Push-Benachrichtigungen Toggle (nur für Admin sichtbar) -->
+      <div id="push-bereich" style="display:none;flex-direction:column;gap:8px;">
       <button id="btn-push-toggle" aria-expanded="false" aria-controls="push-inhalt" class="btn-secondary" style="text-align:left;">Benachrichtigungen einstellen</button>
       <div id="push-inhalt" style="display:none;flex-direction:column;gap:14px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
 
@@ -1004,6 +1005,7 @@
         <p id="push-status" style="font-size:.85rem;color:var(--text-muted);margin:0;" aria-live="polite"></p>
         <button id="btn-push-speichern" class="btn-primary">Änderungen speichern</button>
       </div>
+      </div><!-- Ende push-bereich -->
       <button class="btn-secondary" id="btn-spitzname-aendern-start">Spitzname ändern ✏️</button>
       <button class="btn-secondary" id="btn-abmelden">Abmelden</button>
       <button class="btn-secondary" id="btn-account-loeschen">Account löschen</button>
@@ -1066,7 +1068,7 @@
       </div>
       <div class="design-karte-label">
         <span class="design-karte-name">Fuchsbau</span>
-        <span class="design-karte-desc">Warme Erdtöne</span>
+        <span class="design-karte-desc">Warme Erdtöne — In Arbeit</span>
       </div>
     </label>
 
@@ -1077,7 +1079,7 @@
       </div>
       <div class="design-karte-label">
         <span class="design-karte-name">Natur am Tag</span>
-        <span class="design-karte-desc">Wiese und Himmel</span>
+        <span class="design-karte-desc">Wiese und Himmel — In Arbeit</span>
       </div>
     </label>
 
@@ -1088,7 +1090,7 @@
       </div>
       <div class="design-karte-label">
         <span class="design-karte-name">Natur Nacht</span>
-        <span class="design-karte-desc">Sterne und Mond</span>
+        <span class="design-karte-desc">Sterne und Mond — In Arbeit</span>
       </div>
     </label>
 
@@ -1380,7 +1382,7 @@
       <div class="buchstaben-zeile nicht-vorhanden" id="bz-nein">keine (Nicht vorhanden)</div>
     </div>
     <div class="status-gruppe used">
-      <div class="buchstaben-zeile verwendet" id="bz-used">keine (Bereits verwendet)</div>
+      <div class="buchstaben-zeile verwendet" id="bz-used">keine (Bereits verwendet, aber mehrfach Vorkommen möglich)</div>
     </div>
     <div class="status-gruppe unused">
       <div class="buchstaben-zeile unbenutzt" id="bz-unused">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z (Noch nicht verwendet)</div>

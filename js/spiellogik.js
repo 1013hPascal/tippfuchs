@@ -94,7 +94,7 @@ export function aktualisiereBuchstabenStatus() {
   const nein=[...aS].filter(b=>!cS.has(b)&&!pS.has(b));
   document.getElementById('bz-falsch').textContent=(falsch.length?falsch.join(' '):'keine')+' (Falsche Stelle)';
   document.getElementById('bz-nein').textContent=(nein.length?nein.join(' '):'keine')+' (Nicht vorhanden)';
-  document.getElementById('bz-used').textContent=([...uS].sort().join(' ')||'keine')+' (Bereits verwendet)';
+  document.getElementById('bz-used').textContent=([...uS].sort().join(' ')||'keine')+' (Bereits verwendet, aber mehrfach Vorkommen möglich)';
   document.getElementById('bz-unused').textContent=(ALLE_BUCHSTABEN.filter(b=>!uS.has(b)).join(' ')||'keine')+' (Noch nicht verwendet)';
   // Grafische Tastatur einfärben
   document.querySelectorAll('#grafik-tastatur .taste[data-key]').forEach(taste => {
