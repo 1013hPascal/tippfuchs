@@ -12,7 +12,7 @@ const ANLEITUNG_INHALTE = {
       Orange mit Unterstrich — Der Buchstabe ist im Loesungswort, steht aber an einer anderen Stelle.<br>
       Rot mit Durchstrich — Dieser Buchstabe kommt im Loesungswort nicht vor.</p>
       <p><strong>Der Timer</strong><br>Die Zeit startet erst wenn du deinen ersten Versuch abschickst — nicht beim Oeffnen der Seite. Du kannst also in Ruhe nachdenken bevor du anfaengst.</p>
-      <p><strong>Buchstabenstatus</strong><br>Unterhalb des Eingabefelds siehst du vier Gruppen: Falsche Stelle, Nicht vorhanden, Bereits verwendet und Noch nicht verwendet. So behaeltst du immer den Ueberblick welche Buchstaben du schon kennst.</p>
+      <p><strong>Buchstabenstatus</strong><br>Unterhalb des Eingabefelds siehst du vier Gruppen: Falsche Stelle, Kommt nicht vor, Richtig (mehrfach vorkommen möglich) und Noch nicht verwendet. So behaeltst du immer den Ueberblick welche Buchstaben du schon kennst.</p>
       <p><strong>Fortschrittsanzeige</strong><br>Oberhalb der Verlaufsliste siehst du 6 kleine Punkte die sich mit jedem Versuch fuellen. Gruen bedeutet gewonnen, Rot bedeutet nicht geschafft.</p>
       <p><strong>Rangliste</strong><br>Wenn du eingeloggt bist und das Wort erraetst, wirst du automatisch in der Tagesrangliste eingetragen. Gewertet wird zuerst nach Anzahl der Versuche, bei Gleichstand nach Zeit.</p>
       <p><strong>Tipp</strong><br>Beginne mit einem Wort das viele haeufige Buchstaben enthaelt, zum Beispiel STERN, RATEN oder SALON.</p>`
