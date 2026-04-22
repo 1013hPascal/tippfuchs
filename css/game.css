@@ -452,9 +452,12 @@ details[open] summary::after {
   flex: 1;
 }
 .fuchs-tatze {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
+  max-width: 36px;
+  max-height: 36px;
   flex-shrink: 0;
+  display: block;
   opacity: 0.85;
 }
 /* Im Dunkelmodus etwas heller */
