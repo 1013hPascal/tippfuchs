@@ -211,34 +211,6 @@ ${wandUhrSVG(11.5, 27, 3.5, '#d4c8a0', '#3a2a10', 'natur-tag')}
 <circle cx="38%" cy="60%" r="0.9%" fill="#FF9FD0"/>
 <circle cx="66%" cy="59%" r="1%" fill="#FF6B6B"/>
 <circle cx="73%" cy="61%" r="0.9%" fill="#9B59B6"/>
-<!-- WERBEFLIEGER (Propellerflugzeug mit Werbebanner, zieht von rechts nach links) -->
-<!-- Seil zwischen Flugzeug und Banner -->
-<line x1="32%" y1="7.5%" x2="37%" y2="8%" stroke="#888" stroke-width="0.8" opacity="0.7"/>
-<!-- Werbebanner -->
-<rect x="37%" y="5.5%" width="23%" height="6%" fill="#fffef5" stroke="#d4c070" stroke-width="0.8" rx="1"/>
-<rect x="38.5%" y="7.2%" width="19%" height="1%" fill="#b0a030" opacity="0.25" rx="0.5"/>
-<rect x="38.5%" y="9%" width="13%" height="1%" fill="#b0a030" opacity="0.2" rx="0.5"/>
-<!-- Befestigungsösen am Banner -->
-<circle cx="37%" cy="5.5%" r="0.4%" fill="#c0b050"/>
-<circle cx="37%" cy="11.5%" r="0.4%" fill="#c0b050"/>
-<!-- Flugzeug-Rumpf (Nase zeigt links) -->
-<ellipse cx="28%" cy="7.5%" rx="4.5%" ry="1.4%" fill="#dde2ea"/>
-<!-- Bugspitze -->
-<ellipse cx="23.5%" cy="7.5%" rx="0.8%" ry="1%" fill="#c8cdd6"/>
-<!-- Propeller -->
-<ellipse cx="22.8%" cy="7.5%" rx="0.4%" ry="0.4%" fill="#777"/>
-<line x1="22.8%" y1="5.5%" x2="22.8%" y2="9.5%" stroke="#444" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
-<!-- Hauptflügel oben -->
-<polygon points="27%,7% 30.5%,7% 32%,4.5% 26%,5.5%" fill="#c8cdd6"/>
-<!-- Hauptflügel unten -->
-<polygon points="27%,8% 30.5%,8% 32%,10.5% 26%,9.5%" fill="#c8cdd6"/>
-<!-- Heckflosse oben -->
-<polygon points="32%,7% 33.5%,7% 33%,5% 31.5%,6.5%" fill="#c8cdd6"/>
-<!-- Cockpit-Fenster -->
-<ellipse cx="26%" cy="7%" rx="0.8%" ry="0.55%" fill="#a8c8e8" opacity="0.8"/>
-<ellipse cx="28.5%" cy="7%" rx="0.8%" ry="0.55%" fill="#a8c8e8" opacity="0.8"/>
-<!-- Heckdüse / Schwanz -->
-<ellipse cx="32.5%" cy="7.5%" rx="0.5%" ry="0.7%" fill="#b0b5bf"/>
 `,
 
 // NATUR NACHT — Sterne, Mond, Kirchturm mit leuchtendem Zifferblatt
