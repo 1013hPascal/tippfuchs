@@ -244,6 +244,7 @@ function registriereToggle(btnId, inhaltId, label) {
 
 registriereToggle('btn-erg-wortbedeutung', 'erg-wortbedeutung-inhalt', 'Wortbedeutung');
 registriereToggle('btn-push-toggle',      'push-inhalt',             'Benachrichtigungen einstellen');
+registriereToggle('btn-kalender-toggle',  'kalender-inhalt',         'Tägliche Erinnerung');
 registrierePushButtons();
 
 // Push-Onboarding-Screen Buttons

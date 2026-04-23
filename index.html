@@ -988,6 +988,18 @@
         <button id="btn-push-speichern" class="btn-primary">Änderungen speichern</button>
       </div>
       </div><!-- Ende push-bereich -->
+      <!-- Kalender-Erinnerung -->
+      <button class="btn-secondary" id="btn-kalender-toggle" aria-expanded="false" aria-controls="kalender-inhalt" style="text-align:left;">🔔 Tägliche Erinnerung</button>
+      <div id="kalender-inhalt" style="display:none;flex-direction:column;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
+        <p style="font-size:.88rem;color:var(--text-muted);margin:0;line-height:1.6;">
+          Wird als <strong>ganztägiger Kalendereintrag</strong> eingetragen — belegt keinen Zeitslot im Kalender.<br>
+          Wiederholt sich täglich. Wenn du gespielt hast, kannst du den heutigen Eintrag einfach löschen oder ignorieren.<br>
+          Der Kalender weiß nicht, ob du schon gespielt hast — das liegt bei dir.
+        </p>
+        <a href="webcal://wortjaeger-blindmove.web.app/erinnerung.ics" class="btn-secondary" style="text-align:center;display:block;text-decoration:none;" aria-label="Tägliche Erinnerung zum Apple Kalender hinzufügen">🍎 Apple Kalender (iOS &amp; Mac)</a>
+        <a href="https://calendar.google.com/calendar/r?cid=https%3A%2F%2Fwortjaeger-blindmove.web.app%2Ferinnerung.ics" target="_blank" rel="noopener" class="btn-secondary" style="text-align:center;display:block;text-decoration:none;" aria-label="Tägliche Erinnerung zum Google Kalender hinzufügen">🤖 Google Kalender (Android)</a>
+        <a href="https://wortjaeger-blindmove.web.app/erinnerung.ics" class="btn-secondary" style="text-align:center;display:block;text-decoration:none;" aria-label="ICS-Datei herunterladen für andere Kalender-Apps">📥 Datei herunterladen (andere)</a>
+      </div>
       <button class="btn-secondary" id="btn-spitzname-aendern-start">Spitzname ändern ✏️</button>
       <button class="btn-secondary" id="btn-abmelden">Abmelden</button>
       <button class="btn-secondary" id="btn-account-loeschen">Account löschen</button>
