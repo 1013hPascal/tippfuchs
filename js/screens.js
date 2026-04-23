@@ -40,6 +40,14 @@ export function zeigeScreen(id) {
       };
     }
   }
+  // Design-Hintergrund nur auf Spielfeld zeigen
+  const hintergrund = document.getElementById('design-hintergrund');
+  if (hintergrund) {
+    const design = document.documentElement.dataset.design;
+    if (design && design !== 'standard') {
+      hintergrund.style.display = id === 'spiel-screen' ? 'block' : 'none';
+    }
+  }
 }
 function zeigeStart() { aktualisiereStartseite(); zeigeScreen('start-screen'); document.getElementById('fuchs-container').style.display = 'none'; }
 // SCREENS ENDE

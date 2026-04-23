@@ -323,7 +323,8 @@ export function setzeDesign(design, save=true) {
     if (grafikTastatur) grafikTastatur.style.display = 'flex';
     // Beim Standard: Fuchs bleibt im Header, wird von starteSpiel gesteuert
   } else {
-    hintergrund.style.display = 'block';
+    const aktuellerScreen = document.querySelector('main > section.active')?.id;
+    hintergrund.style.display = aktuellerScreen === 'spiel-screen' ? 'block' : 'none';
     svg.innerHTML = DESIGN_SVG_INHALTE[design] || '';
     // Bei grafischen Designs: grafische Tastatur anzeigen
     // inputmode NICHT auf "none" setzen — Screen Reader (VoiceOver/TalkBack) brauchen native Tastatur
