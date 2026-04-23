@@ -40,6 +40,8 @@ export function zeigeScreen(id) {
       };
     }
   }
+  // Startseite: immer zum Seitenanfang scrollen damit das Haus sichtbar ist
+  if (id === 'start-screen') window.scrollTo({ top: 0, behavior: 'instant' });
   // Design-Hintergrund nur auf Spielfeld zeigen
   const hintergrund = document.getElementById('design-hintergrund');
   if (hintergrund) {
