@@ -11,13 +11,13 @@ export function initialisiereHausFenster() {
 
   // Fenster-Positionen für Tatze (x,y im SVG-Koordinatensystem)
   const fensterPositionen = {
-    'design':      {x: 250, y: 146},
-    'anleitung':   {x: 390, y: 146},
-    'erfolge':     {x: 196, y: 199},
+    'design':      {x: 145, y: 146},
+    'anleitung':   {x: 495, y: 146},
+    'erfolge':     {x: 140, y: 199},
     'gruppen':     {x: 320, y: 199},
-    'statistik':   {x: 444, y: 199},
-    'anmelden':    {x: 178, y: 249},
-    'spielprinzip':{x: 307, y: 252},
+    'statistik':   {x: 500, y: 199},
+    'anmelden':    {x: 130, y: 249},
+    'spielprinzip':{x: 390, y: 252},
     'philosophie': {x: 160, y: 332},
     'quellen':     {x: 488, y: 333},
   };
