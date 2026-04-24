@@ -1,6 +1,6 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Tippfuchs//Tägliche Erinnerung//DE
+PRODID:-//Tippfuchs//Taegliche Erinnerung//DE
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:Tippfuchs Erinnerung
@@ -8,10 +8,16 @@ BEGIN:VEVENT
 UID:tippfuchs-taegliche-erinnerung@wortjaeger-blindmove.web.app
 DTSTAMP:20260424T000000Z
 DTSTART;VALUE=DATE:20260424
+DTEND;VALUE=DATE:20260425
 RRULE:FREQ=DAILY
-SUMMARY:🦊 Tippfuchs – Heute gespielt?
-DESCRIPTION:Öffne Tippfuchs und rate das heutige Wort!\nWenn du gespielt hast\, einfach diesen Eintrag löschen oder ignorieren.\nhttps://wortjaeger-blindmove.web.app
+SUMMARY:Tippfuchs - Heute gespielt?
+DESCRIPTION:Tippfuchs spielen!\nhttps://wortjaeger-blindmove.web.app
 URL:https://wortjaeger-blindmove.web.app
-STATUS:TENTATIVE
+STATUS:CONFIRMED
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Tippfuchs spielen!
+TRIGGER:PT9H
+END:VALARM
 END:VEVENT
 END:VCALENDAR
