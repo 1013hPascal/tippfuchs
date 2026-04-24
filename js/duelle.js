@@ -187,9 +187,9 @@ export async function speichereEmojiReaktion(duellId, emoji) {
 }
 
 const TYP_LABEL = {
-  vergiftetes_wort: 'Vergiftetes Wort',
-  fuchsjagd: 'Fuchsjagd',
-  wortfuchs: 'Wortfuchs'
+  vergiftetes_wort: 'Das verhexte Wort',
+  fuchsjagd: 'Das Fuchsrennen',
+  wortfuchs: 'Das Fuchswort'
 };
 
 export function duellTypLabel(typ) { return TYP_LABEL[typ] || typ; }
