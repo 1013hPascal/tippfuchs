@@ -112,7 +112,7 @@ export async function aktualisiereStartStats() {
   }
   const streak = stats.streak || 0;
   const streakBox = document.getElementById('start-streak');
-  const rekordBox = document.getElementById('start-rekord');
+  const rekordBox = document.getElementById('start-bester-versuch');
   const statsBox = document.getElementById('start-stats-box');
   if (!statsBox) return;
   statsBox.style.display = 'flex';

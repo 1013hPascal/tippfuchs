@@ -9,6 +9,7 @@ import { zeigeStart } from './auth.js';
 import { appState } from './state.js';
 import { ladeTageswort } from './tageswort.js';
 import { zeigeGruppenScreen } from './gruppen-ui.js';
+import { speicherePendingId } from './duelle.js';
 import './event-listener.js';
 import './anleitung.js';
 
@@ -17,10 +18,12 @@ window.zeigeGruppenScreen = zeigeGruppenScreen;
 window.setzeDesign = setzeDesign;
 
 // App starten
-// URL-Parameter für direkten Gruppen-Beitritt
+// URL-Parameter verarbeiten
 const urlParams = new URLSearchParams(window.location.search);
 const beitretenCode = urlParams.get('beitreten');
 if (beitretenCode) appState.pendingBeitreten = beitretenCode.toUpperCase();
+const duellId = urlParams.get('duell');
+if (duellId) { speicherePendingId(duellId); appState.pendingDuell = duellId; }
 
 // APP-START ANFANG
 ladeDarkMode();

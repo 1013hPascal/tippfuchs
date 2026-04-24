@@ -11,6 +11,7 @@ import { aktualisiereStats, aktualisiereRekord, aktualisiereStartStats, speicher
 import { zeigeScreen } from './screens.js';
 import { sageLaut } from './live-region.js';
 import { fuchsAktion } from './fuchs-animation.js';
+import { speichereDuellErgebnis, zeigeDuellErgebnisBereich } from './duelle.js';
 
 // SPIELLOGIK ANFANG
 export function bewerteVersuch(versuch, loesung) {
@@ -156,20 +157,44 @@ export async function verarbeiteWort() {
     fuchsAktion('falsch');
   }
 
+  // Verhextes Wort: sofortiges Spielende (Vergiftetes Wort Modus)
+  if (appState.duellModus?.typ === 'vergiftetes_wort') {
+    const verhext = appState.duellModus.verhextesWort;
+    if (wort === verhext) {
+      stoppeTimer(); state.spielende = true;
+      const versuchsNr = state.versuche.length;
+      const raterGewinnt = versuchsNr <= 2;
+      state.gewonnen = raterGewinnt;
+      const sek = state.endZeit ? Math.floor((state.endZeit - state.startZeit) / 1000) : 0;
+      await speichereDuellErgebnis(appState.duellModus, raterGewinnt, versuchsNr, sek, { verhextGetroffen: true, raterGewinnt, versuchsNummer: versuchsNr });
+      setTimeout(() => zeigeErgebnis(raterGewinnt, { verhextGetroffen: true, raterGewinnt, versuchsNummer: versuchsNr }), 800);
+      return;
+    }
+  }
+
   if (gewonnen) {
     stoppeTimer(); state.spielende=true; state.gewonnen=true;
-    speichereZustand(); await aktualisiereStats(true,state.versuche.length);
-    if (appState.currentUser&&appState.currentSpitzname) await speichereInRanglisteFirebase();
     const sek = state.endZeit ? Math.floor((state.endZeit-state.startZeit)/1000) : 9999;
-    await aktualisiereRekord(state.versuche.length, sek, appState.TAGESWORT, getDatum(0));
-    await aktualisiereStartStats();
-    setTimeout(()=>zeigeErgebnis(true),800);
+    if (appState.duellModus) {
+      await speichereDuellErgebnis(appState.duellModus, true, state.versuche.length, sek, { versuche: state.versuche.length, sekunden: sek });
+    } else {
+      speichereZustand(); await aktualisiereStats(true,state.versuche.length);
+      if (appState.currentUser&&appState.currentSpitzname) await speichereInRanglisteFirebase();
+      await aktualisiereRekord(state.versuche.length, sek, appState.TAGESWORT, getDatum(0));
+      await aktualisiereStartStats();
+    }
+    setTimeout(()=>zeigeErgebnis(true, { versuche: state.versuche.length, sekunden: sek }),800);
   } else if (state.versuche.length>=6) {
     stoppeTimer(); state.spielende=true; state.gewonnen=false;
-    speichereZustand(); await aktualisiereStats(false,0);
     fuchsAktion('verloren');
-    if (appState.currentUser&&appState.currentSpitzname) await speichereInRanglisteFirebase();
-    setTimeout(()=>zeigeErgebnis(false),800);
+    const sek = state.endZeit ? Math.floor((state.endZeit-state.startZeit)/1000) : 0;
+    if (appState.duellModus) {
+      await speichereDuellErgebnis(appState.duellModus, false, state.versuche.length, sek, { versuche: state.versuche.length, sekunden: sek });
+    } else {
+      speichereZustand(); await aktualisiereStats(false,0);
+      if (appState.currentUser&&appState.currentSpitzname) await speichereInRanglisteFirebase();
+    }
+    setTimeout(()=>zeigeErgebnis(false, { versuche: state.versuche.length, sekunden: sek }),800);
   }
 }
 
@@ -178,6 +203,10 @@ export async function starteSpiel() {
   if (!appState.TAGESWORT) await ladeTageswort();
   aktualisiereVerlauf(); aktualisiereBuchstabenStatus();
   zeigeScreen('game-screen');
+  const titelEl = document.getElementById('spiel-titel-text');
+  const untertitelEl = document.getElementById('spiel-untertitel');
+  if (titelEl) titelEl.textContent = 'Heutiges Tippfuchsrätsel';
+  if (untertitelEl) untertitelEl.style.display = 'none';
   // Fuchs nur im Standard-Design im Header zeigen
   if (document.documentElement.dataset.design === 'standard') {
     document.getElementById('fuchs-container').style.display = 'flex';
@@ -189,9 +218,33 @@ export async function starteSpiel() {
   setTimeout(()=>document.getElementById('wort-input').focus(),100);
   sageLaut(`Spiel gestartet! Das Wort hat 5 Buchstaben. Du hast ${6-state.versuche.length} Versuche.`);
 }
+
+export function starteDuellSpiel(duell) {
+  state.versuche = []; state.spielende = false; state.gewonnen = false;
+  state.startZeit = null; state.endZeit = null; state.ersterVersuchGemacht = false;
+  appState.TAGESWORT = duell.loesung;
+  appState.duellModus = duell;
+  aktualisiereVerlauf(); aktualisiereBuchstabenStatus();
+  zeigeScreen('game-screen');
+  const titelEl = document.getElementById('spiel-titel-text');
+  const untertitelEl = document.getElementById('spiel-untertitel');
+  const typNamen = { vergiftetes_wort: 'Vergiftetes Wort', fuchsjagd: 'Fuchsjagd', wortfuchs: 'Wortfuchs' };
+  if (titelEl) titelEl.textContent = typNamen[duell.typ] || 'Fuchs-Duell';
+  if (untertitelEl) { untertitelEl.textContent = `gestellt von ${duell.erstelltVonName}`; untertitelEl.style.display = 'block'; }
+  document.getElementById('fuchs-container').style.display = 'none';
+  setTimeout(() => document.getElementById('wort-input').focus(), 100);
+  sageLaut(`Fuchs-Duell gestartet: ${typNamen[duell.typ] || 'Duell'}. Das Wort hat 5 Buchstaben. Du hast 6 Versuche.`);
+}
 // ZEIGERGEBNIS ANFANG
-export async function zeigeErgebnis(gewonnen) {
+export async function zeigeErgebnis(gewonnen, extra = {}) {
   zeigeScreen('ergebnis-screen');
+  // Duell-Bereich zurücksetzen
+  const duellBereich = document.getElementById('duell-ergebnis-bereich');
+  const emojiPicker = document.getElementById('emoji-picker');
+  const zurueckDuelle = document.getElementById('btn-zurueck-zu-duelle');
+  if (duellBereich) duellBereich.style.display = 'none';
+  if (emojiPicker) emojiPicker.style.display = 'none';
+  if (zurueckDuelle) zurueckDuelle.style.display = 'none';
   // Nochmal versuchen falls Login beim Spielen noch nicht bereit war
   if (state.spielende && appState.currentUser && appState.currentSpitzname) {
     await speichereInRanglisteFirebase();
@@ -242,6 +295,11 @@ export async function zeigeErgebnis(gewonnen) {
   });
   sageLaut(gewonnen?`Gewonnen! Wort: ${appState.TAGESWORT}. Versuche: ${state.versuche.length}. Zeit: ${getGesamtZeit()}.`:`Verloren. Das Wort war: ${appState.TAGESWORT}.`);
   document.getElementById('erg-titel').focus();
+
+  // Duell-Modus: spezifischen Ergebnisbereich zeigen
+  if (appState.duellModus) {
+    await zeigeDuellErgebnisBereich(gewonnen, extra);
+  }
 }
 // ZEIGERGEBNIS ENDE
 // SPIELLOGIK ENDE

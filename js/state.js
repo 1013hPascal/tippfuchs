@@ -8,6 +8,8 @@ export const appState = {
   timerInterval: null,
   TAGESWORT: null,
   pendingBeitreten: null,
+  pendingDuell: null,
+  duellModus: null,
 };
 
 // Spielzustand — als Objekt direkt mutierbar nach Import

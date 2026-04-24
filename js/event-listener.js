@@ -3,7 +3,7 @@ import { TAGES_IDX } from './tageswort.js';
 import { ladeSpitzname, spitznameVorhanden, speichereSpitzname, aendereSpitzname } from './firebase-basis.js';
 import { zeigeScreen } from './screens.js';
 import { zeigeStart, aktualisiereStartseite, googleLogin, abmelden, loescheAccount } from './auth.js';
-import { starteSpiel, verarbeiteWort, zeigeErgebnis, bewerteVersuch } from './spiellogik.js';
+import { starteSpiel, verarbeiteWort, zeigeErgebnis, bewerteVersuch, starteDuellSpiel } from './spiellogik.js';
 import { zeigeTagesrangliste } from './rangliste.js';
 import { ladeBotListe, ladeTagsSelect, ladeMonatSelect, ladeJahrSelect } from './statistik.js';
 import { zeigeGruppenScreen, zeigeGruppeVerlassenModal, ladeMeineGruppenListe, zeigeGruppeDetail, stoppeGruppenRefresh } from './gruppen-ui.js';
@@ -13,12 +13,18 @@ import { oeffneModal, schliesseModal, schliesseAlleModals } from './modal.js';
 import { setzeDark } from './design.js';
 import { sageLaut } from './live-region.js';
 import { registrierePushButtons, speichereOnboardingErinnerung } from './push-benachrichtigungen.js';
+import { erstelleDuell, zufallsWort, duellLink, zeigeMeineDuelleInhalt, speicherePendingId, ladeDuell, speichereEmojiReaktion } from './duelle.js';
 
 // EVENT-LISTENER ANFANG
 // Haupt-Spielen-Button oben
 document.getElementById('btn-spiel-starten').addEventListener('click', () => {
   if (appState.currentUser && appState.currentSpitzname) {
-    // Angemeldet → direkt spielen
+    // Gespielt → Fuchs-Duelle, sonst normales Spiel
+    if (document.getElementById('btn-spiel-starten').dataset.modus === 'duelle') {
+      zeigeScreen('fuchs-duelle-screen');
+      zeigeMeineDuelleInhalt();
+      return;
+    }
     starteSpiel();
   } else {
     // Nicht angemeldet → Account-Bereich aufklappen und Fokus auf erstes Element
@@ -206,8 +212,15 @@ document.getElementById('btn-theme').addEventListener('click',()=>setzeDark(docu
 document.addEventListener('keydown',e=>{ if (e.key==='Escape') schliesseAlleModals(); });
 document.querySelectorAll('.modal-overlay').forEach(o=>{ o.addEventListener('click',e=>{ if (e.target===o) schliesseModal(o.id); }); });
 document.getElementById('bot-suche').addEventListener('input',function(){ clearTimeout(suchTimeout); suchTimeout=setTimeout(()=>ladeBotListe(this.value.trim()),400); });
-document.getElementById('btn-zurueck-zum-menue').addEventListener('click', zeigeStart);
-document.getElementById('btn-zurueck-erg').addEventListener('click', zeigeStart);
+document.getElementById('btn-zurueck-zum-menue').addEventListener('click', () => {
+  if (appState.duellModus) { appState.duellModus = null; zeigeScreen('fuchs-duelle-screen'); zeigeMeineDuelleInhalt(); } else { zeigeStart(); }
+});
+document.getElementById('btn-zurueck-erg').addEventListener('click', () => {
+  if (appState.duellModus) { appState.duellModus = null; zeigeScreen('fuchs-duelle-screen'); zeigeMeineDuelleInhalt(); } else { zeigeStart(); }
+});
+document.getElementById('btn-zurueck-zu-duelle').addEventListener('click', () => {
+  appState.duellModus = null; zeigeScreen('fuchs-duelle-screen'); zeigeMeineDuelleInhalt();
+});
 document.getElementById('btn-spielanleitung').addEventListener('click', () => {
   const btn = document.getElementById('btn-anleitung-toggle');
   const inhalt = document.getElementById('anleitung-toggle-inhalt');
@@ -259,6 +272,7 @@ document.getElementById('btn-onb-push-nein').addEventListener('click', () => {
 });
 
 registriereToggle('btn-erfolge-toggle',   'erfolge-inhalt',          'Persönliche Erfolge');
+registriereToggle('btn-tagesergebnis-toggle', 'tagesergebnis-inhalt', 'Tagesergebnis ansehen');
 registriereToggle('btn-gruppen-toggle',   'start-gruppen-inhalt',    'Meine Tippfuchsgruppen');
 registriereToggle('btn-stats-toggle',     'stats-inhalt',            'Statistik aller Tippfüchse');
 registriereToggle('btn-account-toggle',   'account-inhalt',          'Account');
@@ -268,5 +282,208 @@ registriereToggle('btn-philosophie-toggle',       'philosophie-inhalt',       'P
 registriereToggle('btn-lizenzen-toggle',          'lizenzen-inhalt',          'Quellen und Lizenzen');
 registriereToggle('btn-gruppen-verwalten-toggle', 'gruppen-verwalten-inhalt', 'Tippfuchsgruppen verwalten');
 registriereToggle('btn-freunde-verwalten-toggle', 'freunde-verwalten-inhalt', 'Freundesliste verwalten');
+
+// Fuchs-Duelle Screen
+document.getElementById('btn-zurueck-von-duelle').addEventListener('click', () => zeigeScreen('start-screen'));
+
+registriereToggle('btn-meine-duelle-toggle',  'meine-duelle-inhalt',  'Meine Duelle');
+registriereToggle('btn-vergiftetes-toggle',   'vergiftetes-inhalt',   'Das vergiftete Wort');
+registriereToggle('btn-fuchsjagd-toggle',     'fuchsjagd-inhalt',     'Fuchsjagd');
+registriereToggle('btn-wortfuchs-toggle',     'wortfuchs-inhalt',     'Wortfuchs');
+
+// Meine Duelle laden wenn aufgeklappt
+document.getElementById('btn-meine-duelle-toggle').addEventListener('click', () => {
+  if (document.getElementById('btn-meine-duelle-toggle').getAttribute('aria-expanded') === 'true') {
+    zeigeMeineDuelleInhalt();
+  }
+}, true);
+
+// Duell-Link in Anzeigefeld zeigen
+function zeigeDuellLinkBereich(typ, id) {
+  const link = duellLink(id);
+  const bereich = document.getElementById(`${typ}-link-bereich`);
+  const textEl = document.getElementById(`${typ}-link-text`);
+  if (bereich && textEl) { textEl.value = link; bereich.style.display = 'flex'; }
+  sageLaut('Dein Duell-Link: ' + link);
+  return link;
+}
+
+// Meine-Duelle-Akkordion öffnen und Formular schließen
+function wechselZuMeineDuelle(formToggleId, formInhaltId) {
+  document.getElementById('btn-meine-duelle-toggle').setAttribute('aria-expanded', 'true');
+  document.getElementById('meine-duelle-inhalt').style.display = 'flex';
+  document.getElementById(formToggleId).setAttribute('aria-expanded', 'false');
+  document.getElementById(formInhaltId).style.display = 'none';
+  zeigeMeineDuelleInhalt();
+}
+
+// Wortfuchs
+document.getElementById('btn-wortfuchs-speichern').addEventListener('click', async () => {
+  const input = document.getElementById('wortfuchs-eingabe');
+  const fehler = document.getElementById('wortfuchs-fehler');
+  const wort = input.value.trim().toUpperCase().replace(/[^A-ZÄÖÜ]/g, '');
+  if (wort.length !== 5) { fehler.textContent = 'Bitte genau 5 Buchstaben eingeben.'; return; }
+  fehler.textContent = '';
+  const btnS = document.getElementById('btn-wortfuchs-speichern');
+  const btnL = document.getElementById('btn-wortfuchs-link');
+  btnS.disabled = true; btnL.disabled = true; btnS.textContent = 'Wird gespeichert…';
+  try {
+    const id = await erstelleDuell('wortfuchs', wort);
+    input.value = '';
+    zeigeDuellLinkBereich('wortfuchs', id);
+    sageLaut('Wortfuchs gespeichert.');
+    wechselZuMeineDuelle('btn-wortfuchs-toggle', 'wortfuchs-inhalt');
+  } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
+  btnS.disabled = false; btnL.disabled = false; btnS.textContent = 'Spiel speichern';
+});
+
+document.getElementById('btn-wortfuchs-link').addEventListener('click', async () => {
+  const input = document.getElementById('wortfuchs-eingabe');
+  const fehler = document.getElementById('wortfuchs-fehler');
+  const wort = input.value.trim().toUpperCase().replace(/[^A-ZÄÖÜ]/g, '');
+  if (wort.length !== 5) { fehler.textContent = 'Bitte genau 5 Buchstaben eingeben.'; return; }
+  fehler.textContent = '';
+  const btnS = document.getElementById('btn-wortfuchs-speichern');
+  const btnL = document.getElementById('btn-wortfuchs-link');
+  btnS.disabled = true; btnL.disabled = true; btnL.textContent = 'Wird erstellt…';
+  try {
+    const id = await erstelleDuell('wortfuchs', wort);
+    input.value = '';
+    const link = zeigeDuellLinkBereich('wortfuchs', id);
+    try { await navigator.clipboard.writeText(link); sageLaut('Link kopiert: ' + link); } catch(e) {}
+  } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
+  btnS.disabled = false; btnL.disabled = false; btnL.textContent = 'Link teilen ⚔️';
+});
+
+// Vergiftetes Wort
+document.getElementById('btn-vergiftetes-speichern').addEventListener('click', async () => {
+  const loesEl = document.getElementById('vergiftetes-loesung');
+  const verhEl = document.getElementById('vergiftetes-verhext');
+  const fehler = document.getElementById('vergiftetes-fehler');
+  const loes = loesEl.value.trim().toUpperCase().replace(/[^A-ZÄÖÜ]/g, '');
+  const verh = verhEl.value.trim().toUpperCase().replace(/[^A-ZÄÖÜ]/g, '');
+  if (loes.length !== 5) { fehler.textContent = 'Lösungswort muss genau 5 Buchstaben haben.'; return; }
+  if (verh.length !== 5) { fehler.textContent = 'Verhextes Wort muss genau 5 Buchstaben haben.'; return; }
+  if (loes === verh) { fehler.textContent = 'Lösungswort und verhextes Wort dürfen nicht identisch sein.'; return; }
+  fehler.textContent = '';
+  const btnS = document.getElementById('btn-vergiftetes-speichern');
+  const btnL = document.getElementById('btn-vergiftetes-link');
+  btnS.disabled = true; btnL.disabled = true; btnS.textContent = 'Wird gespeichert…';
+  try {
+    const id = await erstelleDuell('vergiftetes_wort', loes, verh);
+    loesEl.value = ''; verhEl.value = '';
+    zeigeDuellLinkBereich('vergiftetes', id);
+    sageLaut('Vergiftetes Wort gespeichert.');
+    wechselZuMeineDuelle('btn-vergiftetes-toggle', 'vergiftetes-inhalt');
+  } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
+  btnS.disabled = false; btnL.disabled = false; btnS.textContent = 'Spiel speichern';
+});
+
+document.getElementById('btn-vergiftetes-link').addEventListener('click', async () => {
+  const loesEl = document.getElementById('vergiftetes-loesung');
+  const verhEl = document.getElementById('vergiftetes-verhext');
+  const fehler = document.getElementById('vergiftetes-fehler');
+  const loes = loesEl.value.trim().toUpperCase().replace(/[^A-ZÄÖÜ]/g, '');
+  const verh = verhEl.value.trim().toUpperCase().replace(/[^A-ZÄÖÜ]/g, '');
+  if (loes.length !== 5) { fehler.textContent = 'Lösungswort muss genau 5 Buchstaben haben.'; return; }
+  if (verh.length !== 5) { fehler.textContent = 'Verhextes Wort muss genau 5 Buchstaben haben.'; return; }
+  if (loes === verh) { fehler.textContent = 'Lösungswort und verhextes Wort dürfen nicht identisch sein.'; return; }
+  fehler.textContent = '';
+  const btnS = document.getElementById('btn-vergiftetes-speichern');
+  const btnL = document.getElementById('btn-vergiftetes-link');
+  btnS.disabled = true; btnL.disabled = true; btnL.textContent = 'Wird erstellt…';
+  try {
+    const id = await erstelleDuell('vergiftetes_wort', loes, verh);
+    loesEl.value = ''; verhEl.value = '';
+    const link = zeigeDuellLinkBereich('vergiftetes', id);
+    try { await navigator.clipboard.writeText(link); sageLaut('Link kopiert: ' + link); } catch(e) {}
+  } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
+  btnS.disabled = false; btnL.disabled = false; btnL.textContent = 'Link teilen ⚔️';
+});
+
+// Fuchsjagd
+document.getElementById('btn-fuchsjagd-speichern').addEventListener('click', async () => {
+  const fehler = document.getElementById('fuchsjagd-fehler');
+  fehler.textContent = '';
+  const btnS = document.getElementById('btn-fuchsjagd-speichern');
+  const btnL = document.getElementById('btn-fuchsjagd-link');
+  btnS.disabled = true; btnL.disabled = true; btnS.textContent = 'Wird gespeichert…';
+  try {
+    const id = await erstelleDuell('fuchsjagd', zufallsWort());
+    speicherePendingId(id);
+    zeigeDuellLinkBereich('fuchsjagd', id);
+    sageLaut('Fuchsjagd gespeichert.');
+    wechselZuMeineDuelle('btn-fuchsjagd-toggle', 'fuchsjagd-inhalt');
+  } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
+  btnS.disabled = false; btnL.disabled = false; btnS.textContent = 'Spiel speichern';
+});
+
+document.getElementById('btn-fuchsjagd-link').addEventListener('click', async () => {
+  const fehler = document.getElementById('fuchsjagd-fehler');
+  fehler.textContent = '';
+  const btnS = document.getElementById('btn-fuchsjagd-speichern');
+  const btnL = document.getElementById('btn-fuchsjagd-link');
+  btnS.disabled = true; btnL.disabled = true; btnL.textContent = 'Wird erstellt…';
+  try {
+    const id = await erstelleDuell('fuchsjagd', zufallsWort());
+    speicherePendingId(id);
+    const link = zeigeDuellLinkBereich('fuchsjagd', id);
+    try { await navigator.clipboard.writeText(link); sageLaut('Link kopiert: ' + link); } catch(e) {}
+  } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
+  btnS.disabled = false; btnL.disabled = false; btnL.textContent = 'Link teilen ⚔️';
+});
+
+// Link-Kopieren-Buttons in den Link-Bereichen
+['vergiftetes', 'fuchsjagd', 'wortfuchs'].forEach(typ => {
+  document.getElementById(`btn-${typ}-link-kopieren`)?.addEventListener('click', async () => {
+    const textEl = document.getElementById(`${typ}-link-text`);
+    if (!textEl?.value) return;
+    try {
+      await navigator.clipboard.writeText(textEl.value);
+      sageLaut('Link kopiert.');
+    } catch(e) {
+      textEl.select();
+      sageLaut('Link markiert — bitte manuell kopieren.');
+    }
+  });
+});
+
+// Eingabefelder: nur Buchstaben, Großbuchstaben erzwingen
+['vergiftetes-loesung', 'vergiftetes-verhext', 'wortfuchs-eingabe'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', function() {
+    this.value = this.value.toUpperCase().replace(/[^A-ZÄÖÜ]/g, '').slice(0, 5);
+  });
+});
+
+// Duell-Listeneinträge anklicken (Event-Delegation auf beiden Listen)
+['duelle-fuer-mich-liste', 'duelle-von-mir-liste'].forEach(listId => {
+  document.getElementById(listId)?.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-duell-id]');
+    if (!btn) return;
+    const id = btn.dataset.duellId;
+    const duell = await ladeDuell(id);
+    if (!duell) { sageLaut('Duell nicht gefunden oder abgelaufen.'); return; }
+    starteDuellSpiel(duell);
+  });
+});
+
+// Emoji-Picker: Reaktion für Wortfuchs speichern
+document.getElementById('duell-ergebnis-bereich')?.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.emoji-btn');
+  if (!btn || !appState.duellModus) return;
+  const emoji = btn.dataset.emoji;
+  try {
+    await speichereEmojiReaktion(appState.duellModus.id, emoji);
+    document.querySelectorAll('.emoji-btn').forEach(b => {
+      b.disabled = true;
+      b.style.opacity = b.dataset.emoji === emoji ? '1' : '0.3';
+      b.style.border = b.dataset.emoji === emoji ? '2px solid var(--accent)' : '2px solid transparent';
+    });
+    const gespeichert = document.getElementById('emoji-gespeichert');
+    if (gespeichert) gespeichert.style.display = 'block';
+    sageLaut(`Reaktion ${emoji} gespeichert.`);
+  } catch(ex) {}
+});
 
 

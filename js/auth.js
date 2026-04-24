@@ -14,6 +14,7 @@ import { sageLaut } from './live-region.js';
 import { oeffneModal, schliesseModal } from './modal.js';
 import { zeigeAdminBereich } from './admin.js';
 import { ladePushPraeferenzen } from './push-benachrichtigungen.js';
+import { zeigeMeineDuelleInhalt } from './duelle.js';
 
 // AUTH ANFANG
 
@@ -36,6 +37,21 @@ onAuthStateChanged(auth, async (user) => {
     ladePushPraeferenzen(user.uid);
     // Gruppen-Selbst-Sync: prüfe ob du irgendwo als Mitglied eingetragen bist
     await syncGruppenBeiLogin(user.uid);
+    // Ausstehenden Duell-Link verarbeiten (z.B. via ?duell=ID geöffnet)
+    if (appState.pendingDuell && appState.currentSpitzname) {
+      appState.pendingDuell = null;
+      aktualisiereStartseite();
+      setTimeout(() => {
+        zeigeScreen('fuchs-duelle-screen');
+        const toggle = document.getElementById('btn-meine-duelle-toggle');
+        const inhalt = document.getElementById('meine-duelle-inhalt');
+        if (toggle && inhalt) { toggle.setAttribute('aria-expanded', 'true'); inhalt.style.display = 'flex'; }
+        zeigeMeineDuelleInhalt();
+        sageLaut('Du wurdest zu einem Duell eingeladen. Es erscheint in deiner Duellliste.');
+        setTimeout(() => { if (toggle) toggle.focus(); }, 100);
+      }, 300);
+      return;
+    }
     // Ausstehenden Beitritts-Link verarbeiten (z.B. via ?beitreten=CODE geöffnet)
     if (appState.pendingBeitreten && appState.currentSpitzname) {
       const code = appState.pendingBeitreten;
@@ -76,11 +92,11 @@ export function aktualisiereStartseite() {
   if (appState.currentUser && appState.currentSpitzname) {
     // Angemeldet
     if (heuteGespielt) {
-      if (titel) titel.textContent = 'Du hast heute schon gespielt';
-      if (btnSpielStarten) btnSpielStarten.textContent = 'Ergebnis ansehen 🦊';
+      if (titel) titel.textContent = 'Du hast das Tagesrätsel gelöst, spiele die Fuchs-Duelle';
+      if (btnSpielStarten) { btnSpielStarten.textContent = 'Fuchs-Duelle spielen ⚔️'; btnSpielStarten.dataset.modus = 'duelle'; }
     } else {
       if (titel) titel.textContent = 'Spiele das heutige Tippfuchs Rätsel';
-      if (btnSpielStarten) btnSpielStarten.textContent = 'Jetzt spielen 🦊';
+      if (btnSpielStarten) { btnSpielStarten.textContent = 'Jetzt spielen 🦊'; btnSpielStarten.dataset.modus = 'spielen'; }
     }
     if (accountNichtAngemeldet) accountNichtAngemeldet.style.display = 'none';
     if (accountAngemeldet) accountAngemeldet.style.display = 'flex';
