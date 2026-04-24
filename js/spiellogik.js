@@ -245,8 +245,8 @@ export async function zeigeErgebnis(gewonnen, extra = {}) {
   if (duellBereich) duellBereich.style.display = 'none';
   if (emojiPicker) emojiPicker.style.display = 'none';
   if (zurueckDuelle) zurueckDuelle.style.display = 'none';
-  // Nochmal versuchen falls Login beim Spielen noch nicht bereit war
-  if (state.spielende && appState.currentUser && appState.currentSpitzname) {
+  // Nochmal versuchen falls Login beim Spielen noch nicht bereit war (nur Tageswort, nicht Duelle)
+  if (state.spielende && appState.currentUser && appState.currentSpitzname && !appState.duellModus) {
     await speichereInRanglisteFirebase();
   }
   const titel = document.getElementById('erg-titel');
@@ -279,7 +279,7 @@ export async function zeigeErgebnis(gewonnen, extra = {}) {
       platzZeile.style.display='flex';
     }
   }
-  if (gewonnen) {
+  if (gewonnen && !appState.duellModus) {
     const sek = state.endZeit ? Math.floor((state.endZeit-state.startZeit)/1000) : 9999;
     await aktualisiereRekord(state.versuche.length, sek, appState.TAGESWORT, getDatum(0));
     await aktualisiereStartStats();
