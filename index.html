@@ -773,11 +773,6 @@
       <div id="start-streak" style="font-size:.9rem;font-weight:700;color:var(--text);"></div>
       <div id="start-bester-versuch" style="font-size:.85rem;color:var(--text-muted);"></div>
     </div>
-    <!-- Fuchs-Duelle Statistik (wird angezeigt sobald Duelle gespielt wurden) -->
-    <div id="duelle-stats-box" style="display:none;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;">
-      <div style="font-size:.88rem;font-weight:700;color:var(--text);">Fuchs-Duelle Statistik</div>
-      <div id="duelle-stats-inhalt" style="font-size:.85rem;color:var(--text-muted);display:flex;flex-direction:column;gap:4px;"></div>
-    </div>
     <!-- Tagesergebnis ausklappbar -->
     <button id="btn-tagesergebnis-toggle" class="btn-secondary" aria-expanded="false" aria-controls="tagesergebnis-inhalt" style="text-align:left;">📅 Tagesergebnis ansehen</button>
     <div id="tagesergebnis-inhalt" style="display:none;flex-direction:column;gap:8px;">
@@ -790,6 +785,9 @@
         <div id="historie-ergebnis" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;flex-direction:column;gap:8px;"></div>
       </div>
     </div>
+    <!-- Fuchs-Duelle Statistik ausklappbar -->
+    <button id="btn-duelle-stats-toggle" class="btn-secondary" aria-expanded="false" aria-controls="duelle-stats-inhalt" style="text-align:left;">⚔️ Fuchs-Duelle Statistik</button>
+    <div id="duelle-stats-inhalt" style="display:none;flex-direction:column;gap:6px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);"></div>
   </div>
 </div>
 <!-- STREAK-UND-REKORD-ANZEIGE ENDE -->
@@ -1724,15 +1722,13 @@
         <label for="vergiftetes-verhext" class="sr-only">Das verhexte Wort (5 Buchstaben)</label>
         <input type="text" id="vergiftetes-verhext" maxlength="5" autocomplete="off" spellcheck="false" placeholder="Verhextes Wort (5 Buchstaben)" class="text-input" aria-label="Verhextes Wort eingeben, 5 Buchstaben" style="text-transform:uppercase;">
         <div id="vergiftetes-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn-secondary" id="btn-vergiftetes-speichern" style="flex:1;min-width:140px;">Spiel speichern</button>
-          <button class="btn-primary" id="btn-vergiftetes-link" style="flex:1;min-width:140px;">Link teilen ⚔️</button>
-        </div>
+        <button class="btn-primary" id="btn-vergiftetes-link" style="width:100%;">Link teilen ⚔️</button>
         <div id="vergiftetes-link-bereich" role="region" aria-live="polite" style="display:none;flex-direction:column;gap:8px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
           <p style="font-size:.85rem;margin:0;font-weight:700;">Dein Duell-Link:</p>
           <input type="text" readonly id="vergiftetes-link-text" class="text-input" style="font-size:.75rem;" aria-label="Duell-Link zum Kopieren">
           <button class="btn-secondary" id="btn-vergiftetes-link-kopieren" style="font-size:.85rem;">Link kopieren</button>
         </div>
+        <button class="btn-secondary" id="btn-vergiftetes-speichern" style="width:100%;">Spiel speichern</button>
       </div>
     </div>
 
@@ -1744,15 +1740,13 @@
       <div id="fuchsjagd-inhalt" style="display:none;flex-direction:column;gap:10px;padding-top:4px;">
         <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;">Ein Wort wird zufällig ausgewählt. Das Duell erscheint in deiner Duellliste, dein Mitspieler erhält das Rätsel per Link. Wer es in weniger Versuchen löst, gewinnt.</p>
         <div id="fuchsjagd-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn-secondary" id="btn-fuchsjagd-speichern" style="flex:1;min-width:140px;">Spiel speichern</button>
-          <button class="btn-primary" id="btn-fuchsjagd-link" style="flex:1;min-width:140px;">Link teilen ⚔️</button>
-        </div>
+        <button class="btn-primary" id="btn-fuchsjagd-link" style="width:100%;">Link teilen ⚔️</button>
         <div id="fuchsjagd-link-bereich" role="region" aria-live="polite" style="display:none;flex-direction:column;gap:8px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
           <p style="font-size:.85rem;margin:0;font-weight:700;">Dein Duell-Link:</p>
           <input type="text" readonly id="fuchsjagd-link-text" class="text-input" style="font-size:.75rem;" aria-label="Duell-Link zum Kopieren">
           <button class="btn-secondary" id="btn-fuchsjagd-link-kopieren" style="font-size:.85rem;">Link kopieren</button>
         </div>
+        <button class="btn-secondary" id="btn-fuchsjagd-speichern" style="width:100%;">Spiel speichern</button>
       </div>
     </div>
 
@@ -1766,15 +1760,13 @@
         <label for="wortfuchs-eingabe" class="sr-only">Dein Wort (5 Buchstaben)</label>
         <input type="text" id="wortfuchs-eingabe" maxlength="5" autocomplete="off" spellcheck="false" placeholder="Dein Wort (5 Buchstaben)" class="text-input" aria-label="Wort eingeben, 5 Buchstaben" style="text-transform:uppercase;">
         <div id="wortfuchs-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn-secondary" id="btn-wortfuchs-speichern" style="flex:1;min-width:140px;">Spiel speichern</button>
-          <button class="btn-primary" id="btn-wortfuchs-link" style="flex:1;min-width:140px;">Link teilen ⚔️</button>
-        </div>
+        <button class="btn-primary" id="btn-wortfuchs-link" style="width:100%;">Link teilen ⚔️</button>
         <div id="wortfuchs-link-bereich" role="region" aria-live="polite" style="display:none;flex-direction:column;gap:8px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
           <p style="font-size:.85rem;margin:0;font-weight:700;">Dein Duell-Link:</p>
           <input type="text" readonly id="wortfuchs-link-text" class="text-input" style="font-size:.75rem;" aria-label="Duell-Link zum Kopieren">
           <button class="btn-secondary" id="btn-wortfuchs-link-kopieren" style="font-size:.85rem;">Link kopieren</button>
         </div>
+        <button class="btn-secondary" id="btn-wortfuchs-speichern" style="width:100%;">Spiel speichern</button>
       </div>
     </div>
 

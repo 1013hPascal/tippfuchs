@@ -35,8 +35,7 @@ export function zufallsWort() {
 }
 
 export function duellLink(id) {
-  const base = window.location.origin + window.location.pathname;
-  return `${base}?duell=${id}`;
+  return `https://blindmove.blogspot.com/p/tippfuchs.html?duell=${id}`;
 }
 
 export async function teileDuell(id) {
@@ -184,6 +183,58 @@ export async function zeigeDuellErgebnisBereich(gewonnen, extra = {}) {
 
 export async function speichereEmojiReaktion(duellId, emoji) {
   await set(ref(db, `duelle/${duellId}/ergebnis_rater/emojiReaktion`), emoji);
+}
+
+export async function zeigeStartDuelleStats(userId) {
+  const inhalt = document.getElementById('duelle-stats-inhalt');
+  if (!inhalt) return;
+  inhalt.innerHTML = '<span style="font-size:.85rem;color:var(--text-muted);">Wird geladen…</span>';
+  try {
+    const snap = await get(child(ref(db), 'duelle'));
+    const s = {
+      verhext_gestellt: { gespielt: 0, gewonnen: 0 },
+      verhext_geloest:  { gespielt: 0, gewonnen: 0 },
+      fuchsrennen:      { gespielt: 0, gewonnen: 0 },
+      fuchswort:        { gespielt: 0, geloest: 0 }
+    };
+    if (snap.exists()) {
+      const pendingIds = new Set(ladePendingIds());
+      for (const [id, d] of Object.entries(snap.val())) {
+        const istSteller = d.erstelltVon === userId;
+        const istRater = !istSteller && pendingIds.has(id);
+        if (!istSteller && !istRater) continue;
+        const rg = d.ergebnis_rater;
+        const sg = d.ergebnis_steller;
+        if (d.typ === 'vergiftetes_wort') {
+          if (istSteller && rg?.gespielt) {
+            s.verhext_gestellt.gespielt++;
+            if (!rg.raterGewinnt) s.verhext_gestellt.gewonnen++;
+          } else if (istRater && rg?.gespielt) {
+            s.verhext_geloest.gespielt++;
+            if (rg.raterGewinnt) s.verhext_geloest.gewonnen++;
+          }
+        } else if (d.typ === 'fuchsjagd' && sg?.gespielt && rg?.gespielt) {
+          s.fuchsrennen.gespielt++;
+          const ichGewann = istSteller
+            ? (sg.versuche < rg.versuche || (sg.versuche === rg.versuche && sg.sekunden < rg.sekunden))
+            : (rg.versuche < sg.versuche || (rg.versuche === sg.versuche && rg.sekunden < sg.sekunden));
+          if (ichGewann) s.fuchsrennen.gewonnen++;
+        } else if (d.typ === 'wortfuchs' && istRater && rg?.gespielt) {
+          s.fuchswort.gespielt++;
+          if (rg.gewonnen) s.fuchswort.geloest++;
+        }
+      }
+    }
+    const pct = (n, d) => d === 0 ? '—' : `${Math.round(n / d * 100)}%`;
+    inhalt.innerHTML = [
+      `<div style="font-size:.85rem;color:var(--text-muted);">${pct(s.verhext_gestellt.gewonnen, s.verhext_gestellt.gespielt)} der gestellten verhexten Wörter gewonnen (${s.verhext_gestellt.gewonnen} von ${s.verhext_gestellt.gespielt})</div>`,
+      `<div style="font-size:.85rem;color:var(--text-muted);">${pct(s.verhext_geloest.gewonnen, s.verhext_geloest.gespielt)} der gelösten verhexten Duelle gewonnen (${s.verhext_geloest.gewonnen} von ${s.verhext_geloest.gespielt})</div>`,
+      `<div style="font-size:.85rem;color:var(--text-muted);">${pct(s.fuchsrennen.gewonnen, s.fuchsrennen.gespielt)} der Fuchsrennen gewonnen (${s.fuchsrennen.gewonnen} von ${s.fuchsrennen.gespielt})</div>`,
+      `<div style="font-size:.85rem;color:var(--text-muted);">${s.fuchswort.geloest} von ${s.fuchswort.gespielt} Fuchswörtern gelöst</div>`
+    ].join('');
+  } catch(e) {
+    inhalt.innerHTML = '<span style="font-size:.85rem;color:var(--text-muted);">Fehler beim Laden.</span>';
+  }
 }
 
 const TYP_LABEL = {

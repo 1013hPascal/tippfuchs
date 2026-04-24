@@ -13,7 +13,7 @@ import { oeffneModal, schliesseModal, schliesseAlleModals } from './modal.js';
 import { setzeDark } from './design.js';
 import { sageLaut } from './live-region.js';
 import { registrierePushButtons, speichereOnboardingErinnerung } from './push-benachrichtigungen.js';
-import { erstelleDuell, zufallsWort, duellLink, zeigeMeineDuelleInhalt, speicherePendingId, ladeDuell, speichereEmojiReaktion } from './duelle.js';
+import { erstelleDuell, zufallsWort, duellLink, zeigeMeineDuelleInhalt, speicherePendingId, ladeDuell, speichereEmojiReaktion, zeigeStartDuelleStats } from './duelle.js';
 
 // EVENT-LISTENER ANFANG
 // Haupt-Spielen-Button oben
@@ -273,6 +273,22 @@ document.getElementById('btn-onb-push-nein').addEventListener('click', () => {
 
 registriereToggle('btn-erfolge-toggle',   'erfolge-inhalt',          'Persönliche Erfolge');
 registriereToggle('btn-tagesergebnis-toggle', 'tagesergebnis-inhalt', 'Tagesergebnis ansehen');
+
+document.getElementById('btn-duelle-stats-toggle')?.addEventListener('click', async () => {
+  const toggle = document.getElementById('btn-duelle-stats-toggle');
+  const inhalt = document.getElementById('duelle-stats-inhalt');
+  const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+  toggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+  inhalt.style.display = isOpen ? 'none' : 'flex';
+  if (!isOpen) {
+    if (appState.currentUser) {
+      await zeigeStartDuelleStats(appState.currentUser.uid);
+    } else {
+      inhalt.innerHTML = '<span style="font-size:.85rem;color:var(--text-muted);">Bitte melde dich an um deine Duelle-Statistik zu sehen.</span>';
+    }
+  }
+});
+
 registriereToggle('btn-gruppen-toggle',   'start-gruppen-inhalt',    'Meine Tippfuchsgruppen');
 registriereToggle('btn-stats-toggle',     'stats-inhalt',            'Statistik aller Tippfüchse');
 registriereToggle('btn-account-toggle',   'account-inhalt',          'Account');
