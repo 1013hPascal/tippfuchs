@@ -74,18 +74,18 @@ export function verarbeiteFFWort() {
     return;
   }
 
-  // Weicher Hinweis: Buchstaben die bereits als nicht vorhanden bekannt sind
+  // Weicher Hinweis nur visuell — kein eigener sageLaut (wird in Haupt-Ankündigung eingebaut)
   const hinweisBuchstaben = [...new Set(versuch.split(''))].filter(b =>
     ff.tastaturStatus[b] === 'absent' || ff.tastaturStatus[b] === 'falle'
   );
-  if (hinweisBuchstaben.length > 0) {
-    fehlerEl.textContent = `Hinweis: ${hinweisBuchstaben.join(', ')} bereits als nicht vorhanden bekannt.`;
-    sageLaut(`Hinweis: ${hinweisBuchstaben.join(', ')} ${hinweisBuchstaben.length > 1 ? 'sind' : 'ist'} bereits als nicht vorhanden markiert.`);
-  } else {
-    fehlerEl.textContent = '';
-  }
+  fehlerEl.textContent = hinweisBuchstaben.length > 0
+    ? `Hinweis: ${hinweisBuchstaben.join(', ')} bereits als nicht vorhanden bekannt.`
+    : '';
 
+  // Wie beim Tageswort: erst Eingabe leeren + Fokus setzen, dann sageLaut —
+  // so unterbricht der Focus-Wechsel die live-region-Ankündigung nicht (iOS VoiceOver)
   inp.value = '';
+  inp.focus();
   ff.versuche.push(versuch);
 
   const erg = bewerteVersuch(versuch, ff.zielwort);
@@ -139,31 +139,32 @@ export function verarbeiteFFWort() {
     }
   });
 
-  // Max. 1 Versuch verloren pro geratenem Wort
   if (fallenBuchstaben.length > 0) ff.verloreneVersuche += 1;
 
-  // SR-Ankündigung
-  let sr = `Versuch ${ff.versuche.length}: `;
-  erg.forEach((e, i) => {
-    const s = e === 'correct' ? 'richtig' : e === 'present' ? 'falsche Stelle' : 'nein';
-    sr += `${versuch[i]}: ${s}, `;
-  });
+  // Einziger sageLaut-Aufruf — gleicher Sprachstil wie Tageswort + Falle/Niete/Hinweis
+  let sr = erg.map((e, i) => {
+    const s = e === 'correct' ? 'richtige Stelle' : e === 'present' ? 'falsche Stelle' : 'kommt nicht vor';
+    return `${versuch[i]}: ${s}`;
+  }).join(', ');
   if (fallenBuchstaben.length > 0) {
-    sr += `Fuchsfalle! ${fallenBuchstaben.join(', ')} ${fallenBuchstaben.length > 1 ? 'waren' : 'war'} im Fallenwort. 1 Versuch verloren. `;
+    sr += `. Fuchsfalle! ${fallenBuchstaben.join(', ')} ${fallenBuchstaben.length > 1 ? 'waren' : 'war'} im Fallenwort. 1 Versuch verloren`;
   }
   if (nietenEntfernt.length > 0) {
-    sr += `Nieten entfernt: ${nietenEntfernt.join(', ')}. `;
+    sr += `. Nieten enthüllt: ${nietenEntfernt.join(', ')}`;
+  }
+  if (hinweisBuchstaben.length > 0) {
+    sr += `. Hinweis: ${hinweisBuchstaben.join(', ')} ${hinweisBuchstaben.length > 1 ? 'sind' : 'ist'} bereits als nicht vorhanden bekannt`;
   }
 
   const verfuegbar = ff.maxVersuche - ff.verloreneVersuche;
   if (versuch === ff.zielwort) {
     ff.spielende = true;
     ff.gewonnen = true;
-    sr += `Gewonnen! Das Zielwort war ${ff.zielwort}.`;
+    sr += `. Gewonnen! Das Zielwort war ${ff.zielwort}.`;
   } else if (ff.versuche.length >= verfuegbar) {
     ff.spielende = true;
     ff.gewonnen = false;
-    sr += `Verloren! Das Zielwort war ${ff.zielwort}. Das Fallenwort war ${ff.fallenwort}.`;
+    sr += `. Verloren! Das Zielwort war ${ff.zielwort}. Das Fallenwort war ${ff.fallenwort}.`;
   }
 
   sageLaut(sr);
@@ -171,8 +172,6 @@ export function verarbeiteFFWort() {
 
   if (ff.spielende) {
     _zeigeErgebnis();
-  } else {
-    inp.focus();
   }
 }
 
