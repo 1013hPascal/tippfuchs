@@ -793,6 +793,15 @@
 <!-- STREAK-UND-REKORD-ANZEIGE ENDE -->
 
 <div class="start-section">
+  <button class="btn-secondary" id="btn-fuchsfallen-start" style="text-align:left;width:100%;padding-left:14px;">
+    <span style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:1.3rem;" aria-hidden="true">🪤</span>
+      <span>Fuchsfallen spielen</span>
+    </span>
+  </button>
+</div>
+
+<div class="start-section">
   <div class="start-section-header">
     <svg class="section-fuchs" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <!-- Globus -->
@@ -1760,6 +1769,116 @@
   </div>
 </section>
 <!-- FUCHS-DUELLE-SCREEN ENDE -->
+
+<!-- FUCHSFALLEN-SCREEN ANFANG -->
+<section id="fuchsfallen-screen" aria-label="Fuchsfallen">
+  <div class="fuchs-titel-box" style="margin-top:16px;">
+    <svg class="fuchs-tatze" width="36" height="36" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="20" cy="26" rx="11" ry="9" fill="#E8621A"/>
+      <ellipse cx="20" cy="28" rx="7" ry="6" fill="#F5E6D0"/>
+      <ellipse cx="10" cy="16" rx="4" ry="5" fill="#E8621A"/>
+      <ellipse cx="17" cy="13" rx="3.5" ry="4.5" fill="#E8621A"/>
+      <ellipse cx="24" cy="13" rx="3.5" ry="4.5" fill="#E8621A"/>
+      <ellipse cx="31" cy="16" rx="4" ry="5" fill="#E8621A"/>
+    </svg>
+    <h1 class="fuchs-titel-text">Fuchsfallen</h1>
+    <svg class="fuchs-tatze" width="36" height="36" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="20" cy="26" rx="11" ry="9" fill="#E8621A"/>
+      <ellipse cx="20" cy="28" rx="7" ry="6" fill="#F5E6D0"/>
+      <ellipse cx="10" cy="16" rx="4" ry="5" fill="#E8621A"/>
+      <ellipse cx="17" cy="13" rx="3.5" ry="4.5" fill="#E8621A"/>
+      <ellipse cx="24" cy="13" rx="3.5" ry="4.5" fill="#E8621A"/>
+      <ellipse cx="31" cy="16" rx="4" ry="5" fill="#E8621A"/>
+    </svg>
+  </div>
+  <p style="font-size:.82rem;color:var(--text-muted);margin:6px 0 8px;line-height:1.5;">Errate das geheime Zielwort in 6 Versuchen. Vorsicht: Manche Buchstaben sind Fuchsfallen — sie stecken im Fallenwort und kosten dich einen Versuch!</p>
+  <div id="ff-versuche-info" style="font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:8px;" aria-live="polite"></div>
+
+  <div id="ff-verlauf" aria-label="Bisherige Eingaben">
+    <ul id="ff-verlauf-liste" aria-label="Eingegebene Wörter und Lösungsfortschritt"></ul>
+  </div>
+
+  <div id="ff-eingabe-bereich">
+    <div class="eingabe-wrapper">
+      <input type="text" id="ff-wort-input" maxlength="5"
+        autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+        placeholder="= = = = ="
+        aria-label="Dein Tipp für Fuchsfallen"
+        aria-describedby="ff-fehler-msg">
+    </div>
+    <div id="ff-fehler-msg" role="alert" aria-live="assertive"></div>
+  </div>
+
+  <!-- Buchstabenstatus für Screenreader -->
+  <div class="sr-only" aria-label="Buchstabenstatus">
+    <div id="ff-bz-falle">keine (Fuchsfalle — war im Fallenwort)</div>
+    <div id="ff-bz-niete">keine (Niete — sicher, nicht im Fallenwort)</div>
+    <div id="ff-bz-richtig">keine (Richtige Stelle im Zielwort)</div>
+    <div id="ff-bz-falsch">keine (Falsche Stelle im Zielwort)</div>
+    <div id="ff-bz-nein">keine (Nicht im Zielwort)</div>
+    <div id="ff-bz-unused">Q W E R T Z U I O P Ü A S D F G H J K L Ö Ä Y X C V B N M ẞ (Noch nicht verwendet)</div>
+  </div>
+
+  <!-- Grafische QWERTZ-Tastatur (aria-hidden, nur visuell) -->
+  <div id="ff-grafik-tastatur" aria-hidden="true">
+    <div class="tastatur-reihe">
+      <button class="taste" data-key="Q">Q</button>
+      <button class="taste" data-key="W">W</button>
+      <button class="taste" data-key="E">E</button>
+      <button class="taste" data-key="R">R</button>
+      <button class="taste" data-key="T">T</button>
+      <button class="taste" data-key="Z">Z</button>
+      <button class="taste" data-key="U">U</button>
+      <button class="taste" data-key="I">I</button>
+      <button class="taste" data-key="O">O</button>
+      <button class="taste" data-key="P">P</button>
+      <button class="taste" data-key="Ü">Ü</button>
+    </div>
+    <div class="tastatur-reihe">
+      <button class="taste" data-key="A">A</button>
+      <button class="taste" data-key="S">S</button>
+      <button class="taste" data-key="D">D</button>
+      <button class="taste" data-key="F">F</button>
+      <button class="taste" data-key="G">G</button>
+      <button class="taste" data-key="H">H</button>
+      <button class="taste" data-key="J">J</button>
+      <button class="taste" data-key="K">K</button>
+      <button class="taste" data-key="L">L</button>
+      <button class="taste" data-key="Ö">Ö</button>
+      <button class="taste" data-key="Ä">Ä</button>
+    </div>
+    <div class="tastatur-reihe">
+      <button class="taste taste-action" data-key="Backspace">⌫</button>
+      <button class="taste" data-key="Y">Y</button>
+      <button class="taste" data-key="X">X</button>
+      <button class="taste" data-key="C">C</button>
+      <button class="taste" data-key="V">V</button>
+      <button class="taste" data-key="B">B</button>
+      <button class="taste" data-key="N">N</button>
+      <button class="taste" data-key="M">M</button>
+      <button class="taste" data-key="ẞ">ẞ</button>
+      <button class="taste taste-action taste-enter" data-key="Enter">↵</button>
+    </div>
+  </div>
+
+  <!-- Farblegende -->
+  <div id="ff-farblegende" aria-hidden="true">
+    <div class="farb-eintrag"><span class="farb-box farb-correct"></span><span>Richtige Stelle</span></div>
+    <div class="farb-eintrag"><span class="farb-box farb-present"></span><span>Falsche Stelle</span></div>
+    <div class="farb-eintrag"><span class="farb-box farb-absent"></span><span>Nicht im Zielwort</span></div>
+    <div class="farb-eintrag"><span class="farb-box ff-farb-falle"></span><span>Fuchsfalle (Fallenwort)</span></div>
+    <div class="farb-eintrag"><span class="farb-box ff-farb-niete"></span><span>Niete (sicher)</span></div>
+  </div>
+
+  <!-- Ergebnis-Bereich -->
+  <div id="ff-ergebnis-bereich" style="display:none;flex-direction:column;gap:8px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-top:8px;"></div>
+
+  <div style="display:flex;gap:8px;margin-top:12px;">
+    <button class="btn-primary" id="btn-ff-neu" style="flex:1;">Neues Spiel</button>
+    <button class="btn-secondary" id="btn-zurueck-von-fuchsfallen" style="flex:1;">Zurück zum Menü</button>
+  </div>
+</section>
+<!-- FUCHSFALLEN-SCREEN ENDE -->
 
 </main>
 

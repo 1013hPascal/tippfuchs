@@ -14,6 +14,7 @@ import { setzeDark } from './design.js';
 import { sageLaut } from './live-region.js';
 import { registrierePushButtons, speichereOnboardingErinnerung } from './push-benachrichtigungen.js';
 import { erstelleDuell, zufallsWort, teileDuell, zeigeMeineDuelleInhalt, speicherePendingId, ladeDuell, speichereEmojiReaktion, zeigeStartDuelleStats } from './duelle.js';
+import { starteFFSpiel, verarbeiteFFWort } from './fuchsfallen.js';
 
 // EVENT-LISTENER ANFANG
 // Haupt-Spielen-Button oben
@@ -431,4 +432,43 @@ document.getElementById('duell-ergebnis-bereich')?.addEventListener('click', asy
   } catch(ex) {}
 });
 
+// FUCHSFALLEN EVENT-LISTENER ANFANG
 
+document.getElementById('btn-fuchsfallen-start').addEventListener('click', () => {
+  zeigeScreen('fuchsfallen-screen');
+  starteFFSpiel();
+});
+
+document.getElementById('ff-wort-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { e.preventDefault(); verarbeiteFFWort(); }
+  if (e.key === 'Escape') { this.value = ''; sageLaut('Eingabe abgebrochen.'); }
+});
+
+document.getElementById('ff-wort-input').addEventListener('input', function() {
+  this.value = this.value.toUpperCase().replace(/[^A-ZÄÖÜẞ]/g, '').slice(0, 5);
+});
+
+document.getElementById('ff-grafik-tastatur').addEventListener('click', e => {
+  const taste = e.target.closest('.taste[data-key]');
+  if (!taste) return;
+  const key = taste.dataset.key;
+  const input = document.getElementById('ff-wort-input');
+  if (key === 'Backspace') {
+    input.value = input.value.slice(0, -1);
+  } else if (key === 'Enter') {
+    verarbeiteFFWort();
+  } else {
+    if (input.value.length < 5) input.value += key;
+  }
+  input.focus();
+});
+
+document.getElementById('btn-ff-neu').addEventListener('click', () => {
+  starteFFSpiel();
+});
+
+document.getElementById('btn-zurueck-von-fuchsfallen').addEventListener('click', () => {
+  zeigeScreen('start-screen');
+});
+
+// FUCHSFALLEN EVENT-LISTENER ENDE
