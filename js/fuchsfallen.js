@@ -8,11 +8,8 @@ import { db, ref, get, set, child } from './firebase-config.js';
 
 // FUCHSFALLEN ANFANG
 
-const TASTATUR_BUCHSTABEN = [
-  'Q','W','E','R','T','Z','U','I','O','P','Ü',
-  'A','S','D','F','G','H','J','K','L','Ö','Ä',
-  'Y','X','C','V','B','N','M','ẞ'
-];
+// Nur A–Z, keine Umlaute (Wortlisten enthalten keine Umlaute)
+const TASTATUR_BUCHSTABEN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 const ff = {
   zielwort: null,
@@ -89,7 +86,7 @@ export function verarbeiteFFWort() {
     else if (e === 'present' && curr !== 'correct') ff.tastaturStatus[b] = 'present';
   });
 
-  // Neue Buchstaben dieses Versuchs ermitteln (jeder Buchstabe nur einmal pro Spiel)
+  // Neue Buchstaben dieses Versuchs ermitteln (jeder nur einmal pro Spiel)
   const neueLetters = [];
   const dieserVersuch = new Set();
   for (const b of versuch) {
@@ -106,25 +103,20 @@ export function verarbeiteFFWort() {
   for (const b of neueLetters) {
     const inZ = ff.zielwort.includes(b);
     const inF = ff.fallenwort.includes(b);
-
     if (inZ && inF) {
-      // In beiden Wörtern: 1 Niete enthüllen
       nietenEntfernt.push(..._entferneNieten(1, b));
     } else if (inZ) {
-      // Nur im Zielwort: 2 Nieten enthüllen
       nietenEntfernt.push(..._entferneNieten(2, b));
     } else if (inF) {
-      // Nur im Fallenwort: Fuchsfalle!
       ff.fallen.add(b);
       ff.tastaturStatus[b] = 'falle';
       fallenBuchstaben.push(b);
     } else {
-      // Weder noch: kein Spezialeffekt
       if (!ff.tastaturStatus[b]) ff.tastaturStatus[b] = 'absent';
     }
   }
 
-  // absent für alle verbleibenden Buchstaben aus dem Wordle-Ergebnis setzen
+  // absent für restliche Buchstaben aus Wordle-Ergebnis setzen
   erg.forEach((e, i) => {
     const b = versuch[i];
     if (e === 'absent' &&
@@ -138,11 +130,11 @@ export function verarbeiteFFWort() {
   // Max. 1 Versuch verloren pro geratenem Wort
   if (fallenBuchstaben.length > 0) ff.verloreneVersuche += 1;
 
-  // SR-Ankündigung zusammenbauen
+  // SR-Ankündigung
   let sr = `Versuch ${ff.versuche.length}: `;
   erg.forEach((e, i) => {
-    const s = e === 'correct' ? 'richtig' : e === 'present' ? 'falsche Stelle' : 'nicht im Wort';
-    sr += `${versuch[i]} ${s}. `;
+    const s = e === 'correct' ? 'richtig' : e === 'present' ? 'falsche Stelle' : 'nein';
+    sr += `${versuch[i]}: ${s}, `;
   });
   if (fallenBuchstaben.length > 0) {
     sr += `Fuchsfalle! ${fallenBuchstaben.join(', ')} ${fallenBuchstaben.length > 1 ? 'waren' : 'war'} im Fallenwort. 1 Versuch verloren. `;
@@ -151,7 +143,6 @@ export function verarbeiteFFWort() {
     sr += `Nieten entfernt: ${nietenEntfernt.join(', ')}. `;
   }
 
-  // Gewonnen/Verloren prüfen
   const verfuegbar = ff.maxVersuche - ff.verloreneVersuche;
   if (versuch === ff.zielwort) {
     ff.spielende = true;
@@ -174,7 +165,6 @@ export function verarbeiteFFWort() {
 }
 
 function _entferneNieten(anzahl, ausschluss) {
-  // Zufällige sichere Buchstaben enthüllen (nicht im Fallenwort, noch nicht gesehen)
   const kandidaten = TASTATUR_BUCHSTABEN.filter(b =>
     !ff.fallenwort.includes(b) &&
     !ff.nieten.has(b) &&
@@ -198,8 +188,8 @@ function _entferneNieten(anzahl, ausschluss) {
 
 function _aktualisiereAnzeige() {
   _verlauf();
+  _fortschritt();
   _tastatur();
-  _info();
   _srStatus();
 }
 
@@ -207,18 +197,57 @@ function _verlauf() {
   const liste = document.getElementById('ff-verlauf-liste');
   if (!liste) return;
   liste.innerHTML = '';
-  ff.versuche.forEach(wort => {
+
+  ff.versuche.forEach((wort, idx) => {
     const erg = bewerteVersuch(wort, ff.zielwort);
     const li = document.createElement('li');
     li.className = 'verlauf-eintrag';
-    let html = `<span class="v-wort" aria-hidden="true">${wort}</span><span class="buchstaben" aria-hidden="true">`;
+    let srText = `Versuch ${idx + 1}: ${wort}: `;
+    let mini = '';
     erg.forEach((e, i) => {
-      html += `<span class="vb ${e}" aria-hidden="true">${wort[i]}</span>`;
+      const cls = e === 'correct' ? 'correct' : e === 'present' ? 'present' : 'absent';
+      const s = e === 'correct' ? 'richtig' : e === 'present' ? 'falsche Stelle' : 'nein';
+      mini += `<span class="vb ${cls}" aria-hidden="true">${wort[i]}</span>`;
+      srText += `${wort[i]}: ${s}, `;
     });
-    html += '</span>';
-    li.innerHTML = html;
+    li.innerHTML = `<span class="v-wort" aria-hidden="true">${wort}</span><span class="buchstaben" aria-hidden="true">${mini}</span><span class="sr-only">${srText}</span>`;
     liste.appendChild(li);
   });
+
+  // Lösungsfortschritt wie im Hauptspiel
+  const enthullt = Array(5).fill(false);
+  ff.versuche.forEach(w =>
+    bewerteVersuch(w, ff.zielwort).forEach((e, i) => { if (e === 'correct') enthullt[i] = true; })
+  );
+  const liL = document.createElement('li');
+  liL.className = 'loesung-in-verlauf';
+  let loesAria = 'Lösungsfortschritt: ';
+  let loesHtml = '';
+  for (let i = 0; i < 5; i++) {
+    const z = enthullt[i] ? ff.zielwort[i] : '_';
+    const cls = enthullt[i] ? '' : ' leer';
+    loesHtml += `<span class="lz-zeichen${cls}" aria-hidden="true">${z}</span>`;
+    loesAria += enthullt[i] ? ff.zielwort[i] + ' ' : '_ ';
+  }
+  liL.innerHTML = `<span class="sr-only">${loesAria}</span>${loesHtml}`;
+  liste.appendChild(liL);
+}
+
+function _fortschritt() {
+  const verfuegbar = ff.maxVersuche - ff.verloreneVersuche;
+  for (let i = 1; i <= 6; i++) {
+    const p = document.getElementById(`ff-fp-${i}`);
+    if (!p) continue;
+    p.className = 'fp-punkt';
+    if (i > verfuegbar) {
+      // Durch Falle verlorener Versuch
+      p.classList.add('verloren');
+    } else if (i <= ff.versuche.length) {
+      if (ff.spielende && ff.gewonnen && i === ff.versuche.length) p.classList.add('gewonnen');
+      else if (ff.spielende && !ff.gewonnen) p.classList.add('verloren');
+      else p.classList.add('aktiv');
+    }
+  }
 }
 
 function _tastatur() {
@@ -231,32 +260,20 @@ function _tastatur() {
   });
 }
 
-function _info() {
-  const verfuegbar = ff.maxVersuche - ff.verloreneVersuche;
-  const verbleibend = Math.max(0, verfuegbar - ff.versuche.length);
-  const el = document.getElementById('ff-versuche-info');
-  if (!el) return;
-  let txt = `${verbleibend} Versuch${verbleibend !== 1 ? 'e' : ''} verbleibend`;
-  if (ff.verloreneVersuche > 0) {
-    txt += ` (${ff.verloreneVersuche} durch Fallen verloren)`;
-  }
-  el.textContent = txt;
-}
-
 function _srStatus() {
-  const fallen  = [...ff.fallen].join(' ') || 'keine';
-  const nieten  = [...ff.nieten].join(' ') || 'keine';
-  const richtig = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'correct').join(' ') || 'keine';
-  const falsch  = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'present').join(' ') || 'keine';
-  const absent  = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'absent').join(' ') || 'keine';
-  const unused  = TASTATUR_BUCHSTABEN.filter(b => !ff.tastaturStatus[b]).join(' ') || 'keine';
+  const fallen = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'falle').join(' ') || 'keine';
+  const nieten = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'niete').join(' ') || 'keine';
+  const falsch = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'present').join(' ') || 'keine';
+  const nein   = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'absent').join(' ') || 'keine';
+  const used   = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'correct').join(' ') || 'keine';
+  const unused = TASTATUR_BUCHSTABEN.filter(b => !ff.tastaturStatus[b]).join(' ') || 'keine';
 
   const s = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
   s('ff-bz-falle',  `${fallen} (Fuchsfalle — war im Fallenwort, 1 Versuch verloren)`);
   s('ff-bz-niete',  `${nieten} (Niete — sicher, nicht im Fallenwort)`);
-  s('ff-bz-richtig',`${richtig} (Richtige Stelle im Zielwort)`);
-  s('ff-bz-falsch', `${falsch} (Falsche Stelle im Zielwort)`);
-  s('ff-bz-nein',   `${absent} (Nicht im Zielwort)`);
+  s('ff-bz-falsch', `${falsch} (Falsche Stelle)`);
+  s('ff-bz-nein',   `${nein} (Kommt nicht vor)`);
+  s('ff-bz-used',   `${used} (Richtig, mehrfach vorkommen möglich)`);
   s('ff-bz-unused', `${unused} (Noch nicht verwendet)`);
 }
 

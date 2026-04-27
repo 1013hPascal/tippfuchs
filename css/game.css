@@ -656,7 +656,8 @@ details[open] summary::after {
   border-color: #b71c1c;
 }
 
-/* FUCHSFALLEN — Verlauf und Eingabe (Äquivalent zu #verlauf, #eingabe-bereich) */
+/* FUCHSFALLEN — Layout-Äquivalente zum Hauptspiel */
+#ff-fortschritt-punkte { display: flex; gap: 8px; justify-content: center; padding: 8px 0 4px; }
 #ff-verlauf { padding: 8px 0; min-height: 32px; }
 #ff-verlauf-liste { list-style: none; display: flex; flex-direction: column; gap: 4px; }
 #ff-eingabe-bereich { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }

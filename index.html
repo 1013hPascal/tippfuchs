@@ -1806,35 +1806,53 @@
       <ellipse cx="31" cy="16" rx="4" ry="5" fill="#E8621A"/>
     </svg>
   </div>
-  <p style="font-size:.82rem;color:var(--text-muted);margin:6px 0 8px;line-height:1.5;">Errate das geheime Zielwort in 6 Versuchen. Vorsicht: Manche Buchstaben sind Fuchsfallen — sie stecken im Fallenwort und kosten dich einen Versuch!</p>
-  <div id="ff-versuche-info" style="font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:8px;" aria-live="polite"></div>
-
+  <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:4px;margin-top:8px;">Mit dem ersten Tipp läuft die Uhr. Vorsicht vor Fuchsfallen!</p>
+  <!-- Fortschritts-Punkte -->
+  <div id="ff-fortschritt-punkte" aria-hidden="true">
+    <div class="fp-punkt" id="ff-fp-1"></div>
+    <div class="fp-punkt" id="ff-fp-2"></div>
+    <div class="fp-punkt" id="ff-fp-3"></div>
+    <div class="fp-punkt" id="ff-fp-4"></div>
+    <div class="fp-punkt" id="ff-fp-5"></div>
+    <div class="fp-punkt" id="ff-fp-6"></div>
+  </div>
+  <!-- Verlauf + Lösungszeile (wird per JS befüllt) -->
   <div id="ff-verlauf" aria-label="Bisherige Eingaben">
     <ul id="ff-verlauf-liste" aria-label="Eingegebene Wörter und Lösungsfortschritt"></ul>
   </div>
-
+  <!-- Eingabe -->
   <div id="ff-eingabe-bereich">
     <div class="eingabe-wrapper">
       <input type="text" id="ff-wort-input" maxlength="5"
         autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
         placeholder="= = = = ="
-        aria-label="Dein Tipp für Fuchsfallen"
+        aria-label="Dein Tipp"
         aria-describedby="ff-fehler-msg">
     </div>
     <div id="ff-fehler-msg" role="alert" aria-live="assertive"></div>
   </div>
-
-  <!-- Buchstabenstatus für Screenreader -->
-  <div class="sr-only" aria-label="Buchstabenstatus">
-    <div id="ff-bz-falle">keine (Fuchsfalle — war im Fallenwort)</div>
-    <div id="ff-bz-niete">keine (Niete — sicher, nicht im Fallenwort)</div>
-    <div id="ff-bz-richtig">keine (Richtige Stelle im Zielwort)</div>
-    <div id="ff-bz-falsch">keine (Falsche Stelle im Zielwort)</div>
-    <div id="ff-bz-nein">keine (Nicht im Zielwort)</div>
-    <div id="ff-bz-unused">Q W E R T Z U I O P Ü A S D F G H J K L Ö Ä Y X C V B N M ẞ (Noch nicht verwendet)</div>
+  <!-- Buchstabenstatus für Screenreader — wie im Hauptspiel, plus Falle und Niete -->
+  <div id="ff-status-bereich" class="sr-only" aria-label="Buchstabenstatus">
+    <div class="status-gruppe falle">
+      <div class="buchstaben-zeile" id="ff-bz-falle">keine (Fuchsfalle — war im Fallenwort, 1 Versuch verloren)</div>
+    </div>
+    <div class="status-gruppe niete">
+      <div class="buchstaben-zeile" id="ff-bz-niete">keine (Niete — sicher, nicht im Fallenwort)</div>
+    </div>
+    <div class="status-gruppe falsch">
+      <div class="buchstaben-zeile falsche-stelle" id="ff-bz-falsch">keine (Falsche Stelle)</div>
+    </div>
+    <div class="status-gruppe nein">
+      <div class="buchstaben-zeile nicht-vorhanden" id="ff-bz-nein">keine (Kommt nicht vor)</div>
+    </div>
+    <div class="status-gruppe used">
+      <div class="buchstaben-zeile verwendet" id="ff-bz-used">keine (Richtig, mehrfach vorkommen möglich)</div>
+    </div>
+    <div class="status-gruppe unused">
+      <div class="buchstaben-zeile unbenutzt" id="ff-bz-unused">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z (Noch nicht verwendet)</div>
+    </div>
   </div>
-
-  <!-- Grafische QWERTZ-Tastatur (aria-hidden, nur visuell) -->
+  <!-- Grafische QWERTZ-Tastatur (aria-hidden, nur visuell) — immer sichtbar wegen Falle/Niete-Farben -->
   <div id="ff-grafik-tastatur" aria-hidden="true">
     <div class="tastatur-reihe">
       <button class="taste" data-key="Q">Q</button>
@@ -1875,19 +1893,17 @@
       <button class="taste taste-action taste-enter" data-key="Enter">↵</button>
     </div>
   </div>
-
-  <!-- Farblegende -->
+  <!-- Farblegende: gleich wie Hauptspiel + Falle (blau) + Niete (rot) -->
   <div id="ff-farblegende" aria-hidden="true">
     <div class="farb-eintrag"><span class="farb-box farb-correct"></span><span>Richtige Stelle</span></div>
     <div class="farb-eintrag"><span class="farb-box farb-present"></span><span>Falsche Stelle</span></div>
-    <div class="farb-eintrag"><span class="farb-box farb-absent"></span><span>Nicht im Zielwort</span></div>
-    <div class="farb-eintrag"><span class="farb-box ff-farb-falle"></span><span>Fuchsfalle (Fallenwort)</span></div>
+    <div class="farb-eintrag"><span class="farb-box farb-absent"></span><span>Nicht im Wort</span></div>
+    <div class="farb-eintrag"><span class="farb-box farb-unused"></span><span>Noch nicht verwendet</span></div>
+    <div class="farb-eintrag"><span class="farb-box ff-farb-falle"></span><span>Fuchsfalle</span></div>
     <div class="farb-eintrag"><span class="farb-box ff-farb-niete"></span><span>Niete (sicher)</span></div>
   </div>
-
   <!-- Ergebnis-Bereich -->
   <div id="ff-ergebnis-bereich" style="display:none;flex-direction:column;gap:8px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-top:8px;"></div>
-
   <div style="display:flex;gap:8px;margin-top:12px;">
     <button class="btn-primary" id="btn-ff-neu" style="flex:1;">Neues Spiel</button>
     <button class="btn-secondary" id="btn-zurueck-von-fuchsfallen" style="flex:1;">Zurück zum Menü</button>
