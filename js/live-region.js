@@ -4,5 +4,5 @@
 export function sageLaut(text) {
   const el = document.getElementById('live-region');
   el.textContent = '';
-  setTimeout(() => { el.textContent = text; }, 100);
+  setTimeout(() => { el.textContent = text; }, 200);
 }

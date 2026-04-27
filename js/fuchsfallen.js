@@ -244,7 +244,16 @@ function _verlauf() {
     loesHtml += `<span class="lz-zeichen${cls}" aria-hidden="true">${z}</span>`;
     loesAria += enthullt[i] ? ff.zielwort[i] + ' ' : '_ ';
   }
-  liL.innerHTML = `<span class="sr-only">${loesAria}</span>${loesHtml}`;
+  // Verbleibende Versuche anzeigen (inkl. Fallenabzüge)
+  const verfuegbar = ff.maxVersuche - ff.verloreneVersuche;
+  const verbleibend = verfuegbar - ff.versuche.length;
+  let restHtml = '';
+  let restAria = '';
+  if (!ff.spielende && verbleibend >= 0) {
+    restHtml = `<span class="lz-rest" aria-hidden="true" style="font-size:.8rem;color:var(--text-muted);margin-left:8px;">noch ${verbleibend} ${verbleibend === 1 ? 'Versuch' : 'Versuche'}</span>`;
+    restAria = ` Noch ${verbleibend} ${verbleibend === 1 ? 'Versuch' : 'Versuche'}.`;
+  }
+  liL.innerHTML = `<span class="sr-only">${loesAria}${restAria}</span>${loesHtml}${restHtml}`;
   liste.appendChild(liL);
 }
 
@@ -319,7 +328,8 @@ async function _zeigeErgebnis() {
   const vl = ff.verloreneVersuche;
   let html = ff.gewonnen
     ? `<p style="font-size:1.1rem;font-weight:700;color:#4a9e50;">Gewonnen!</p>
-       <p>Das Zielwort war <strong>${ff.zielwort}</strong>. In ${v} ${v === 1 ? 'Versuch' : 'Versuchen'} erraten.</p>`
+       <p>Das Zielwort war <strong>${ff.zielwort}</strong>. In ${v} ${v === 1 ? 'Versuch' : 'Versuchen'} erraten.</p>
+       <p>Das Fallenwort war <strong>${ff.fallenwort}</strong>.</p>`
     : `<p style="font-size:1.1rem;font-weight:700;color:#c62828;">Verloren!</p>
        <p>Das Zielwort war <strong>${ff.zielwort}</strong>.</p>
        <p>Das Fallenwort war <strong>${ff.fallenwort}</strong>.</p>`;

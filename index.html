@@ -774,7 +774,7 @@
       <div id="start-bester-versuch" style="font-size:.85rem;color:var(--text-muted);"></div>
     </div>
     <!-- Tagesergebnis ausklappbar -->
-    <button id="btn-tagesergebnis-toggle" class="btn-secondary" aria-expanded="false" aria-controls="tagesergebnis-inhalt" style="text-align:left;">📅 Tagesergebnis ansehen</button>
+    <button id="btn-tagesergebnis-toggle" class="btn-secondary" aria-expanded="false" aria-controls="tagesergebnis-inhalt" style="text-align:left;">Tagesergebnis ansehen 📅</button>
     <div id="tagesergebnis-inhalt" style="display:none;flex-direction:column;gap:8px;">
       <div id="historie-kein-account" style="display:none;font-size:.85rem;color:var(--text-muted);padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
         Für die Historie deiner Spielergebnisse brauchst du einen Account — dann werden deine Ergebnisse gespeichert.
@@ -786,7 +786,7 @@
       </div>
     </div>
     <!-- Fuchs-Duelle Statistik ausklappbar -->
-    <button id="btn-duelle-stats-toggle" class="btn-secondary" aria-expanded="false" aria-controls="duelle-stats-inhalt" style="text-align:left;">⚔️ Fuchs-Duelle Statistik</button>
+    <button id="btn-duelle-stats-toggle" class="btn-secondary" aria-expanded="false" aria-controls="duelle-stats-inhalt" style="text-align:left;">Fuchs-Duelle Statistik ⚔️</button>
     <div id="duelle-stats-inhalt" style="display:none;flex-direction:column;gap:6px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);"></div>
   </div>
 </div>
@@ -1699,7 +1699,7 @@
     <!-- Akkordion 1: Meine Duelle -->
     <div class="start-section">
       <div class="start-section-header">
-        <h2><button id="btn-meine-duelle-toggle" aria-expanded="false" aria-controls="meine-duelle-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Meine Duelle</button></h2>
+        <h2><button id="btn-meine-duelle-toggle" aria-expanded="false" aria-controls="meine-duelle-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Offene Duelle</button></h2>
       </div>
       <div id="meine-duelle-inhalt" style="display:none;flex-direction:column;gap:10px;padding-top:4px;">
         <div style="font-size:.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Für dich zu lösen</div>
@@ -1714,10 +1714,10 @@
     <!-- Akkordion: Fuchsfallen -->
     <div class="start-section">
       <div class="start-section-header">
-        <h2><button id="btn-fuchsfallen-toggle" aria-expanded="false" aria-controls="fuchsfallen-duelle-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">🪤 Fuchsfallen</button></h2>
+        <h2><button id="btn-fuchsfallen-toggle" aria-expanded="false" aria-controls="fuchsfallen-duelle-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Fuchsfallen (Solo-Spiel)</button></h2>
       </div>
       <div id="fuchsfallen-duelle-inhalt" style="display:none;flex-direction:column;gap:10px;padding-top:4px;">
-        <button class="btn-primary" id="btn-fuchsfallen-start" style="width:100%;">Fuchsfallen spielen 🪤</button>
+        <button class="btn-primary" id="btn-fuchsfallen-start" style="width:100%;">Fuchsfallen spielen</button>
         <div style="font-size:.85rem;color:var(--text-muted);line-height:1.7;">
           <p style="margin:0 0 6px;"><strong>Wie funktioniert es?</strong></p>
           <p style="margin:0 0 6px;">Es gibt zwei geheime Wörter: das <strong>Zielwort</strong>, das du erraten musst, und ein verstecktes <strong>Fallenwort</strong>, von dem du nichts weißt.</p>
@@ -2015,7 +2015,7 @@
 </div>
 <!-- MODAL-GRUPPE-VERLASSEN ENDE -->
 
-<div id="live-region" aria-live="assertive" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;"></div>
+<div id="live-region" aria-live="assertive" aria-atomic="true" style="position:fixed;left:-9999px;width:1px;height:1px;overflow:hidden;"></div>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

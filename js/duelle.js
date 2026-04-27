@@ -286,16 +286,19 @@ export async function zeigeMeineDuelleInhalt() {
 
 function duellListenEintrag(d, perspektive) {
   const label = duellTypLabel(d.typ);
-  const stil = 'text-align:left;font-size:.88rem;';
-  const linkBtn = `<button class="btn-secondary" data-teile-duell-id="${d.id}" style="font-size:.82rem;margin-top:6px;width:100%;" aria-label="Duell-Link teilen">Link teilen ⚔️</button>`;
-  const box = (inhalt, mitLink) => `<div style="display:flex;flex-direction:column;gap:4px;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.88rem;">${inhalt}${mitLink ? linkBtn : ''}</div>`;
+  // Einzeilig: text-overflow damit auf Handy kein Umbruch
+  const stil = 'text-align:left;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+  const linkBtnStil = 'font-size:.82rem;flex-shrink:0;white-space:nowrap;';
+  const linkBtn = `<button class="btn-secondary" data-teile-duell-id="${d.id}" style="${linkBtnStil}" aria-label="Duell-Link teilen">Link teilen ⚔️</button>`;
+  // box: Status-Text und optionaler Link-Button nebeneinander in einer Zeile
+  const box = (inhalt, mitLink) => `<div style="display:flex;flex-direction:row;align-items:center;gap:8px;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.88rem;"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${inhalt}</span>${mitLink ? linkBtn : ''}</div>`;
 
   if (perspektive === 'steller') {
     if (d.typ === 'fuchsjagd') {
       const sg = d.ergebnis_steller;
       if (!sg?.gespielt) {
-        return `<div style="display:flex;flex-direction:column;gap:4px;">` +
-          `<button class="btn-secondary" data-duell-id="${d.id}" data-perspektive="steller" style="${stil}">⚔️ ${label} — Dein Zug fehlt noch → Jetzt spielen</button>` +
+        return `<div style="display:flex;flex-direction:row;align-items:center;gap:8px;">` +
+          `<button class="btn-secondary" data-duell-id="${d.id}" data-perspektive="steller" style="${stil};flex:1;min-width:0;">⚔️ ${label} — Dein Zug fehlt noch → Jetzt spielen</button>` +
           linkBtn + `</div>`;
       }
       const rg = d.ergebnis_rater;
