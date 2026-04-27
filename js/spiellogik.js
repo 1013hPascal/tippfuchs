@@ -245,6 +245,8 @@ export async function zeigeErgebnis(gewonnen, extra = {}) {
   if (duellBereich) duellBereich.style.display = 'none';
   if (emojiPicker) emojiPicker.style.display = 'none';
   if (zurueckDuelle) zurueckDuelle.style.display = 'none';
+  const duelleSpielen = document.getElementById('btn-duelle-spielen-erg');
+  if (duelleSpielen) duelleSpielen.style.display = appState.duellModus ? 'none' : 'block';
   // Nochmal versuchen falls Login beim Spielen noch nicht bereit war (nur Tageswort, nicht Duelle)
   if (state.spielende && appState.currentUser && appState.currentSpitzname && !appState.duellModus) {
     await speichereInRanglisteFirebase();

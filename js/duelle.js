@@ -225,12 +225,15 @@ export async function zeigeStartDuelleStats(userId) {
         }
       }
     }
-    const pct = (n, d) => d === 0 ? '—' : `${Math.round(n / d * 100)}%`;
+    const zeile = (label, n, d, verb = 'gewonnen') => {
+      const pct = d === 0 ? '—' : `${Math.round(n / d * 100)}%`;
+      return `<div style="font-size:.85rem;color:var(--text-muted);"><strong>${n} von ${d} (${pct})</strong> ${verb} — ${label}</div>`;
+    };
     inhalt.innerHTML = [
-      `<div style="font-size:.85rem;color:var(--text-muted);">${pct(s.verhext_gestellt.gewonnen, s.verhext_gestellt.gespielt)} der gestellten verhexten Wörter gewonnen (${s.verhext_gestellt.gewonnen} von ${s.verhext_gestellt.gespielt})</div>`,
-      `<div style="font-size:.85rem;color:var(--text-muted);">${pct(s.verhext_geloest.gewonnen, s.verhext_geloest.gespielt)} der gelösten verhexten Duelle gewonnen (${s.verhext_geloest.gewonnen} von ${s.verhext_geloest.gespielt})</div>`,
-      `<div style="font-size:.85rem;color:var(--text-muted);">${pct(s.fuchsrennen.gewonnen, s.fuchsrennen.gespielt)} der Fuchsrennen gewonnen (${s.fuchsrennen.gewonnen} von ${s.fuchsrennen.gespielt})</div>`,
-      `<div style="font-size:.85rem;color:var(--text-muted);">${s.fuchswort.geloest} von ${s.fuchswort.gespielt} Fuchswörtern gelöst</div>`
+      zeile('Das verhexte Wort (als Steller)', s.verhext_gestellt.gewonnen, s.verhext_gestellt.gespielt),
+      zeile('Das verhexte Wort (als Löser)', s.verhext_geloest.gewonnen, s.verhext_geloest.gespielt),
+      zeile('Das Fuchsrennen', s.fuchsrennen.gewonnen, s.fuchsrennen.gespielt),
+      zeile('Das Fuchswort', s.fuchswort.geloest, s.fuchswort.gespielt, 'gelöst')
     ].join('');
   } catch(e) {
     inhalt.innerHTML = '<span style="font-size:.85rem;color:var(--text-muted);">Fehler beim Laden.</span>';
@@ -276,24 +279,28 @@ export async function zeigeMeineDuelleInhalt() {
 function duellListenEintrag(d, perspektive) {
   const label = duellTypLabel(d.typ);
   const stil = 'text-align:left;font-size:.88rem;';
+  const linkBtn = `<button class="btn-secondary" data-teile-duell-id="${d.id}" style="font-size:.82rem;margin-top:6px;width:100%;" aria-label="Duell-Link teilen">Link teilen ⚔️</button>`;
+  const box = (inhalt, mitLink) => `<div style="display:flex;flex-direction:column;gap:4px;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.88rem;">${inhalt}${mitLink ? linkBtn : ''}</div>`;
 
   if (perspektive === 'steller') {
     if (d.typ === 'fuchsjagd') {
       const sg = d.ergebnis_steller;
       if (!sg?.gespielt) {
-        return `<button class="btn-secondary" data-duell-id="${d.id}" data-perspektive="steller" style="${stil}">⚔️ ${label} — Dein Zug fehlt noch → Jetzt spielen</button>`;
+        return `<div style="display:flex;flex-direction:column;gap:4px;">` +
+          `<button class="btn-secondary" data-duell-id="${d.id}" data-perspektive="steller" style="${stil}">⚔️ ${label} — Dein Zug fehlt noch → Jetzt spielen</button>` +
+          linkBtn + `</div>`;
       }
       const rg = d.ergebnis_rater;
       if (!rg?.gespielt) {
-        return `<div style="padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.88rem;">⚔️ ${label} — Du: ${sg.versuche} Versuche — Warte auf Gegner…</div>`;
+        return box(`⚔️ ${label} — Du: ${sg.versuche} Versuche — Warte auf Gegner…`, true);
       }
       const ichGewann = sg.versuche < rg.versuche || (sg.versuche === rg.versuche && sg.sekunden < rg.sekunden);
-      return `<div style="padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.88rem;">⚔️ ${label} — Du: ${sg.versuche} | Gegner: ${rg.versuche} → ${ichGewann ? '🏆 Gewonnen' : 'Verloren'}</div>`;
+      return box(`⚔️ ${label} — Du: ${sg.versuche} | Gegner: ${rg.versuche} → ${ichGewann ? '🏆 Gewonnen' : 'Verloren'}`, false);
     }
     // Wortfuchs / Vergiftetes Wort — nur Status
     const rg = d.ergebnis_rater;
     if (!rg?.gespielt) {
-      return `<div style="padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.88rem;">⚔️ ${label} — Noch nicht gespielt</div>`;
+      return box(`⚔️ ${label} — Noch nicht gespielt`, true);
     }
     let resultat = '';
     if (d.typ === 'vergiftetes_wort') {
@@ -302,7 +309,7 @@ function duellListenEintrag(d, perspektive) {
       const emoji = rg.emojiReaktion ? ` ${rg.emojiReaktion}` : '';
       resultat = rg.gewonnen ? `gelöst in ${rg.versuche} Versuch${rg.versuche !== 1 ? 'en' : ''}${emoji}` : `nicht gelöst${emoji}`;
     }
-    return `<div style="padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.88rem;">⚔️ ${label} — ${resultat}</div>`;
+    return box(`⚔️ ${label} — ${resultat}`, false);
   }
 
   // Rater (für mich zu lösen)

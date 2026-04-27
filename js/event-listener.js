@@ -13,7 +13,7 @@ import { oeffneModal, schliesseModal, schliesseAlleModals } from './modal.js';
 import { setzeDark } from './design.js';
 import { sageLaut } from './live-region.js';
 import { registrierePushButtons, speichereOnboardingErinnerung } from './push-benachrichtigungen.js';
-import { erstelleDuell, zufallsWort, duellLink, zeigeMeineDuelleInhalt, speicherePendingId, ladeDuell, speichereEmojiReaktion, zeigeStartDuelleStats } from './duelle.js';
+import { erstelleDuell, zufallsWort, teileDuell, zeigeMeineDuelleInhalt, speicherePendingId, ladeDuell, speichereEmojiReaktion, zeigeStartDuelleStats } from './duelle.js';
 
 // EVENT-LISTENER ANFANG
 // Haupt-Spielen-Button oben
@@ -218,6 +218,10 @@ document.getElementById('btn-zurueck-zum-menue').addEventListener('click', () =>
 document.getElementById('btn-zurueck-erg').addEventListener('click', () => {
   if (appState.duellModus) { appState.duellModus = null; zeigeScreen('fuchs-duelle-screen'); zeigeMeineDuelleInhalt(); } else { zeigeStart(); }
 });
+document.getElementById('btn-duelle-spielen-erg').addEventListener('click', () => {
+  zeigeScreen('fuchs-duelle-screen'); zeigeMeineDuelleInhalt();
+});
+
 document.getElementById('btn-zurueck-zu-duelle').addEventListener('click', () => {
   appState.duellModus = null; zeigeScreen('fuchs-duelle-screen'); zeigeMeineDuelleInhalt();
 });
@@ -314,16 +318,6 @@ document.getElementById('btn-meine-duelle-toggle').addEventListener('click', () 
   }
 }, true);
 
-// Duell-Link in Anzeigefeld zeigen
-function zeigeDuellLinkBereich(typ, id) {
-  const link = duellLink(id);
-  const bereich = document.getElementById(`${typ}-link-bereich`);
-  const textEl = document.getElementById(`${typ}-link-text`);
-  if (bereich && textEl) { textEl.value = link; bereich.style.display = 'flex'; }
-  sageLaut('Dein Duell-Link: ' + link);
-  return link;
-}
-
 // Meine-Duelle-Akkordion öffnen und Formular schließen
 function wechselZuMeineDuelle(formToggleId, formInhaltId) {
   document.getElementById('btn-meine-duelle-toggle').setAttribute('aria-expanded', 'true');
@@ -340,35 +334,15 @@ document.getElementById('btn-wortfuchs-speichern').addEventListener('click', asy
   const wort = input.value.trim().toUpperCase().replace(/[^A-ZÄÖÜ]/g, '');
   if (wort.length !== 5) { fehler.textContent = 'Bitte genau 5 Buchstaben eingeben.'; return; }
   fehler.textContent = '';
-  const btnS = document.getElementById('btn-wortfuchs-speichern');
-  const btnL = document.getElementById('btn-wortfuchs-link');
-  btnS.disabled = true; btnL.disabled = true; btnS.textContent = 'Wird gespeichert…';
+  const btn = document.getElementById('btn-wortfuchs-speichern');
+  btn.disabled = true; btn.textContent = 'Wird gespeichert…';
   try {
-    const id = await erstelleDuell('wortfuchs', wort);
+    await erstelleDuell('wortfuchs', wort);
     input.value = '';
-    zeigeDuellLinkBereich('wortfuchs', id);
-    sageLaut('Wortfuchs gespeichert.');
+    sageLaut('Wortfuchs gespeichert. Den Link findest du unter Gestellte Duelle.');
     wechselZuMeineDuelle('btn-wortfuchs-toggle', 'wortfuchs-inhalt');
   } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
-  btnS.disabled = false; btnL.disabled = false; btnS.textContent = 'Spiel speichern';
-});
-
-document.getElementById('btn-wortfuchs-link').addEventListener('click', async () => {
-  const input = document.getElementById('wortfuchs-eingabe');
-  const fehler = document.getElementById('wortfuchs-fehler');
-  const wort = input.value.trim().toUpperCase().replace(/[^A-ZÄÖÜ]/g, '');
-  if (wort.length !== 5) { fehler.textContent = 'Bitte genau 5 Buchstaben eingeben.'; return; }
-  fehler.textContent = '';
-  const btnS = document.getElementById('btn-wortfuchs-speichern');
-  const btnL = document.getElementById('btn-wortfuchs-link');
-  btnS.disabled = true; btnL.disabled = true; btnL.textContent = 'Wird erstellt…';
-  try {
-    const id = await erstelleDuell('wortfuchs', wort);
-    input.value = '';
-    const link = zeigeDuellLinkBereich('wortfuchs', id);
-    try { await navigator.clipboard.writeText(link); sageLaut('Link kopiert: ' + link); } catch(e) {}
-  } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
-  btnS.disabled = false; btnL.disabled = false; btnL.textContent = 'Link teilen ⚔️';
+  btn.disabled = false; btn.textContent = 'Spiel speichern ⚔️';
 });
 
 // Vergiftetes Wort
@@ -382,86 +356,41 @@ document.getElementById('btn-vergiftetes-speichern').addEventListener('click', a
   if (verh.length !== 5) { fehler.textContent = 'Verhextes Wort muss genau 5 Buchstaben haben.'; return; }
   if (loes === verh) { fehler.textContent = 'Lösungswort und verhextes Wort dürfen nicht identisch sein.'; return; }
   fehler.textContent = '';
-  const btnS = document.getElementById('btn-vergiftetes-speichern');
-  const btnL = document.getElementById('btn-vergiftetes-link');
-  btnS.disabled = true; btnL.disabled = true; btnS.textContent = 'Wird gespeichert…';
+  const btn = document.getElementById('btn-vergiftetes-speichern');
+  btn.disabled = true; btn.textContent = 'Wird gespeichert…';
   try {
-    const id = await erstelleDuell('vergiftetes_wort', loes, verh);
+    await erstelleDuell('vergiftetes_wort', loes, verh);
     loesEl.value = ''; verhEl.value = '';
-    zeigeDuellLinkBereich('vergiftetes', id);
-    sageLaut('Vergiftetes Wort gespeichert.');
+    sageLaut('Verhextes Wort gespeichert. Den Link findest du unter Gestellte Duelle.');
     wechselZuMeineDuelle('btn-vergiftetes-toggle', 'vergiftetes-inhalt');
   } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
-  btnS.disabled = false; btnL.disabled = false; btnS.textContent = 'Spiel speichern';
-});
-
-document.getElementById('btn-vergiftetes-link').addEventListener('click', async () => {
-  const loesEl = document.getElementById('vergiftetes-loesung');
-  const verhEl = document.getElementById('vergiftetes-verhext');
-  const fehler = document.getElementById('vergiftetes-fehler');
-  const loes = loesEl.value.trim().toUpperCase().replace(/[^A-ZÄÖÜ]/g, '');
-  const verh = verhEl.value.trim().toUpperCase().replace(/[^A-ZÄÖÜ]/g, '');
-  if (loes.length !== 5) { fehler.textContent = 'Lösungswort muss genau 5 Buchstaben haben.'; return; }
-  if (verh.length !== 5) { fehler.textContent = 'Verhextes Wort muss genau 5 Buchstaben haben.'; return; }
-  if (loes === verh) { fehler.textContent = 'Lösungswort und verhextes Wort dürfen nicht identisch sein.'; return; }
-  fehler.textContent = '';
-  const btnS = document.getElementById('btn-vergiftetes-speichern');
-  const btnL = document.getElementById('btn-vergiftetes-link');
-  btnS.disabled = true; btnL.disabled = true; btnL.textContent = 'Wird erstellt…';
-  try {
-    const id = await erstelleDuell('vergiftetes_wort', loes, verh);
-    loesEl.value = ''; verhEl.value = '';
-    const link = zeigeDuellLinkBereich('vergiftetes', id);
-    try { await navigator.clipboard.writeText(link); sageLaut('Link kopiert: ' + link); } catch(e) {}
-  } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
-  btnS.disabled = false; btnL.disabled = false; btnL.textContent = 'Link teilen ⚔️';
+  btn.disabled = false; btn.textContent = 'Spiel speichern ⚔️';
 });
 
 // Fuchsjagd
 document.getElementById('btn-fuchsjagd-speichern').addEventListener('click', async () => {
   const fehler = document.getElementById('fuchsjagd-fehler');
   fehler.textContent = '';
-  const btnS = document.getElementById('btn-fuchsjagd-speichern');
-  const btnL = document.getElementById('btn-fuchsjagd-link');
-  btnS.disabled = true; btnL.disabled = true; btnS.textContent = 'Wird gespeichert…';
+  const btn = document.getElementById('btn-fuchsjagd-speichern');
+  btn.disabled = true; btn.textContent = 'Wird gespeichert…';
   try {
     const id = await erstelleDuell('fuchsjagd', zufallsWort());
     speicherePendingId(id);
-    zeigeDuellLinkBereich('fuchsjagd', id);
-    sageLaut('Fuchsjagd gespeichert.');
+    sageLaut('Fuchsrennen gespeichert. Den Link findest du unter Gestellte Duelle.');
     wechselZuMeineDuelle('btn-fuchsjagd-toggle', 'fuchsjagd-inhalt');
   } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
-  btnS.disabled = false; btnL.disabled = false; btnS.textContent = 'Spiel speichern';
+  btn.disabled = false; btn.textContent = 'Spiel speichern ⚔️';
 });
 
-document.getElementById('btn-fuchsjagd-link').addEventListener('click', async () => {
-  const fehler = document.getElementById('fuchsjagd-fehler');
-  fehler.textContent = '';
-  const btnS = document.getElementById('btn-fuchsjagd-speichern');
-  const btnL = document.getElementById('btn-fuchsjagd-link');
-  btnS.disabled = true; btnL.disabled = true; btnL.textContent = 'Wird erstellt…';
-  try {
-    const id = await erstelleDuell('fuchsjagd', zufallsWort());
-    speicherePendingId(id);
-    const link = zeigeDuellLinkBereich('fuchsjagd', id);
-    try { await navigator.clipboard.writeText(link); sageLaut('Link kopiert: ' + link); } catch(e) {}
-  } catch(e) { fehler.textContent = 'Fehler beim Erstellen. Bitte versuche es erneut.'; }
-  btnS.disabled = false; btnL.disabled = false; btnL.textContent = 'Link teilen ⚔️';
-});
-
-// Link-Kopieren-Buttons in den Link-Bereichen
-['vergiftetes', 'fuchsjagd', 'wortfuchs'].forEach(typ => {
-  document.getElementById(`btn-${typ}-link-kopieren`)?.addEventListener('click', async () => {
-    const textEl = document.getElementById(`${typ}-link-text`);
-    if (!textEl?.value) return;
-    try {
-      await navigator.clipboard.writeText(textEl.value);
-      sageLaut('Link kopiert.');
-    } catch(e) {
-      textEl.select();
-      sageLaut('Link markiert — bitte manuell kopieren.');
-    }
-  });
+// Link teilen — Event-Delegation auf der "Von dir gestellt"-Liste
+document.getElementById('duelle-von-mir-liste').addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-teile-duell-id]');
+  if (!btn) return;
+  const id = btn.dataset.teileDuellId;
+  const ursprung = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Wird geteilt…';
+  await teileDuell(id);
+  btn.disabled = false; btn.textContent = ursprung;
 });
 
 // Eingabefelder: nur Buchstaben, Großbuchstaben erzwingen
