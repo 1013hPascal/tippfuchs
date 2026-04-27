@@ -3,6 +3,8 @@ import { EINGABEWOERTER } from './eingabewoerter.js';
 import { bewerteVersuch } from './spiellogik.js';
 import { zeigeScreen } from './screens.js';
 import { sageLaut } from './live-region.js';
+import { appState } from './state.js';
+import { db, ref, get, set, child } from './firebase-config.js';
 
 // FUCHSFALLEN ANFANG
 
@@ -258,7 +260,18 @@ function _srStatus() {
   s('ff-bz-unused', `${unused} (Noch nicht verwendet)`);
 }
 
-function _speichereStats() {
+async function _speichereStats() {
+  const uid = appState.currentUser?.uid;
+  if (uid) {
+    try {
+      const snap = await get(child(ref(db), `spieler/${uid}/fuchsfallen`));
+      const s = snap.exists() ? snap.val() : { gespielt: 0, gewonnen: 0 };
+      s.gespielt++;
+      if (ff.gewonnen) s.gewonnen++;
+      await set(ref(db, `spieler/${uid}/fuchsfallen`), s);
+      return;
+    } catch(e) { /* Fallback auf localStorage */ }
+  }
   const raw = localStorage.getItem('ff_stats');
   const s = raw ? JSON.parse(raw) : { gespielt: 0, gewonnen: 0 };
   s.gespielt++;
@@ -266,13 +279,8 @@ function _speichereStats() {
   localStorage.setItem('ff_stats', JSON.stringify(s));
 }
 
-export function ladeFFStats() {
-  const raw = localStorage.getItem('ff_stats');
-  return raw ? JSON.parse(raw) : { gespielt: 0, gewonnen: 0 };
-}
-
-function _zeigeErgebnis() {
-  _speichereStats();
+async function _zeigeErgebnis() {
+  await _speichereStats();
   const bereich = document.getElementById('ff-ergebnis-bereich');
   if (!bereich) return;
   const v = ff.versuche.length;
