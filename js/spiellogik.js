@@ -5,7 +5,7 @@ import { EINGABEWOERTER } from './eingabewoerter.js';
 import { ALLE_BUCHSTABEN } from './hilfsfunktionen.js';
 import { TAGES_IDX, ladeTageswort } from './tageswort.js';
 import { getDatum, wortbedeutungLinksHTML } from './hilfsfunktionen.js';
-import { ladeRanglisteFirebase, speichereInRanglisteFirebase } from './firebase-basis.js';
+import { ladeRanglisteFirebase, speichereInRanglisteFirebase, ladeHistorieFirebase } from './firebase-basis.js';
 import { starteTimer, stoppeTimer, formatZeit, getGesamtZeit } from './timer.js';
 import { aktualisiereStats, aktualisiereRekord, aktualisiereStartStats, speichereZustand, ladeZustand } from './lokaler-zustand.js';
 import { zeigeScreen } from './screens.js';
@@ -201,6 +201,22 @@ export async function verarbeiteWort() {
 export async function starteSpiel() {
   ladeZustand();
   if (!appState.TAGESWORT) await ladeTageswort();
+  // Falls kein lokaler Spielstand und Nutzer eingeloggt: Firebase prüfen
+  if (state.versuche.length === 0 && !state.spielende && appState.currentUser) {
+    try {
+      const fbHeute = await ladeHistorieFirebase(appState.currentUser.uid, TAGES_IDX);
+      if (fbHeute) {
+        state.versuche = fbHeute.woerter || [];
+        state.spielende = true;
+        state.gewonnen = fbHeute.gewonnen || false;
+        state.ersterVersuchGemacht = state.versuche.length > 0;
+        const sek = fbHeute.sekunden || 0;
+        state.endZeit = Date.now();
+        state.startZeit = state.endZeit - sek * 1000;
+        speichereZustand();
+      }
+    } catch(e) {}
+  }
   aktualisiereVerlauf(); aktualisiereBuchstabenStatus();
   zeigeScreen('game-screen');
   const titelEl = document.getElementById('spiel-titel-text');
