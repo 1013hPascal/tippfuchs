@@ -41,12 +41,12 @@ export function starteFFSpiel() {
   const w = LOESUNGSWOERTER;
   let i1 = zufIdx(w.length), i2;
   do { i2 = zufIdx(w.length); } while (i2 === i1);
-  ff.zielwort = w[i1].toUpperCase();
-  ff.fallenwort = w[i2].toUpperCase();
+  ff.zielwort = w[i1];
+  ff.fallenwort = w[i2];
 
   _aktualisiereAnzeige();
   const inp = document.getElementById('ff-wort-input');
-  if (inp) { inp.value = ''; inp.focus(); }
+  if (inp) { inp.value = ''; inp.placeholder = '= = = = ='; inp.focus(); }
   document.getElementById('ff-fehler-msg').textContent = '';
   const ergBereich = document.getElementById('ff-ergebnis-bereich');
   if (ergBereich) ergBereich.style.display = 'none';
@@ -65,14 +65,26 @@ export function verarbeiteFFWort() {
     sageLaut('Bitte genau 5 Buchstaben eingeben.');
     return;
   }
-  const vL = versuch.toLowerCase();
-  if (!LOESUNGSWOERTER.includes(vL) && !EINGABEWOERTER.includes(vL)) {
+  // Wortlistenprüfung wie beim Tageswort: LOESUNGSWOERTER ist bereits uppercase,
+  // EINGABEWOERTER ist gemischt → beim Vergleich uppercase erzwingen
+  if (!LOESUNGSWOERTER.includes(versuch) && !EINGABEWOERTER.some(w => w.toUpperCase() === versuch)) {
     fehlerEl.textContent = 'Dieses Wort kennt der Fuchs nicht.';
     sageLaut('Dieses Wort kennt der Fuchs nicht.');
+    inp.value = '';
     return;
   }
 
-  fehlerEl.textContent = '';
+  // Weicher Hinweis: Buchstaben die bereits als nicht vorhanden bekannt sind
+  const hinweisBuchstaben = [...new Set(versuch.split(''))].filter(b =>
+    ff.tastaturStatus[b] === 'absent' || ff.tastaturStatus[b] === 'falle'
+  );
+  if (hinweisBuchstaben.length > 0) {
+    fehlerEl.textContent = `Hinweis: ${hinweisBuchstaben.join(', ')} bereits als nicht vorhanden bekannt.`;
+    sageLaut(`Hinweis: ${hinweisBuchstaben.join(', ')} ${hinweisBuchstaben.length > 1 ? 'sind' : 'ist'} bereits als nicht vorhanden markiert.`);
+  } else {
+    fehlerEl.textContent = '';
+  }
+
   inp.value = '';
   ff.versuche.push(versuch);
 
@@ -197,6 +209,9 @@ function _verlauf() {
   const liste = document.getElementById('ff-verlauf-liste');
   if (!liste) return;
   liste.innerHTML = '';
+  // Placeholder nach erstem Versuch leeren (wie im Tageswort)
+  const inp = document.getElementById('ff-wort-input');
+  if (inp && ff.versuche.length > 0) inp.placeholder = '';
 
   ff.versuche.forEach((wort, idx) => {
     const erg = bewerteVersuch(wort, ff.zielwort);
