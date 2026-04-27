@@ -1711,12 +1711,28 @@
 
     <p style="font-size:.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin:0;">Wähle ein Spiel</p>
 
-    <!-- Fuchsfallen — Einzelspieler-Modus -->
+    <!-- Akkordion: Fuchsfallen -->
     <div class="start-section">
       <div class="start-section-header">
-        <h2><button id="btn-fuchsfallen-start" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">🪤 Fuchsfallen spielen</button></h2>
+        <h2><button id="btn-fuchsfallen-toggle" aria-expanded="false" aria-controls="fuchsfallen-duelle-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">🪤 Fuchsfallen</button></h2>
       </div>
-      <p style="font-size:.85rem;color:var(--text-muted);margin:4px 0 0;line-height:1.6;">Errate das geheime Zielwort. Vorsicht: Manche Buchstaben stecken auch im Fallenwort — und kosten dich einen Versuch!</p>
+      <div id="fuchsfallen-duelle-inhalt" style="display:none;flex-direction:column;gap:10px;padding-top:4px;">
+        <button class="btn-primary" id="btn-fuchsfallen-start" style="width:100%;">Fuchsfallen spielen 🪤</button>
+        <div style="font-size:.85rem;color:var(--text-muted);line-height:1.7;">
+          <p style="margin:0 0 6px;"><strong>Wie funktioniert es?</strong></p>
+          <p style="margin:0 0 6px;">Es gibt zwei geheime Wörter: das <strong>Zielwort</strong>, das du erraten musst, und ein verstecktes <strong>Fallenwort</strong>, von dem du nichts weißt.</p>
+          <p style="margin:0 0 6px;">Du hast <strong>6 Versuche</strong>. Die Farbrückmeldung (grün, orange, grau) bezieht sich immer nur auf das Zielwort — genau wie beim normalen Tippfuchs-Rätsel.</p>
+          <p style="margin:0 0 6px;"><strong>Was passiert nach jedem Versuch?</strong><br>
+          Für jeden neuen Buchstaben, der zum ersten Mal in deinem Tipp vorkommt, gilt:</p>
+          <ul style="margin:0 0 6px;padding-left:18px;">
+            <li><strong>Nur im Zielwort:</strong> 2 Nieten werden enthüllt — sichere Buchstaben, die garantiert nicht im Fallenwort stecken.</li>
+            <li><strong>In beiden Wörtern:</strong> 1 Niete wird enthüllt.</li>
+            <li><strong>Nur im Fallenwort:</strong> Fuchsfalle! Du verlierst 1 Versuch. Der Buchstabe erscheint blau auf der Tastatur.</li>
+            <li><strong>In keinem Wort:</strong> Kein Spezialeffekt.</li>
+          </ul>
+          <p style="margin:0;"><strong>Nieten</strong> (rot auf der Tastatur) sind Buchstaben, die garantiert nicht im Fallenwort sind — du kannst sie bedenkenlos tippen. Je mehr Nieten enthüllt werden, desto sicherer weißt du, welche Buchstaben echte Fallen sind.</p>
+        </div>
+      </div>
     </div>
 
     <!-- Akkordion 2: Das vergiftete Wort -->

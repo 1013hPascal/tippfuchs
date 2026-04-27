@@ -307,10 +307,11 @@ registriereToggle('btn-freunde-verwalten-toggle', 'freunde-verwalten-inhalt', 'F
 // Fuchs-Duelle Screen
 document.getElementById('btn-zurueck-von-duelle').addEventListener('click', () => zeigeScreen('start-screen'));
 
-registriereToggle('btn-meine-duelle-toggle',  'meine-duelle-inhalt',  'Meine Duelle');
-registriereToggle('btn-vergiftetes-toggle',   'vergiftetes-inhalt',   'Das vergiftete Wort');
-registriereToggle('btn-fuchsjagd-toggle',     'fuchsjagd-inhalt',     'Fuchsjagd');
-registriereToggle('btn-wortfuchs-toggle',     'wortfuchs-inhalt',     'Wortfuchs');
+registriereToggle('btn-meine-duelle-toggle',  'meine-duelle-inhalt',       'Meine Duelle');
+registriereToggle('btn-fuchsfallen-toggle',   'fuchsfallen-duelle-inhalt', 'Fuchsfallen');
+registriereToggle('btn-vergiftetes-toggle',   'vergiftetes-inhalt',        'Das vergiftete Wort');
+registriereToggle('btn-fuchsjagd-toggle',     'fuchsjagd-inhalt',          'Fuchsjagd');
+registriereToggle('btn-wortfuchs-toggle',     'wortfuchs-inhalt',          'Wortfuchs');
 
 // Meine Duelle laden wenn aufgeklappt
 document.getElementById('btn-meine-duelle-toggle').addEventListener('click', () => {
