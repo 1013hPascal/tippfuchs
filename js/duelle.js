@@ -3,6 +3,7 @@ import { appState } from './state.js';
 import { sageLaut } from './live-region.js';
 import { LOESUNGSWOERTER } from './loesungswoerter.js';
 import { zeigeScreen } from './screens.js';
+import { ladeFFStats } from './fuchsfallen.js';
 
 // DUELLE ANFANG
 const ABLAUF_MS = 24 * 60 * 60 * 1000;
@@ -229,11 +230,13 @@ export async function zeigeStartDuelleStats(userId) {
       const pct = d === 0 ? '—' : `${Math.round(n / d * 100)}%`;
       return `<div style="font-size:.85rem;color:var(--text-muted);"><strong>${n} von ${d} (${pct})</strong> ${verb} — ${label}</div>`;
     };
+    const ff = ladeFFStats();
     inhalt.innerHTML = [
       zeile('Das verhexte Wort (als Steller)', s.verhext_gestellt.gewonnen, s.verhext_gestellt.gespielt),
       zeile('Das verhexte Wort (als Löser)', s.verhext_geloest.gewonnen, s.verhext_geloest.gespielt),
       zeile('Das Fuchsrennen', s.fuchsrennen.gewonnen, s.fuchsrennen.gespielt),
-      zeile('Das Fuchswort', s.fuchswort.geloest, s.fuchswort.gespielt, 'gelöst')
+      zeile('Das Fuchswort', s.fuchswort.geloest, s.fuchswort.gespielt, 'gelöst'),
+      zeile('Fuchsfallen', ff.gewonnen, ff.gespielt)
     ].join('');
   } catch(e) {
     inhalt.innerHTML = '<span style="font-size:.85rem;color:var(--text-muted);">Fehler beim Laden.</span>';

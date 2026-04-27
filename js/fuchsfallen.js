@@ -258,7 +258,21 @@ function _srStatus() {
   s('ff-bz-unused', `${unused} (Noch nicht verwendet)`);
 }
 
+function _speichereStats() {
+  const raw = localStorage.getItem('ff_stats');
+  const s = raw ? JSON.parse(raw) : { gespielt: 0, gewonnen: 0 };
+  s.gespielt++;
+  if (ff.gewonnen) s.gewonnen++;
+  localStorage.setItem('ff_stats', JSON.stringify(s));
+}
+
+export function ladeFFStats() {
+  const raw = localStorage.getItem('ff_stats');
+  return raw ? JSON.parse(raw) : { gespielt: 0, gewonnen: 0 };
+}
+
 function _zeigeErgebnis() {
+  _speichereStats();
   const bereich = document.getElementById('ff-ergebnis-bereich');
   if (!bereich) return;
   const v = ff.versuche.length;
