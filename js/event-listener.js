@@ -14,7 +14,7 @@ import { setzeDark } from './design.js';
 import { sageLaut } from './live-region.js';
 import { registrierePushButtons, speichereOnboardingErinnerung } from './push-benachrichtigungen.js';
 import { erstelleDuell, zufallsWort, teileDuell, zeigeMeineDuelleInhalt, speicherePendingId, ladeDuell, speichereEmojiReaktion, zeigeStartDuelleStats } from './duelle.js';
-import { starteFFSpiel, verarbeiteFFWort } from './fuchsfallen.js';
+import { starteFFSpiel, verarbeiteFFWort, pruefeFfEingabeHinweis } from './fuchsfallen.js';
 
 // EVENT-LISTENER ANFANG
 // Haupt-Spielen-Button oben
@@ -440,13 +440,20 @@ document.getElementById('btn-fuchsfallen-start').addEventListener('click', () =>
   starteFFSpiel();
 });
 
+let _vorherigeFFInputLaenge = 0;
 document.getElementById('ff-wort-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') { e.preventDefault(); verarbeiteFFWort(); }
-  if (e.key === 'Escape') { this.value = ''; sageLaut('Eingabe abgebrochen.'); }
+  if (e.key === 'Enter') { e.preventDefault(); _vorherigeFFInputLaenge = 0; verarbeiteFFWort(); }
+  if (e.key === 'Escape') { this.value = ''; _vorherigeFFInputLaenge = 0; sageLaut('Eingabe abgebrochen.'); }
 });
 
 document.getElementById('ff-wort-input').addEventListener('input', function() {
+  const vorher = _vorherigeFFInputLaenge;
   this.value = this.value.toUpperCase().replace(/[^A-ZÄÖÜẞ]/g, '').slice(0, 5);
+  _vorherigeFFInputLaenge = this.value.length;
+  if (this.value.length > vorher && this.value.length > 0) {
+    const hinweis = pruefeFfEingabeHinweis(this.value[this.value.length - 1], this.value.length - 1);
+    if (hinweis) sageLaut(hinweis);
+  }
 });
 
 document.getElementById('ff-grafik-tastatur').addEventListener('click', e => {
@@ -456,10 +463,18 @@ document.getElementById('ff-grafik-tastatur').addEventListener('click', e => {
   const input = document.getElementById('ff-wort-input');
   if (key === 'Backspace') {
     input.value = input.value.slice(0, -1);
+    _vorherigeFFInputLaenge = input.value.length;
   } else if (key === 'Enter') {
+    _vorherigeFFInputLaenge = 0;
     verarbeiteFFWort();
   } else {
-    if (input.value.length < 5) input.value += key;
+    if (input.value.length < 5) {
+      const pos = input.value.length;
+      input.value += key;
+      _vorherigeFFInputLaenge = input.value.length;
+      const hinweis = pruefeFfEingabeHinweis(key, pos);
+      if (hinweis) sageLaut(hinweis);
+    }
   }
   input.focus();
 });

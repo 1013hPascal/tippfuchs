@@ -358,4 +358,21 @@ async function _zeigeErgebnis() {
   setTimeout(() => { document.getElementById('btn-ff-neu')?.focus(); }, 100);
 }
 
+export function pruefeFfEingabeHinweis(buchstabe, position) {
+  if (!ff.zielwort || ff.versuche.length === 0) return null;
+  if (ff.tastaturStatus[buchstabe] === 'absent' || ff.tastaturStatus[buchstabe] === 'falle') {
+    return `Buchstabe ${buchstabe} darf nicht im Wort vorkommen.`;
+  }
+  const correctAnPos = Array(5).fill(null);
+  ff.versuche.forEach(v => {
+    bewerteVersuch(v, ff.zielwort).forEach((e, i) => {
+      if (e === 'correct') correctAnPos[i] = v[i];
+    });
+  });
+  if (correctAnPos[position] && correctAnPos[position] !== buchstabe) {
+    return `An der Stelle hast du ${correctAnPos[position]} schon richtig.`;
+  }
+  return null;
+}
+
 // FUCHSFALLEN ENDE
