@@ -82,7 +82,7 @@ async function sendePushErinnerungen() {
     const nachricht = {
       notification: {
         title: 'Tippfuchs 🦊',
-        body: 'Du hast heute noch nicht gespielt! Dein Tageswort wartet.'
+        body: 'Hey, heute schon Tippfuchs gespielt? Nein? Dann nichts wie los — die anderen Füchse warten bestimmt auf dich!'
       },
       webpush: {
         notification: {

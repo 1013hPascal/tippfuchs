@@ -1694,7 +1694,7 @@
 <section id="fuchs-duelle-screen" aria-label="Fuchs-Duelle" aria-live="polite">
   <div style="display:flex;flex-direction:column;gap:14px;padding:16px 0;">
     <h1 style="font-family:var(--font-display);font-size:1.4rem;">Fuchs-Duelle ⚔️</h1>
-    <p style="font-size:.9rem;color:var(--text-muted);margin:0;line-height:1.6;">Hier ziehst du deine Duelle. Spiele mit einem anderen Tippfuchs eines dieser Spiele.</p>
+    <p style="font-size:.9rem;color:var(--text-muted);margin:0;line-height:1.6;">Hier geht es zu deinen offenen Duellen — schau nach, ob du noch spielen musst.</p>
 
     <!-- Akkordion 1: Meine Duelle -->
     <div class="start-section">
@@ -1709,7 +1709,7 @@
       </div>
     </div>
 
-    <p style="font-size:.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin:0;">Wähle ein Spiel</p>
+    <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.5;">Wähle ein Solo-Spiel oder starte ein Duell.</p>
 
     <!-- Akkordion: Fuchsfallen -->
     <div class="start-section">
@@ -1717,20 +1717,20 @@
         <h2><button id="btn-fuchsfallen-toggle" aria-expanded="false" aria-controls="fuchsfallen-duelle-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Fuchsfallen (Solo-Spiel)</button></h2>
       </div>
       <div id="fuchsfallen-duelle-inhalt" style="display:none;flex-direction:column;gap:10px;padding-top:4px;">
+        <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;font-style:italic;">An der Fuchsakademie gibt es einen Lehrer, der ganz gemeine Prüfungen stellt. Die Füchse müssen nicht nur alleine auf das richtige Wort kommen — nein, der Lehrer ist hinterlistig und hat Fallen eingebaut. Bevor die Prüfung beginnt, müssen sich die Fuchsschülerinnen folgende Regeln einprägen.</p>
         <button class="btn-primary" id="btn-fuchsfallen-start" style="width:100%;">Fuchsfallen spielen</button>
         <div style="font-size:.85rem;color:var(--text-muted);line-height:1.7;">
-          <p style="margin:0 0 6px;"><strong>Wie funktioniert es?</strong></p>
-          <p style="margin:0 0 6px;">Es gibt zwei geheime Wörter: das <strong>Zielwort</strong>, das du erraten musst, und ein verstecktes <strong>Fallenwort</strong>, von dem du nichts weißt.</p>
-          <p style="margin:0 0 6px;">Du hast <strong>6 Versuche</strong>. Die Farbrückmeldung (grün, orange, grau) bezieht sich immer nur auf das Zielwort — genau wie beim normalen Tippfuchs-Rätsel.</p>
-          <p style="margin:0 0 6px;"><strong>Was passiert nach jedem Versuch?</strong><br>
-          Für jeden neuen Buchstaben, der zum ersten Mal in deinem Tipp vorkommt, gilt:</p>
+          <p style="margin:0 0 6px;"><strong>Kurzregeln:</strong></p>
+          <p style="margin:0 0 4px;">Es gibt zwei geheime Wörter: das <strong>Zielwort</strong> (das du erraten musst) und ein verstecktes <strong>Fallenwort</strong>. Du hast <strong>6 Versuche</strong>. Die Farben (grün/orange/grau) zeigen nur, wie dein Tipp zum Zielwort passt.</p>
+          <p style="margin:0 0 4px;">Für jeden Buchstaben, der zum ersten Mal in deinem Tipp vorkommt, gilt:</p>
           <ul style="margin:0 0 6px;padding-left:18px;">
-            <li><strong>Nur im Zielwort:</strong> 2 Nieten werden enthüllt — sichere Buchstaben, die garantiert nicht im Fallenwort stecken.</li>
-            <li><strong>In beiden Wörtern:</strong> 1 Niete wird enthüllt.</li>
-            <li><strong>Nur im Fallenwort:</strong> Fuchsfalle! Du verlierst 1 Versuch. Der Buchstabe erscheint blau auf der Tastatur.</li>
-            <li><strong>In keinem Wort:</strong> Kein Spezialeffekt.</li>
+            <li><strong>Nur im Zielwort:</strong> 2 sichere Nieten (rot) werden aufgedeckt.</li>
+            <li><strong>In beiden Wörtern:</strong> 1 Niete wird aufgedeckt.</li>
+            <li><strong>Nur im Fallenwort:</strong> Fuchsfalle! 1 Versuch verloren, Buchstabe leuchtet blau.</li>
+            <li><strong>In keinem Wort:</strong> kein Effekt.</li>
           </ul>
-          <p style="margin:0;"><strong>Nieten</strong> (rot auf der Tastatur) sind Buchstaben, die garantiert nicht im Fallenwort sind — du kannst sie bedenkenlos tippen. Je mehr Nieten enthüllt werden, desto sicherer weißt du, welche Buchstaben echte Fallen sind.</p>
+          <p style="margin:0 0 6px;"><strong>Nieten</strong> (rot) sind Buchstaben, die garantiert nicht im Fallenwort stecken — tippe sie bedenkenlos.</p>
+          <p style="margin:0;font-style:italic;"><strong>Beispiel:</strong> Du tippst HUNDE. Das H steckt nur im Fallenwort → Fuchsfalle, 1 Versuch weg! Das U steckt nur im Zielwort → 2 Nieten werden enthüllt.</p>
         </div>
       </div>
     </div>
@@ -1738,45 +1738,54 @@
     <!-- Akkordion 2: Das vergiftete Wort -->
     <div class="start-section">
       <div class="start-section-header">
-        <h2><button id="btn-vergiftetes-toggle" aria-expanded="false" aria-controls="vergiftetes-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Das verhexte Wort</button></h2>
+        <h2><button id="btn-vergiftetes-toggle" aria-expanded="false" aria-controls="vergiftetes-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Das verhexte Wort (Duell)</button></h2>
       </div>
       <div id="vergiftetes-inhalt" style="display:none;flex-direction:column;gap:10px;padding-top:4px;">
-        <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;">Lege ein Lösungswort fest, das ein anderer Tippfuchs in 6 Versuchen erraten muss. Lege außerdem ein verhextes Wort fest — tippt dein Gegner dieses Wort, hast du gewonnen. Tippt er es in den ersten zwei Versuchen, gewinnt trotzdem er.</p>
+        <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;font-style:italic;">Es waren einmal zwei super schlaue Fuchsgeschwister. Sie kennen sich so gut, dass sie wie ein einziger Fuchs denken. Daher kamen sie auf eine Idee: Du denkst dem anderen ein Zielwort aus — und legst dazu noch ein verhextes Wort, das er niemals tippen darf. Du glaubst, du kennst ihn so gut, dass er das verhexte Wort garantiert nicht erwischt. Tippt er es doch, ruft er: Verhext! — und du hast verloren.</p>
         <label for="vergiftetes-loesung" class="sr-only">Das Lösungswort (5 Buchstaben)</label>
         <input type="text" id="vergiftetes-loesung" maxlength="5" autocomplete="off" spellcheck="false" placeholder="Lösungswort (5 Buchstaben)" class="text-input" aria-label="Lösungswort eingeben, 5 Buchstaben" style="text-transform:uppercase;">
         <label for="vergiftetes-verhext" class="sr-only">Das verhexte Wort (5 Buchstaben)</label>
         <input type="text" id="vergiftetes-verhext" maxlength="5" autocomplete="off" spellcheck="false" placeholder="Verhextes Wort (5 Buchstaben)" class="text-input" aria-label="Verhextes Wort eingeben, 5 Buchstaben" style="text-transform:uppercase;">
         <div id="vergiftetes-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
-        <p style="font-size:.82rem;color:var(--text-muted);margin:0;">Nach dem Speichern findest du den Link unter <strong>Gestellte Duelle</strong>.</p>
         <button class="btn-primary" id="btn-vergiftetes-speichern" style="width:100%;">Spiel speichern ⚔️</button>
+        <div style="font-size:.82rem;color:var(--text-muted);line-height:1.6;">
+          <p style="margin:0 0 4px;"><strong>Kurzregeln:</strong> Du gibst ein Zielwort und ein verhextes Wort ein. Dein Mitspieler muss das Zielwort in 6 Versuchen erraten. Tippt er dabei das verhexte Wort, gewinnst du. Tippt er es in den ersten zwei Versuchen, gewinnt trotzdem er.</p>
+          <p style="margin:0;">Den Link zum Teilen findest du danach unter <strong>Gestellte Duelle</strong>.</p>
+        </div>
       </div>
     </div>
 
     <!-- Akkordion 3: Fuchsjagd -->
     <div class="start-section">
       <div class="start-section-header">
-        <h2><button id="btn-fuchsjagd-toggle" aria-expanded="false" aria-controls="fuchsjagd-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Das Fuchsrennen</button></h2>
+        <h2><button id="btn-fuchsjagd-toggle" aria-expanded="false" aria-controls="fuchsjagd-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Das Fuchsrennen (Duell)</button></h2>
       </div>
       <div id="fuchsjagd-inhalt" style="display:none;flex-direction:column;gap:10px;padding-top:4px;">
-        <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;">Ein Wort wird zufällig ausgewählt. Das Duell erscheint in deiner Duellliste, dein Mitspieler erhält das Rätsel per Link. Wer es in weniger Versuchen löst, gewinnt.</p>
+        <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;font-style:italic;">Es waren einmal zwei Füchschen, die sich stritten, wer schneller auf das richtige Wort kommt. Nun wollen sich die beiden messen. Beide bekommen dasselbe Wort — wer es in weniger Versuchen löst, gewinnt. Hier die Regeln, auf die sich die beiden Füchse geeinigt haben.</p>
         <div id="fuchsjagd-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
-        <p style="font-size:.82rem;color:var(--text-muted);margin:0;">Nach dem Speichern findest du den Link unter <strong>Gestellte Duelle</strong>.</p>
         <button class="btn-primary" id="btn-fuchsjagd-speichern" style="width:100%;">Spiel speichern ⚔️</button>
+        <div style="font-size:.82rem;color:var(--text-muted);line-height:1.6;">
+          <p style="margin:0 0 4px;"><strong>Kurzregeln:</strong> Ein Wort wird zufällig gewählt. Du spielst es zuerst, dein Mitspieler bekommt dasselbe Rätsel per Link. Wer es in weniger Versuchen löst, gewinnt.</p>
+          <p style="margin:0;">Den Link zum Teilen findest du danach unter <strong>Gestellte Duelle</strong>.</p>
+        </div>
       </div>
     </div>
 
     <!-- Akkordion 4: Wortfuchs -->
     <div class="start-section">
       <div class="start-section-header">
-        <h2><button id="btn-wortfuchs-toggle" aria-expanded="false" aria-controls="wortfuchs-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Das Fuchswort</button></h2>
+        <h2><button id="btn-wortfuchs-toggle" aria-expanded="false" aria-controls="wortfuchs-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Das Fuchswort (Duell)</button></h2>
       </div>
       <div id="wortfuchs-inhalt" style="display:none;flex-direction:column;gap:10px;padding-top:4px;">
-        <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;">Denke dir ein eigenes Wort aus, das ein anderer Tippfuchs lösen soll. Gib es ein und teile das Rätsel.</p>
+        <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;font-style:italic;">Es waren einmal zwei Füchschen, die hatten es satt, immer vorgeschrieben zu bekommen, welches Wort gesucht werden soll. Heute sind sie rebellisch — und denken sich selbst ein Wort aus, das sie dem anderen stellen.</p>
         <label for="wortfuchs-eingabe" class="sr-only">Dein Wort (5 Buchstaben)</label>
         <input type="text" id="wortfuchs-eingabe" maxlength="5" autocomplete="off" spellcheck="false" placeholder="Dein Wort (5 Buchstaben)" class="text-input" aria-label="Wort eingeben, 5 Buchstaben" style="text-transform:uppercase;">
         <div id="wortfuchs-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
-        <p style="font-size:.82rem;color:var(--text-muted);margin:0;">Nach dem Speichern findest du den Link unter <strong>Gestellte Duelle</strong>.</p>
         <button class="btn-primary" id="btn-wortfuchs-speichern" style="width:100%;">Spiel speichern ⚔️</button>
+        <div style="font-size:.82rem;color:var(--text-muted);line-height:1.6;">
+          <p style="margin:0 0 4px;"><strong>Kurzregeln:</strong> Du denkst dir ein 5-Buchstaben-Wort aus. Dein Mitspieler muss es in 6 Versuchen erraten.</p>
+          <p style="margin:0;">Den Link zum Teilen findest du danach unter <strong>Gestellte Duelle</strong>.</p>
+        </div>
       </div>
     </div>
 

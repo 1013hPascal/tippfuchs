@@ -16,7 +16,7 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
   const title = payload.notification?.title || 'Tippfuchs';
-  const body = payload.notification?.body || 'Du hast heute noch nicht gespielt!';
+  const body = payload.notification?.body || 'Hey, heute schon Tippfuchs gespielt? Dann nichts wie los!';
   self.registration.showNotification(title, {
     body,
     icon: '/icons/icon-192.png',
