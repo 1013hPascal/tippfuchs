@@ -239,7 +239,7 @@ document.getElementById('btn-spielanleitung').addEventListener('click', () => {
 });
 
 // Ausklappbare Bereiche — gemeinsame Hilfsfunktion
-function registriereToggle(btnId, inhaltId, label) {
+function registriereToggle(btnId, inhaltId, label, keinSageLautBeimOeffnen = false) {
   const btn = document.getElementById(btnId);
   const inhalt = document.getElementById(inhaltId);
   if (!btn || !inhalt) return;
@@ -247,7 +247,9 @@ function registriereToggle(btnId, inhaltId, label) {
     const expanded = this.getAttribute('aria-expanded') === 'true';
     this.setAttribute('aria-expanded', String(!expanded));
     inhalt.style.display = expanded ? 'none' : 'flex';
-    sageLaut(expanded ? label + ' eingeklappt.' : label + ' ausgeklappt.');
+    if (!keinSageLautBeimOeffnen || expanded) {
+      sageLaut(expanded ? label + ' eingeklappt.' : label + ' ausgeklappt.');
+    }
     // Aufgeklappt: Fokus auf erstes Kind-Element setzen
     if (!expanded) {
       const erstesKind = inhalt.firstElementChild;
@@ -308,10 +310,10 @@ registriereToggle('btn-freunde-verwalten-toggle', 'freunde-verwalten-inhalt', 'F
 document.getElementById('btn-zurueck-von-duelle').addEventListener('click', () => zeigeScreen('start-screen'));
 
 registriereToggle('btn-meine-duelle-toggle',  'meine-duelle-inhalt',       'Meine Duelle');
-registriereToggle('btn-fuchsfallen-toggle',   'fuchsfallen-duelle-inhalt', 'Fuchsfallen');
-registriereToggle('btn-vergiftetes-toggle',   'vergiftetes-inhalt',        'Das vergiftete Wort');
-registriereToggle('btn-fuchsjagd-toggle',     'fuchsjagd-inhalt',          'Fuchsjagd');
-registriereToggle('btn-wortfuchs-toggle',     'wortfuchs-inhalt',          'Wortfuchs');
+registriereToggle('btn-fuchsfallen-toggle',   'fuchsfallen-duelle-inhalt', 'Fuchsfallen',        true);
+registriereToggle('btn-vergiftetes-toggle',   'vergiftetes-inhalt',        'Das verhexte Wort',  true);
+registriereToggle('btn-fuchsjagd-toggle',     'fuchsjagd-inhalt',          'Das Fuchsrennen',    true);
+registriereToggle('btn-wortfuchs-toggle',     'wortfuchs-inhalt',          'Das Fuchswort',      true);
 
 // Meine Duelle laden wenn aufgeklappt
 document.getElementById('btn-meine-duelle-toggle').addEventListener('click', () => {
