@@ -141,22 +141,40 @@ export function verarbeiteFFWort() {
 
   if (fallenBuchstaben.length > 0) ff.verloreneVersuche += 1;
 
-  // Einziger sageLaut-Aufruf — gleicher Sprachstil wie Tageswort + Falle/Niete/Hinweis
+  // Reihenfolge: Wortlösung → Ergebnis (= Muster) → Nieten → Fuchsfallen
+  // 1. Wortlösung: Buchstaben-Ergebnis
   let sr = erg.map((e, i) => {
     const s = e === 'correct' ? 'richtige Stelle' : e === 'present' ? 'falsche Stelle' : 'kommt nicht vor';
     return `${versuch[i]}: ${s}`;
   }).join(', ');
-  if (fallenBuchstaben.length > 0) {
-    sr += `. Fuchsfalle! ${fallenBuchstaben.join(', ')} ${fallenBuchstaben.length > 1 ? 'waren' : 'war'} im Fallenwort. 1 Versuch verloren`;
+
+  // 2. Ergebnis: = Muster (nur wenn Spiel weitergeht)
+  const verfuegbar = ff.maxVersuche - ff.verloreneVersuche;
+  const spielLaeuft = versuch !== ff.zielwort && ff.versuche.length < verfuegbar;
+  if (spielLaeuft) {
+    const muster = Array(5).fill('=');
+    ff.versuche.forEach(v => {
+      for (let i = 0; i < 5; i++) {
+        if (v[i] === ff.zielwort[i]) muster[i] = v[i];
+      }
+    });
+    sr += `. ${muster.join(' ')}`;
   }
+
+  // 3. Nieten
   if (nietenEntfernt.length > 0) {
     sr += `. Nieten enthüllt: ${nietenEntfernt.join(', ')}`;
   }
+
+  // 4. Fuchsfallen
+  if (fallenBuchstaben.length > 0) {
+    sr += `. Fuchsfalle! ${fallenBuchstaben.join(', ')} ${fallenBuchstaben.length > 1 ? 'waren' : 'war'} im Fallenwort. 1 Versuch verloren`;
+  }
+
   if (hinweisBuchstaben.length > 0) {
     sr += `. Hinweis: ${hinweisBuchstaben.join(', ')} ${hinweisBuchstaben.length > 1 ? 'sind' : 'ist'} bereits als nicht vorhanden bekannt`;
   }
 
-  const verfuegbar = ff.maxVersuche - ff.verloreneVersuche;
   if (versuch === ff.zielwort) {
     ff.spielende = true;
     ff.gewonnen = true;
@@ -165,14 +183,6 @@ export function verarbeiteFFWort() {
     ff.spielende = true;
     ff.gewonnen = false;
     sr += `. Verloren! Das Zielwort war ${ff.zielwort}. Das Fallenwort war ${ff.fallenwort}.`;
-  } else {
-    const muster = Array(5).fill('=');
-    ff.versuche.forEach(v => {
-      for (let i = 0; i < 5; i++) {
-        if (v[i] === ff.zielwort[i]) muster[i] = v[i];
-      }
-    });
-    sr += `. ${muster.join(' ')}`;
   }
 
   sageLaut(sr);
