@@ -165,6 +165,14 @@ export function verarbeiteFFWort() {
     ff.spielende = true;
     ff.gewonnen = false;
     sr += `. Verloren! Das Zielwort war ${ff.zielwort}. Das Fallenwort war ${ff.fallenwort}.`;
+  } else {
+    const muster = Array(5).fill('=');
+    ff.versuche.forEach(v => {
+      for (let i = 0; i < 5; i++) {
+        if (v[i] === ff.zielwort[i]) muster[i] = v[i];
+      }
+    });
+    sr += `. ${muster.join(' ')}`;
   }
 
   sageLaut(sr);

@@ -134,7 +134,15 @@ export async function verarbeiteWort() {
   state.versuche.push(wort);
   input.value=''; input.focus();
   aktualisiereVerlauf(); aktualisiereBuchstabenStatus(); speichereZustand();
-  sageLaut(erg.map((e,i)=>`${wort[i]}: ${e==='correct'?'richtige Stelle':e==='present'?'falsche Stelle':'kommt nicht vor'}`).join(', '));
+  const muster = Array(5).fill('=');
+  for (const v of state.versuche) {
+    for (let i = 0; i < 5; i++) {
+      if (v[i] === appState.TAGESWORT[i]) muster[i] = v[i];
+    }
+  }
+  let srWort = erg.map((e,i)=>`${wort[i]}: ${e==='correct'?'richtige Stelle':e==='present'?'falsche Stelle':'kommt nicht vor'}`).join(', ');
+  srWort += `. ${muster.join(' ')}`;
+  sageLaut(srWort);
   const gewonnen = erg.every(e=>e==='correct');
   const korrektAnzahl = erg.filter(e=>e==='correct').length;
 
