@@ -1719,18 +1719,37 @@
       <div id="fuchsfallen-duelle-inhalt" style="display:none;flex-direction:column;gap:10px;padding-top:4px;">
         <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;font-style:italic;">An der Fuchsakademie gibt es einen Lehrer, der ganz gemeine Prüfungen stellt. Die Füchse müssen nicht nur alleine auf das richtige Wort kommen — nein, der Lehrer ist hinterlistig und hat Fallen eingebaut. Bevor die Prüfung beginnt, müssen sich die Fuchsschülerinnen folgende Regeln einprägen.</p>
         <button class="btn-primary" id="btn-fuchsfallen-start" style="width:100%;">Fuchsfallen spielen</button>
-        <div style="font-size:.85rem;color:var(--text-muted);line-height:1.7;">
-          <p style="margin:0 0 6px;"><strong>Kurzregeln:</strong></p>
-          <p style="margin:0 0 4px;">Es gibt zwei geheime Wörter: das <strong>Zielwort</strong> (das du erraten musst) und ein verstecktes <strong>Fallenwort</strong>. Du hast <strong>6 Versuche</strong>. Die Farben (grün/orange/grau) zeigen nur, wie dein Tipp zum Zielwort passt.</p>
-          <p style="margin:0 0 4px;">Für jeden Buchstaben, der zum ersten Mal in deinem Tipp vorkommt, gilt:</p>
-          <ul style="margin:0 0 6px;padding-left:18px;">
-            <li><strong>Nur im Zielwort:</strong> 2 sichere Nieten (rot) werden aufgedeckt.</li>
-            <li><strong>In beiden Wörtern:</strong> 1 Niete wird aufgedeckt.</li>
-            <li><strong>Nur im Fallenwort:</strong> Fuchsfalle! 1 Versuch verloren, Buchstabe leuchtet blau.</li>
-            <li><strong>In keinem Wort:</strong> kein Effekt.</li>
-          </ul>
-          <p style="margin:0 0 6px;"><strong>Nieten</strong> (rot) sind Buchstaben, die garantiert nicht im Fallenwort stecken — tippe sie bedenkenlos.</p>
-          <p style="margin:0;font-style:italic;"><strong>Beispiel:</strong> Du tippst HUNDE. Das H steckt nur im Fallenwort → Fuchsfalle, 1 Versuch weg! Das U steckt nur im Zielwort → 2 Nieten werden enthüllt.</p>
+        <div style="font-size:.85rem;color:var(--text-muted);display:flex;flex-direction:column;gap:6px;">
+          <details>
+            <summary style="cursor:pointer;font-weight:700;padding:4px 0;">Anleitung für Screenreader-Nutzer</summary>
+            <div style="line-height:1.7;padding-top:6px;">
+              <p style="margin:0 0 4px;">Oberhalb des Textfeldes: Lösungsfortschritt (erkannte Buchstaben) und verbleibende Versuche.</p>
+              <p style="margin:0 0 4px;">Unterhalb des Textfeldes: Hinweise, wenn du einen Buchstaben eingibst, der nicht vorkommen darf, oder an einer Stelle schon ein richtiger Buchstabe bekannt ist.</p>
+              <p style="margin:0 0 4px;">Nach jedem Tipp liest der Screenreader automatisch vor:</p>
+              <ol style="margin:0 0 4px;padding-left:18px;">
+                <li>Welche Buchstaben an richtiger Stelle, falscher Stelle oder nicht im Wort sind.</li>
+                <li>Den aktuellen Lösungsfortschritt (z.B. „= A = = =" — = bedeutet noch unbekannt).</li>
+                <li>Falls Nieten enthüllt wurden: welche Buchstaben das sind.</li>
+                <li>Falls eine Fuchsfalle ausgelöst wurde: welcher Buchstabe und dass ein Versuch verloren geht.</li>
+              </ol>
+              <p style="margin:0;">Buchstaben auf der Tastatur: rot = Niete (sicher nicht im Fallenwort), blau = Fuchsfalle.</p>
+            </div>
+          </details>
+          <details>
+            <summary style="cursor:pointer;font-weight:700;padding:4px 0;">Anleitung für Sehende</summary>
+            <div style="line-height:1.7;padding-top:6px;">
+              <p style="margin:0 0 4px;">Es gibt zwei geheime Wörter: das <strong>Zielwort</strong> (das du erraten musst) und ein verstecktes <strong>Fallenwort</strong>. Du hast <strong>6 Versuche</strong>. Die Farben (grün/orange/grau) zeigen, wie dein Tipp zum Zielwort passt.</p>
+              <p style="margin:0 0 4px;">Für jeden Buchstaben, der zum ersten Mal in deinem Tipp vorkommt, gilt:</p>
+              <ul style="margin:0 0 6px;padding-left:18px;">
+                <li><strong>Nur im Zielwort:</strong> 2 sichere Nieten (rot) werden aufgedeckt.</li>
+                <li><strong>In beiden Wörtern:</strong> 1 Niete wird aufgedeckt.</li>
+                <li><strong>Nur im Fallenwort:</strong> Fuchsfalle! 1 Versuch verloren, Buchstabe leuchtet blau.</li>
+                <li><strong>In keinem Wort:</strong> kein Effekt.</li>
+              </ul>
+              <p style="margin:0 0 6px;"><strong>Nieten</strong> (rot) sind Buchstaben, die garantiert nicht im Fallenwort stecken — tippe sie bedenkenlos.</p>
+              <p style="margin:0;font-style:italic;"><strong>Beispiel:</strong> Du tippst HUNDE. Das H steckt nur im Fallenwort → Fuchsfalle, 1 Versuch weg! Das U steckt nur im Zielwort → 2 Nieten werden enthüllt.</p>
+            </div>
+          </details>
         </div>
       </div>
     </div>
@@ -1748,9 +1767,21 @@
         <input type="text" id="vergiftetes-verhext" maxlength="5" autocomplete="off" spellcheck="false" placeholder="Verhextes Wort (5 Buchstaben)" class="text-input" aria-label="Verhextes Wort eingeben, 5 Buchstaben" style="text-transform:uppercase;">
         <div id="vergiftetes-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
         <button class="btn-primary" id="btn-vergiftetes-speichern" style="width:100%;">Spiel speichern ⚔️</button>
-        <div style="font-size:.82rem;color:var(--text-muted);line-height:1.6;">
-          <p style="margin:0 0 4px;"><strong>Kurzregeln:</strong> Du gibst ein Zielwort und ein verhextes Wort ein. Dein Mitspieler muss das Zielwort in 6 Versuchen erraten. Tippt er dabei das verhexte Wort, gewinnst du. Tippt er es in den ersten zwei Versuchen, gewinnt trotzdem er.</p>
-          <p style="margin:0;">Den Link zum Teilen findest du danach unter <strong>Gestellte Duelle</strong>.</p>
+        <div style="font-size:.82rem;color:var(--text-muted);display:flex;flex-direction:column;gap:6px;">
+          <details>
+            <summary style="cursor:pointer;font-weight:700;padding:4px 0;">Anleitung für Screenreader-Nutzer</summary>
+            <div style="line-height:1.6;padding-top:6px;">
+              <p style="margin:0 0 4px;">Dein Mitspieler spielt auf dem normalen Spielfeld. Der Screenreader liest nach jedem Tipp automatisch vor: welche Buchstaben an richtiger Stelle, falscher Stelle oder nicht im Wort sind, sowie den aktuellen Lösungsfortschritt.</p>
+              <p style="margin:0;">Oberhalb des Textfeldes: Lösungsfortschritt und verbleibende Versuche. Unterhalb: Hinweise bei bereits bekannten Buchstaben.</p>
+            </div>
+          </details>
+          <details>
+            <summary style="cursor:pointer;font-weight:700;padding:4px 0;">Kurzregeln</summary>
+            <div style="line-height:1.6;padding-top:6px;">
+              <p style="margin:0 0 4px;">Du gibst ein Zielwort und ein verhextes Wort ein. Dein Mitspieler muss das Zielwort in 6 Versuchen erraten. Tippt er dabei das verhexte Wort, gewinnst du. Tippt er es in den ersten zwei Versuchen, gewinnt trotzdem er.</p>
+              <p style="margin:0;">Den Link zum Teilen findest du danach unter <strong>Gestellte Duelle</strong>.</p>
+            </div>
+          </details>
         </div>
       </div>
     </div>
@@ -1764,9 +1795,21 @@
         <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;font-style:italic;">Es waren einmal zwei Füchschen, die sich stritten, wer schneller auf das richtige Wort kommt. Nun wollen sich die beiden messen. Beide bekommen dasselbe Wort — wer es in weniger Versuchen löst, gewinnt. Hier die Regeln, auf die sich die beiden Füchse geeinigt haben.</p>
         <div id="fuchsjagd-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
         <button class="btn-primary" id="btn-fuchsjagd-speichern" style="width:100%;">Spiel speichern ⚔️</button>
-        <div style="font-size:.82rem;color:var(--text-muted);line-height:1.6;">
-          <p style="margin:0 0 4px;"><strong>Kurzregeln:</strong> Ein Wort wird zufällig gewählt. Du spielst es zuerst, dein Mitspieler bekommt dasselbe Rätsel per Link. Wer es in weniger Versuchen löst, gewinnt.</p>
-          <p style="margin:0;">Den Link zum Teilen findest du danach unter <strong>Gestellte Duelle</strong>.</p>
+        <div style="font-size:.82rem;color:var(--text-muted);display:flex;flex-direction:column;gap:6px;">
+          <details>
+            <summary style="cursor:pointer;font-weight:700;padding:4px 0;">Anleitung für Screenreader-Nutzer</summary>
+            <div style="line-height:1.6;padding-top:6px;">
+              <p style="margin:0 0 4px;">Du und dein Mitspieler spielt auf dem normalen Spielfeld. Der Screenreader liest nach jedem Tipp automatisch vor: welche Buchstaben an richtiger Stelle, falscher Stelle oder nicht im Wort sind, sowie den aktuellen Lösungsfortschritt.</p>
+              <p style="margin:0;">Oberhalb des Textfeldes: Lösungsfortschritt und verbleibende Versuche. Unterhalb: Hinweise bei bereits bekannten Buchstaben.</p>
+            </div>
+          </details>
+          <details>
+            <summary style="cursor:pointer;font-weight:700;padding:4px 0;">Kurzregeln</summary>
+            <div style="line-height:1.6;padding-top:6px;">
+              <p style="margin:0 0 4px;">Ein Wort wird zufällig gewählt. Du spielst es zuerst, dein Mitspieler bekommt dasselbe Rätsel per Link. Wer es in weniger Versuchen löst, gewinnt.</p>
+              <p style="margin:0;">Den Link zum Teilen findest du danach unter <strong>Gestellte Duelle</strong>.</p>
+            </div>
+          </details>
         </div>
       </div>
     </div>
@@ -1782,9 +1825,21 @@
         <input type="text" id="wortfuchs-eingabe" maxlength="5" autocomplete="off" spellcheck="false" placeholder="Dein Wort (5 Buchstaben)" class="text-input" aria-label="Wort eingeben, 5 Buchstaben" style="text-transform:uppercase;">
         <div id="wortfuchs-fehler" role="alert" aria-live="assertive" class="fehler-text"></div>
         <button class="btn-primary" id="btn-wortfuchs-speichern" style="width:100%;">Spiel speichern ⚔️</button>
-        <div style="font-size:.82rem;color:var(--text-muted);line-height:1.6;">
-          <p style="margin:0 0 4px;"><strong>Kurzregeln:</strong> Du denkst dir ein 5-Buchstaben-Wort aus. Dein Mitspieler muss es in 6 Versuchen erraten.</p>
-          <p style="margin:0;">Den Link zum Teilen findest du danach unter <strong>Gestellte Duelle</strong>.</p>
+        <div style="font-size:.82rem;color:var(--text-muted);display:flex;flex-direction:column;gap:6px;">
+          <details>
+            <summary style="cursor:pointer;font-weight:700;padding:4px 0;">Anleitung für Screenreader-Nutzer</summary>
+            <div style="line-height:1.6;padding-top:6px;">
+              <p style="margin:0 0 4px;">Dein Mitspieler spielt auf dem normalen Spielfeld. Der Screenreader liest nach jedem Tipp automatisch vor: welche Buchstaben an richtiger Stelle, falscher Stelle oder nicht im Wort sind, sowie den aktuellen Lösungsfortschritt.</p>
+              <p style="margin:0;">Oberhalb des Textfeldes: Lösungsfortschritt und verbleibende Versuche. Unterhalb: Hinweise bei bereits bekannten Buchstaben.</p>
+            </div>
+          </details>
+          <details>
+            <summary style="cursor:pointer;font-weight:700;padding:4px 0;">Kurzregeln</summary>
+            <div style="line-height:1.6;padding-top:6px;">
+              <p style="margin:0 0 4px;">Du denkst dir ein 5-Buchstaben-Wort aus. Dein Mitspieler muss es in 6 Versuchen erraten.</p>
+              <p style="margin:0;">Den Link zum Teilen findest du danach unter <strong>Gestellte Duelle</strong>.</p>
+            </div>
+          </details>
         </div>
       </div>
     </div>
