@@ -74,13 +74,16 @@ export function verarbeiteFFWort() {
     return;
   }
 
-  // Weicher Hinweis nur visuell — kein eigener sageLaut (wird in Haupt-Ankündigung eingebaut)
-  const hinweisBuchstaben = [...new Set(versuch.split(''))].filter(b =>
-    ff.tastaturStatus[b] === 'absent' || ff.tastaturStatus[b] === 'falle'
-  );
-  fehlerEl.textContent = hinweisBuchstaben.length > 0
-    ? `Hinweis: ${hinweisBuchstaben.join(', ')} bereits als nicht vorhanden bekannt.`
-    : '';
+  // Weiche Hinweise (visuell + in sageLaut eingebaut), nach Status aufgeteilt
+  const eindeutigeBuchstaben = [...new Set(versuch.split(''))];
+  const hinweisFallen = eindeutigeBuchstaben.filter(b => ff.tastaturStatus[b] === 'falle');
+  const hinweisAbsent = eindeutigeBuchstaben.filter(b => ff.tastaturStatus[b] === 'absent');
+  const hinweisNieten = eindeutigeBuchstaben.filter(b => ff.tastaturStatus[b] === 'niete');
+  const hinweisTeile = [];
+  if (hinweisFallen.length > 0) hinweisTeile.push(`Fuchsfallen: ${hinweisFallen.join(', ')} kommen nicht im Zielwort vor.`);
+  if (hinweisAbsent.length > 0) hinweisTeile.push(`Nicht im Zielwort: ${hinweisAbsent.join(', ')}.`);
+  if (hinweisNieten.length > 0) hinweisTeile.push(`Nieten: ${hinweisNieten.join(', ')} — kein Fallenrisiko.`);
+  fehlerEl.textContent = hinweisTeile.join(' ');
 
   // Wie beim Tageswort: erst Eingabe leeren + Fokus setzen, dann sageLaut —
   // so unterbricht der Focus-Wechsel die live-region-Ankündigung nicht (iOS VoiceOver)
@@ -171,8 +174,14 @@ export function verarbeiteFFWort() {
     sr += `. Fuchsfalle! ${fallenBuchstaben.join(', ')} ${fallenBuchstaben.length > 1 ? 'waren' : 'war'} im Fallenwort. 1 Versuch verloren`;
   }
 
-  if (hinweisBuchstaben.length > 0) {
-    sr += `. Hinweis: ${hinweisBuchstaben.join(', ')} ${hinweisBuchstaben.length > 1 ? 'sind' : 'ist'} bereits als nicht vorhanden bekannt`;
+  if (hinweisFallen.length > 0) {
+    sr += `. Hinweis: ${hinweisFallen.join(', ')} ${hinweisFallen.length > 1 ? 'sind Fuchsfallen' : 'ist eine Fuchsfalle'} — nicht im Zielwort`;
+  }
+  if (hinweisAbsent.length > 0) {
+    sr += `. Hinweis: ${hinweisAbsent.join(', ')} ${hinweisAbsent.length > 1 ? 'kommen' : 'kommt'} nicht im Zielwort vor`;
+  }
+  if (hinweisNieten.length > 0) {
+    sr += `. Hinweis: ${hinweisNieten.join(', ')} ${hinweisNieten.length > 1 ? 'sind Nieten' : 'ist eine Niete'} — kein Fallenrisiko`;
   }
 
   if (versuch === ff.zielwort) {
@@ -311,7 +320,7 @@ function _srStatus() {
 
   const s = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
   s('ff-bz-falle',  `${fallen} (Fuchsfalle — war im Fallenwort, 1 Versuch verloren)`);
-  s('ff-bz-niete',  `${nieten} (Niete — sicher, nicht im Fallenwort)`);
+  s('ff-bz-niete',  `${nieten} (Niete — sicher nicht im Fallenwort, kann aber im Lösungswort vorkommen)`);
   s('ff-bz-falsch', `${falsch} (Falsche Stelle)`);
   s('ff-bz-nein',   `${nein} (Kommt nicht vor)`);
   s('ff-bz-used',   `${used} (Richtig, mehrfach vorkommen möglich)`);
@@ -360,8 +369,12 @@ async function _zeigeErgebnis() {
 
 export function pruefeFfEingabeHinweis(buchstabe, position) {
   if (!ff.zielwort || ff.versuche.length === 0) return null;
-  if (ff.tastaturStatus[buchstabe] === 'absent' || ff.tastaturStatus[buchstabe] === 'falle') {
-    return `Buchstabe ${buchstabe} darf nicht im Wort vorkommen.`;
+  const status = ff.tastaturStatus[buchstabe];
+  if (status === 'falle') {
+    return `Achtung! ${buchstabe} war eine Fuchsfalle — er kommt im Zielwort nicht vor.`;
+  }
+  if (status === 'absent') {
+    return `${buchstabe} kommt im Zielwort nicht vor.`;
   }
   const correctAnPos = Array(5).fill(null);
   ff.versuche.forEach(v => {
@@ -370,7 +383,16 @@ export function pruefeFfEingabeHinweis(buchstabe, position) {
     });
   });
   if (correctAnPos[position] && correctAnPos[position] !== buchstabe) {
-    return `An der Stelle hast du ${correctAnPos[position]} schon richtig.`;
+    return `An dieser Stelle steht ${correctAnPos[position]} schon richtig.`;
+  }
+  if (status === 'niete') {
+    return `Gut! ${buchstabe} ist eine Niete — er steckt nicht im Fallenwort, kein Fallenrisiko.`;
+  }
+  if (status === 'present') {
+    return `${buchstabe} ist im Zielwort — aber steht woanders. Versuche eine andere Stelle.`;
+  }
+  if (status === 'correct' && correctAnPos[position] === buchstabe) {
+    return `Richtig! ${buchstabe} steht hier schon an der richtigen Stelle.`;
   }
   return null;
 }
