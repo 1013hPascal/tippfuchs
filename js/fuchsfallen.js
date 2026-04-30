@@ -314,17 +314,19 @@ function _srStatus() {
   const fallen = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'falle').join(' ') || 'keine';
   const nieten = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'niete').join(' ') || 'keine';
   const falsch = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'present').join(' ') || 'keine';
-  const nein   = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'absent').join(' ') || 'keine';
   const used   = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'correct').join(' ') || 'keine';
-  const unused = TASTATUR_BUCHSTABEN.filter(b => !ff.tastaturStatus[b]).join(' ') || 'keine';
+  // Falle-Buchstaben sind auch nicht im Zielwort → erscheinen in beiden Listen
+  const nein   = TASTATUR_BUCHSTABEN.filter(b => ff.tastaturStatus[b] === 'absent' || ff.tastaturStatus[b] === 'falle').join(' ') || 'keine';
+  // Nieten wurden noch nie getippt (nur enthüllt) → erscheinen auch in "noch nicht verwendet"
+  const unused = TASTATUR_BUCHSTABEN.filter(b => !ff.tastaturStatus[b] || ff.tastaturStatus[b] === 'niete').join(' ') || 'keine';
 
   const s = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
   s('ff-bz-falle',  `${fallen} (Fuchsfalle — war im Fallenwort, 1 Versuch verloren)`);
   s('ff-bz-niete',  `${nieten} (Niete — sicher nicht im Fallenwort, kann aber im Lösungswort vorkommen)`);
   s('ff-bz-falsch', `${falsch} (Falsche Stelle)`);
-  s('ff-bz-nein',   `${nein} (Kommt nicht vor)`);
+  s('ff-bz-nein',   `${nein} (Kommt nicht vor im Zielwort — enthält abwesende Buchstaben und Fuchsfallen)`);
   s('ff-bz-used',   `${used} (Richtig, mehrfach vorkommen möglich)`);
-  s('ff-bz-unused', `${unused} (Noch nicht verwendet)`);
+  s('ff-bz-unused', `${unused} (Noch nicht verwendet — enthält auch enthüllte Nieten)`);
 }
 
 async function _speichereStats() {
@@ -377,9 +379,12 @@ export function pruefeFfEingabeHinweis(buchstabe, position) {
     return `${buchstabe} kommt im Zielwort nicht vor.`;
   }
   const correctAnPos = Array(5).fill(null);
+  let schonAnDieserStelle = false;
   ff.versuche.forEach(v => {
-    bewerteVersuch(v, ff.zielwort).forEach((e, i) => {
+    const erg = bewerteVersuch(v, ff.zielwort);
+    erg.forEach((e, i) => {
       if (e === 'correct') correctAnPos[i] = v[i];
+      if (i === position && v[i] === buchstabe && e === 'present') schonAnDieserStelle = true;
     });
   });
   if (correctAnPos[position] && correctAnPos[position] !== buchstabe) {
@@ -388,8 +393,8 @@ export function pruefeFfEingabeHinweis(buchstabe, position) {
   if (status === 'niete') {
     return `Gut! ${buchstabe} ist eine Niete — er steckt nicht im Fallenwort, kein Fallenrisiko.`;
   }
-  if (status === 'present') {
-    return `${buchstabe} ist im Zielwort — aber steht woanders. Versuche eine andere Stelle.`;
+  if (status === 'present' && schonAnDieserStelle) {
+    return `${buchstabe} ist im Zielwort — aber an dieser Stelle schon versucht. Versuche eine andere.`;
   }
   if (status === 'correct' && correctAnPos[position] === buchstabe) {
     return `Richtig! ${buchstabe} steht hier schon an der richtigen Stelle.`;
