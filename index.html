@@ -541,14 +541,15 @@
 </g>
 
 <!-- POOL (zentraler Spielbutton) -->
-<ellipse cx="320" cy="385" rx="114" ry="44" fill="#d8d4cc" stroke="#b8b4ac" stroke-width="2.5"/>
-<ellipse cx="320" cy="385" rx="102" ry="37" fill="#e4e0d8" stroke="#c8c4bc" stroke-width="1.2"/>
-<ellipse cx="320" cy="385" rx="90" ry="29" fill="url(#hg2-pool)" opacity="0.95" filter="url(#pool-glow)"/>
-<path d="M230,378 Q256,372 282,378 Q308,384 334,378 Q360,372 386,378 Q412,384 412,380" fill="none" stroke="white" stroke-width="1.2" opacity="0.35"/>
-<path d="M228,390 Q258,384 290,390 Q322,396 354,390 Q386,384 412,390" fill="none" stroke="white" stroke-width="1" opacity="0.22"/>
-<text id="pool-btn-text" style="pointer-events:all;cursor:pointer;text-shadow:0 1px 4px rgba(0,0,0,0.5);" x="306" y="388" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="700" fill="white">&#128042; Spielen</text>
-<text id="pool-btn-subtext" style="display:none;" x="306" y="388" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white"></text>
-<ellipse id="pool-klick" cx="306" cy="385" rx="82" ry="28" fill="transparent" style="cursor:pointer;pointer-events:all;"/>
+<g class="haus-fenster" data-fenster="spielen" style="cursor:pointer;pointer-events:all;">
+  <ellipse cx="320" cy="385" rx="114" ry="44" fill="#d8d4cc" stroke="#b8b4ac" stroke-width="2.5"/>
+  <ellipse cx="320" cy="385" rx="102" ry="37" fill="#e4e0d8" stroke="#c8c4bc" stroke-width="1.2"/>
+  <ellipse cx="320" cy="385" rx="90" ry="29" fill="url(#hg2-pool)" opacity="0.95" filter="url(#pool-glow)"/>
+  <path d="M230,378 Q256,372 282,378 Q308,384 334,378 Q360,372 386,378 Q412,384 412,380" fill="none" stroke="white" stroke-width="1.2" opacity="0.35"/>
+  <path d="M228,390 Q258,384 290,390 Q322,396 354,390 Q386,384 412,390" fill="none" stroke="white" stroke-width="1" opacity="0.22"/>
+  <text id="pool-btn-text" style="text-shadow:0 1px 4px rgba(0,0,0,0.5);" x="306" y="388" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="700" fill="white">&#128042; Spielen</text>
+  <text id="pool-btn-subtext" style="display:none;" x="306" y="388" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="white"></text>
+</g>
 
 <!-- SPRINGBRUNNEN (Quellen) RECHTS -->
 <g class="haus-fenster" data-fenster="quellen" style="cursor:pointer;pointer-events:all;">
@@ -1760,7 +1761,7 @@
         <h2><button id="btn-vergiftetes-toggle" aria-expanded="false" aria-controls="vergiftetes-inhalt" style="background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left;width:100%;">Das verhexte Wort (Duell)</button></h2>
       </div>
       <div id="vergiftetes-inhalt" style="display:none;flex-direction:column;gap:10px;padding-top:4px;">
-        <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;font-style:italic;">Es waren einmal zwei super schlaue Fuchsgeschwister. Sie kennen sich so gut, dass sie wie ein einziger Fuchs denken. Daher kamen sie auf eine Idee: Du denkst dem anderen ein Zielwort aus — und legst dazu noch ein verhextes Wort, das er niemals tippen darf. Du glaubst, du kennst ihn so gut, dass er das verhexte Wort garantiert nicht erwischt. Tippt er es doch, ruft er: Verhext! — und du hast verloren.</p>
+        <p style="font-size:.85rem;color:var(--text-muted);margin:0;line-height:1.6;font-style:italic;">Es waren einmal zwei super schlaue Fuchsgeschwister. Sie kennen sich so gut, dass sie wie ein einziger Fuchs denken. Daher kamen sie auf eine Idee: Du denkst dem anderen ein Zielwort aus — und legst dazu noch ein verhextes Wort fest. Du glaubst, du kennst ihn so gut, dass er das verhexte Wort garantiert tippt. Löst er das Zielwort ohne das verhexte Wort zu treffen, hat er gewonnen. Tippt er es doch, rufst du: Verhextes Wort! — und du hast gewonnen.</p>
         <label for="vergiftetes-loesung" class="sr-only">Das Lösungswort (5 Buchstaben)</label>
         <input type="text" id="vergiftetes-loesung" maxlength="5" autocomplete="off" spellcheck="false" placeholder="Lösungswort (5 Buchstaben)" class="text-input" aria-label="Lösungswort eingeben, 5 Buchstaben" style="text-transform:uppercase;">
         <label for="vergiftetes-verhext" class="sr-only">Das verhexte Wort (5 Buchstaben)</label>

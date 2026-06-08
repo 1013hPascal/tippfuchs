@@ -61,6 +61,11 @@ export function initialisiereHausFenster() {
   fensterGruppen.forEach(g => {
     g.addEventListener('click', () => {
       const name = g.dataset.fenster;
+      if (name === 'spielen') {
+        const btnSpielStarten = document.getElementById('btn-spiel-starten');
+        if (btnSpielStarten) btnSpielStarten.click();
+        return;
+      }
       if (aktivFenster === name) {
         schliesseFenster();
       } else {
@@ -82,23 +87,22 @@ export function initialisiereHausFenster() {
   const schliessenBtn = document.getElementById('haus-menue-schliessen');
   if (schliessenBtn) schliessenBtn.addEventListener('click', schliesseFenster);
 
-  // Pool-Klick → Spielen
-  const poolKlick = document.getElementById('pool-klick');
+  // Pool-Text aktualisieren
   const poolText = document.getElementById('pool-btn-text');
   const poolSub = document.getElementById('pool-btn-subtext');
 
   function aktualisierePoolText() {
     if (poolText) {
-      // Text vom zugänglichen Button spiegeln
       const btnSpielStarten = document.getElementById('btn-spiel-starten');
-      const btnText = btnSpielStarten ? btnSpielStarten.textContent.trim() : '';
-      if (btnText && btnText !== '🦊 Wird geladen...') {
-        poolText.textContent = btnText;
-        // Schriftgröße bei längeren Texten verkleinern
-        const groesse = btnText.length > 18 ? '11' : btnText.length > 13 ? '13' : '16';
-        poolText.setAttribute('font-size', groesse);
+      const modus = btnSpielStarten ? btnSpielStarten.dataset.modus : '';
+      if (modus === 'duelle') {
+        poolText.textContent = '⚔️ Duelle starten';
+        poolText.setAttribute('font-size', '13');
+      } else if (appState.currentUser && appState.currentSpitzname) {
+        poolText.textContent = '🦊 Jetzt spielen';
+        poolText.setAttribute('font-size', '14');
       } else {
-        poolText.textContent = appState.currentUser && appState.currentSpitzname ? '🦊 Jetzt spielen' : '🦊 Jetzt anmelden';
+        poolText.textContent = '🦊 Jetzt anmelden';
         poolText.setAttribute('font-size', '14');
       }
     }
@@ -109,19 +113,6 @@ export function initialisiereHausFenster() {
     }
   }
   aktualisierePoolText();
-
-  if (poolKlick) {
-    poolKlick.addEventListener('click', () => {
-      if (appState.currentUser && appState.currentSpitzname) {
-        starteSpiel();
-      } else {
-        oeffneFenster('anmelden');
-      }
-    });
-  }
-  // Auch Textklick
-  if (poolText) poolText.addEventListener('click', () => poolKlick && poolKlick.dispatchEvent(new Event('click')));
-  if (poolSub) poolSub.addEventListener('click', () => poolKlick && poolKlick.dispatchEvent(new Event('click')));
 
   // Pool-Text aktualisieren wenn Login-Status sich ändert
   window.aktualisiereHausPoolText = aktualisierePoolText;

@@ -118,7 +118,7 @@ export async function aktualisiereStartStats() {
   statsBox.style.display = 'flex';
   if (streak > 0) {
     const flamme = streak >= 7 ? '🔥🔥' : '🔥';
-    streakBox.textContent = `${flamme} ${streak} Tag${streak!==1?'e':''} in Folge gespielt`;
+    streakBox.textContent = `${flamme} ${streak} Tag${streak!==1?'e':''} in Folge das Wort gelöst`;
   } else {
     streakBox.textContent = 'Noch keine aktive Serie';
   }

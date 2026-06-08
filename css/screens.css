@@ -446,18 +446,6 @@ body.keine-animationen .fp-punkt {
   display: none;
 }
 
-/* Standard/schlicht: Buchstabenstatus auch visuell anzeigen (sr-only aufheben) */
-[data-design="standard"] #status-bereich {
-  position: static;
-  width: auto;
-  height: auto;
-  overflow: visible;
-  clip: auto;
-  clip-path: none;
-  white-space: normal;
-  margin-top: 8px;
-}
-
 /* Dual-UI: In visuellen Designs ist die zugängliche Ebene sr-only
    — visuell unsichtbar, aber für Screen Reader voll zugänglich */
 [data-design="fuchsbau"] .start-abschnitte-normal,

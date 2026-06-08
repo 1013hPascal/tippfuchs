@@ -208,10 +208,10 @@ export async function zeigeStartDuelleStats(userId) {
         if (d.typ === 'vergiftetes_wort') {
           if (istSteller && rg?.gespielt) {
             s.verhext_gestellt.gespielt++;
-            if (!rg.raterGewinnt) s.verhext_gestellt.gewonnen++;
+            if (!rg.gewonnen) s.verhext_gestellt.gewonnen++;
           } else if (istRater && rg?.gespielt) {
             s.verhext_geloest.gespielt++;
-            if (rg.raterGewinnt) s.verhext_geloest.gewonnen++;
+            if (rg.gewonnen) s.verhext_geloest.gewonnen++;
           }
         } else if (d.typ === 'fuchsjagd' && sg?.gespielt && rg?.gespielt) {
           s.fuchsrennen.gespielt++;
@@ -315,7 +315,7 @@ function duellListenEintrag(d, perspektive) {
     }
     let resultat = '';
     if (d.typ === 'vergiftetes_wort') {
-      resultat = rg.raterGewinnt ? 'Gegner hat gewonnen' : '🏆 Du hast gewonnen';
+      resultat = rg.gewonnen ? 'Gegner hat gewonnen' : '🏆 Du hast gewonnen';
     } else {
       const emoji = rg.emojiReaktion ? ` ${rg.emojiReaktion}` : '';
       resultat = rg.gewonnen ? `gelöst in ${rg.versuche} Versuch${rg.versuche !== 1 ? 'en' : ''}${emoji}` : `nicht gelöst${emoji}`;

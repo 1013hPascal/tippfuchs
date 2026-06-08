@@ -107,8 +107,13 @@ document.getElementById('neuer-spitzname-input').addEventListener('keydown',func
 let _vorherigeInputLaenge = 0;
 document.getElementById('wort-input').addEventListener('input', function() {
   const vorher = _vorherigeInputLaenge;
-  this.value = this.value.toUpperCase().replace(/[^A-ZÄÖÜẞ]/g,'').slice(0,5);
+  const rohWert = this.value.toUpperCase().replace(/[^A-ZÄÖÜẞ]/g,'');
+  this.value = rohWert.slice(0, 5);
   _vorherigeInputLaenge = this.value.length;
+  if (rohWert.length > 5) {
+    sageLaut('Du hast mehr als fünf Buchstaben eingegeben. Nur Wörter mit fünf Buchstaben erlaubt.');
+    return;
+  }
   if (this.value.length > vorher && this.value.length > 0) {
     _pruefeEingabeHinweis(this.value[this.value.length - 1], this.value.length - 1);
   }
@@ -119,16 +124,20 @@ function _pruefeEingabeHinweis(buchstabe, position) {
   const absentSet = new Set();
   const correctSet = new Set();
   const correctAnPos = Array(5).fill(null);
+  let schonAlsFalscheStelle = false;
   state.versuche.forEach(versuch => {
     bewerteVersuch(versuch, appState.TAGESWORT).forEach((e, i) => {
       if (e === 'correct') { correctSet.add(versuch[i]); correctAnPos[i] = versuch[i]; }
       else if (e === 'absent') absentSet.add(versuch[i]);
+      else if (e === 'present' && i === position && versuch[i] === buchstabe) schonAlsFalscheStelle = true;
     });
   });
-  if (absentSet.has(buchstabe) && !correctSet.has(buchstabe)) {
+  if (correctAnPos[position] && correctAnPos[position] !== buchstabe) {
+    sageLaut(`An dieser Stelle hast du schon ${correctAnPos[position]} gefunden.`);
+  } else if (absentSet.has(buchstabe) && !correctSet.has(buchstabe)) {
     sageLaut(`Buchstabe ${buchstabe} darf nicht im Wort vorkommen.`);
-  } else if (correctAnPos[position] && correctAnPos[position] !== buchstabe) {
-    sageLaut(`An der Stelle hast du ${correctAnPos[position]} schon richtig.`);
+  } else if (schonAlsFalscheStelle) {
+    sageLaut(`Buchstabe ${buchstabe} hast du hier schon probiert, kommt woanders vor.`);
   }
 }
 document.getElementById('wort-input').addEventListener('keydown',function(e){ if (e.key==='Enter') { e.preventDefault(); _vorherigeInputLaenge=0; verarbeiteWort(); } if (e.key==='Escape') { this.value=''; _vorherigeInputLaenge=0; this.blur(); sageLaut('Eingabe abgebrochen.'); } });
