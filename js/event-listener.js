@@ -107,7 +107,7 @@ document.getElementById('neuer-spitzname-input').addEventListener('keydown',func
 let _vorherigeInputLaenge = 0;
 document.getElementById('wort-input').addEventListener('input', function() {
   const vorher = _vorherigeInputLaenge;
-  const rohWert = this.value.toUpperCase().replace(/[^A-ZÄÖÜẞ]/g,'');
+  const rohWert = this.value.toUpperCase().replace(/[^A-Z]/g,'');
   this.value = rohWert.slice(0, 5);
   _vorherigeInputLaenge = this.value.length;
   if (rohWert.length > 5) {
@@ -148,6 +148,8 @@ document.getElementById('grafik-tastatur')?.addEventListener('click', e => {
   if (!taste) return;
   const key = taste.dataset.key;
   const input = document.getElementById('wort-input');
+  // Kein focus(): sonst klappt auf dem Handy die native Tastatur auf
+  const warFokussiert = document.activeElement === input;
   if (key === 'Backspace') {
     input.value = input.value.slice(0, -1);
     _vorherigeInputLaenge = input.value.length;
@@ -162,10 +164,27 @@ document.getElementById('grafik-tastatur')?.addEventListener('click', e => {
       _pruefeEingabeHinweis(key, pos);
     }
   }
-  input.focus();
+  // verarbeiteWort() fokussiert das Eingabefeld — bei Bedienung über die grafische Tastatur wieder lösen
+  if (!warFokussiert && document.activeElement === input) input.blur();
 });
 
-
+// Grafische Tastatur über der aufgeklappten Handy-Tastatur halten:
+// Wenn die native Tastatur den unteren Bildschirm verdeckt, so weit scrollen,
+// dass die grafische Tastatur komplett im sichtbaren Bereich liegt.
+function _halteGrafikTastaturSichtbar() {
+  const tastatur = document.getElementById('grafik-tastatur');
+  if (!tastatur || tastatur.offsetParent === null) return;
+  const vv = window.visualViewport;
+  const sichtOben = vv ? vv.offsetTop : 0;
+  const sichtHoehe = vv ? vv.height : window.innerHeight;
+  const rect = tastatur.getBoundingClientRect();
+  const ueberstand = (rect.bottom - sichtOben) - sichtHoehe + 8;
+  if (ueberstand > 0) window.scrollBy(0, ueberstand);
+}
+document.getElementById('wort-input').addEventListener('focus', () => setTimeout(_halteGrafikTastaturSichtbar, 350));
+window.visualViewport?.addEventListener('resize', () => {
+  if (document.activeElement?.id === 'wort-input') _halteGrafikTastaturSichtbar();
+});
 
 
 document.getElementById('btn-zurueck-von-rangliste').addEventListener('click',()=>{ if (state.spielende) zeigeErgebnis(state.gewonnen); else zeigeStart(); });
@@ -459,7 +478,7 @@ document.getElementById('ff-wort-input').addEventListener('keydown', function(e)
 
 document.getElementById('ff-wort-input').addEventListener('input', function() {
   const vorher = _vorherigeFFInputLaenge;
-  this.value = this.value.toUpperCase().replace(/[^A-ZÄÖÜẞ]/g, '').slice(0, 5);
+  this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 5);
   _vorherigeFFInputLaenge = this.value.length;
   if (this.value.length > vorher && this.value.length > 0) {
     const hinweis = pruefeFfEingabeHinweis(this.value[this.value.length - 1], this.value.length - 1);
@@ -472,6 +491,8 @@ document.getElementById('ff-grafik-tastatur').addEventListener('click', e => {
   if (!taste) return;
   const key = taste.dataset.key;
   const input = document.getElementById('ff-wort-input');
+  // Kein focus(): sonst klappt auf dem Handy die native Tastatur auf
+  const warFokussiert = document.activeElement === input;
   if (key === 'Backspace') {
     input.value = input.value.slice(0, -1);
     _vorherigeFFInputLaenge = input.value.length;
@@ -487,7 +508,7 @@ document.getElementById('ff-grafik-tastatur').addEventListener('click', e => {
       if (hinweis) sageLaut(hinweis);
     }
   }
-  input.focus();
+  if (!warFokussiert && document.activeElement === input) input.blur();
 });
 
 document.getElementById('btn-ff-neu').addEventListener('click', () => {

@@ -579,14 +579,22 @@ details[open] summary::after {
   gap: 4px;
   width: 100%;
 }
-/* Reihe 1 + 2: 11 gleiche Spalten. minmax(0,1fr) erzwingt Schrumpfen unter Content-Breite */
-.tastatur-reihe:nth-child(1),
-.tastatur-reihe:nth-child(2) {
-  grid-template-columns: repeat(11, minmax(0, 1fr));
+/* Ohne Umlaute: Reihe 1 = 10 Tasten, Reihe 2 = 9 Tasten (eingerückt), Reihe 3 = ENTER + 7 + ⌫.
+   minmax(0,1fr) erzwingt Schrumpfen unter Content-Breite */
+.tastatur-reihe:nth-child(1) {
+  grid-template-columns: repeat(10, minmax(0, 1fr));
 }
-/* Reihe 3: ⌫ breiter, ↵ am breitesten */
+.tastatur-reihe:nth-child(2) {
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  padding: 0 5%;
+}
 .tastatur-reihe:nth-child(3) {
-  grid-template-columns: minmax(0, 1.5fr) repeat(8, minmax(0, 1fr)) minmax(0, 2fr);
+  grid-template-columns: minmax(0, 1.5fr) repeat(7, minmax(0, 1fr)) minmax(0, 1.5fr);
+}
+/* Grafische Tastatur sitzt im Eingabebereich direkt unter dem Eingabefeld */
+#eingabe-bereich #grafik-tastatur {
+  max-width: 500px;
+  padding-top: 0;
 }
 .taste {
   -webkit-appearance: none;
@@ -608,6 +616,13 @@ details[open] summary::after {
 }
 .taste:active { transform: scale(0.9); }
 .taste-action { font-size: 0.75rem; }
+.taste-enter {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+}
 .taste[data-status="correct"] {
   background: #4a9e50;
   color: #fff;

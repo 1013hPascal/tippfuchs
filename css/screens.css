@@ -446,6 +446,9 @@ body.keine-animationen .fp-punkt {
   display: none;
 }
 
+/* Buchstabenstatus (Textform) bleibt in allen Designs sr-only —
+   visuell übernimmt die grafische Tastatur, Screenreader lesen weiterhin den Text */
+
 /* Dual-UI: In visuellen Designs ist die zugängliche Ebene sr-only
    — visuell unsichtbar, aber für Screen Reader voll zugänglich */
 [data-design="fuchsbau"] .start-abschnitte-normal,
