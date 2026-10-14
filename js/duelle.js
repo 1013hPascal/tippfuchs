@@ -35,7 +35,7 @@ export function zufallsWort() {
 }
 
 export function duellLink(id) {
-  return `https://blindmove.blogspot.com/p/tippfuchs.html?duell=${id}`;
+  return `https://wortjaeger-blindmove.web.app/?duell=${id}`;
 }
 
 export async function teileDuell(id) {

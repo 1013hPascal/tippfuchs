@@ -14,7 +14,8 @@ Dieses Dokument enthält alles, was du brauchst, um nach einer Kontext-Komprimie
 
 Ein deutsches tägliches Worträtsel (Wordle-Klon). 5 Buchstaben, 6 Versuche, jeden Tag ein neues Wort. Mit Gruppen-Wettkampf, globaler Rangliste, Freundesliste und vollständiger Barrierefreiheit.
 
-**Live-URL:** `https://blindmove.blogspot.com/p/tippfuchs.html`
+**Live-URL:** `https://wortjaeger-blindmove.web.app` (Firebase Hosting)
+**Blog-Artikel:** auf `https://blindmoveblog.wordpress.com` in der Kategorie „Digitale Spiele“ (Text + Knopf zum Spiel; WordPress-Free-Tarif erlaubt kein iframe). Früher eingebettet auf `blindmove.blogspot.com/p/tippfuchs.html`.
 
 ---
 
@@ -163,7 +164,7 @@ Ablauf:
 3. Nutzer klickt "Anfrage senden" → Bestätigung
 4. Gruppen-Screen wird gezeigt mit aktualisierter Liste
 
-Teilen-Button (`btn-gruppe-code-teilen`) generiert: `https://blindmove.blogspot.com/p/tippfuchs.html?beitreten=${gruppenId}`
+Teilen-Button (`btn-gruppe-code-teilen`) generiert: `https://wortjaeger-blindmove.web.app/?beitreten=${gruppenId}` (Duell-Links analog mit `?duell=`)
 
 ---
 

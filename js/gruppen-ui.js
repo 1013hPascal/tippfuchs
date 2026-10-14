@@ -93,7 +93,7 @@ export async function zeigeGruppeDetail(gruppenId) {
     btnTeilen.textContent = '🦊 Beitrittslink teilen';
     btnTeilen.onclick = () => {
       const gruppenName = gruppe?.name || 'Tippfuchs Gruppe';
-      const link = `https://blindmove.blogspot.com/p/tippfuchs.html?beitreten=${gruppenId}`;
+      const link = `https://wortjaeger-blindmove.web.app/?beitreten=${gruppenId}`;
       const text = `Ich lade dich ein zu meiner Tippfuchs Gruppe "${gruppenName}"!\n\nTippfuchs ist ein tägliches Worträtsel, 5 Buchstaben, 6 Versuche, jeden Tag ein neues Wort. Für alle spielbar!\n\nKlicke auf diesen Link um direkt beizutreten:\n${link}`;
       // Zuverlässige Kopiermethode: temporäres textarea-Element
       const ta = document.createElement('textarea');
